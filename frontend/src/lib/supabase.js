@@ -1,10 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl  = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnon = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl  = import.meta.env.VITE_SUPABASE_URL  || 'https://placeholder.supabase.co';
+const supabaseAnon = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-anon-key';
 
-if (!supabaseUrl || !supabaseAnon) {
-  console.error('Missing Supabase environment variables. Check your .env file.');
+if (
+  import.meta.env.VITE_SUPABASE_URL === undefined ||
+  import.meta.env.VITE_SUPABASE_ANON_KEY === undefined
+) {
+  console.warn(
+    '[TeyaCollections] Supabase env vars not set — auth and database features will be unavailable. ' +
+    'Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your Render environment variables.'
+  );
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnon);
