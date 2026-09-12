@@ -1,0 +1,400 @@
+/* ============================================================
+   TeyaCollections — Cart Page Styles
+   ============================================================ */
+
+.cart-page {
+  padding-top: calc(var(--nav-height, 92px) + 2rem);
+  padding-bottom: 6rem;
+}
+
+.cart-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid #ECE7DE;
+  padding-bottom: 1rem;
+}
+
+.cart-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.5rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.cart-count {
+  font-size: 0.9rem;
+  color: #7A766E;
+}
+
+.cart-page-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 55vh;
+  text-align: center;
+  color: #8C887B;
+}
+
+.cart-page-empty h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.25rem;
+  color: #1A1A1A;
+  margin: 1.5rem 0 0.5rem 0;
+}
+
+.cart-page-empty p {
+  color: #6E6A61;
+  margin-bottom: 2rem;
+}
+
+/* Grid */
+.cart-grid {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: 4rem;
+  align-items: flex-start;
+}
+
+.cart-table-head {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ECE7DE;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8C887B;
+}
+
+.cart-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  align-items: center;
+  padding: 1.75rem 0;
+  border-bottom: 1px solid #F0ECE4;
+}
+
+.cart-row__product {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.cart-row__img {
+  width: 90px;
+  height: 115px;
+  object-fit: cover;
+  border-radius: 2px;
+  background: #EAE6DF;
+}
+
+.cart-row__meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.cart-row__name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  text-decoration: none;
+}
+
+.cart-row__variants {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  color: #7A766E;
+}
+
+.cart-row__unit-price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  color: #4A4A4A;
+}
+
+.cart-row__delete-mobile {
+  display: none;
+}
+
+.cart-row__subtotal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #1A1A1A;
+}
+
+.cart-row__delete {
+  background: none;
+  border: none;
+  color: #A09D96;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.cart-row__delete:hover {
+  color: #D90429;
+}
+
+.cart-footer-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1.5rem;
+}
+
+.continue-shopping {
+  color: #1A1A1A;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.continue-shopping:hover {
+  color: #C9A96E;
+}
+
+.clear-cart-btn {
+  background: none;
+  border: none;
+  font-size: 0.8rem;
+  color: #8C887B;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Order Summary Box */
+.cart-summary {
+  background: #FDFBF7;
+  border: 1px solid #ECE7DE;
+  border-radius: 4px;
+  padding: 2rem;
+}
+
+.summary-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin: 0 0 1.5rem 0;
+  color: #1A1A1A;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #4A463E;
+  margin-bottom: 0.85rem;
+}
+
+.summary-discount {
+  color: #2D6A4F;
+  font-weight: 600;
+}
+
+.summary-divider {
+  height: 1px;
+  background: #EAE6DF;
+  margin: 1.25rem 0;
+}
+
+.promo-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.promo-input-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.promo-icon {
+  position: absolute;
+  left: 10px;
+  color: #8C887B;
+  pointer-events: none;
+}
+
+.promo-input-wrap input {
+  width: 100%;
+  padding: 0.6rem 0.75rem 0.6rem 2.2rem;
+  font-size: 0.8rem;
+  border: 1px solid #D9D4C7;
+  border-radius: 2px;
+  background: #FFF;
+  text-transform: uppercase;
+}
+
+.promo-btn {
+  background: #1A1A1A;
+  color: #FFF;
+  border: none;
+  padding: 0 1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.summary-total {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+/* GST Breakdown */
+.summary-gst-box {
+  background: #FDFBF7;
+  border: 1px dashed #D9D4C7;
+  border-radius: 4px;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+}
+
+.summary-gst {
+  font-size: 0.8rem;
+  color: #6E6A61;
+  margin: 0;
+}
+
+.summary-gst span:last-child {
+  font-weight: 500;
+}
+
+.gst-note {
+  font-size: 0.7rem;
+  color: #8C887B;
+  margin: 0.25rem 0 0 0;
+}
+
+/* Discount row */
+.summary-discount {
+  color: #2D6A4F;
+  font-weight: 500;
+}
+
+.summary-discount span:last-child {
+  font-weight: 700;
+}
+
+/* Coupon applied badge */
+.coupon-applied-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #E8F5E9;
+  border: 1px solid #A5D6A7;
+  border-radius: 4px;
+  padding: 0.65rem 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.coupon-applied-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.coupon-code-text {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1B5E20;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.05em;
+}
+
+.coupon-desc-text {
+  display: block;
+  font-size: 0.72rem;
+  color: #2E7D32;
+}
+
+.coupon-remove-btn {
+  background: none;
+  border: none;
+  color: #7A766E;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.coupon-remove-btn:hover {
+  color: #D90429;
+}
+
+.summary-taxes {
+  font-size: 0.75rem;
+  color: #8C887B;
+  margin: 0.25rem 0 1.5rem 0;
+}
+
+.summary-checkout-btn {
+  padding: 0.9rem;
+}
+
+.summary-secure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #8C887B;
+  margin-top: 1rem;
+}
+
+@media (max-width: 900px) {
+  .cart-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .cart-table-head {
+    display: none;
+  }
+  .cart-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    position: relative;
+  }
+  .cart-row__quantity {
+    display: flex;
+    justify-content: flex-start;
+  }
+  .cart-row__subtotal {
+    justify-content: flex-start;
+  }
+  .cart-row__delete {
+    display: none;
+  }
+  .cart-row__delete-mobile {
+    display: inline-block;
+    background: none;
+    border: none;
+    color: #D90429;
+    font-size: 0.75rem;
+    text-align: left;
+    padding: 0;
+    cursor: pointer;
+  }
+}

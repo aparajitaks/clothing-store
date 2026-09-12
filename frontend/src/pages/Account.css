@@ -1,0 +1,241 @@
+/* ============================================================
+   TeyaCollections — Account Page Styles
+   ============================================================ */
+
+.account-page {
+  padding-top: calc(var(--nav-height, 92px) + 2rem);
+  padding-bottom: 6rem;
+}
+
+.account-header {
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid #ECE7DE;
+  padding-bottom: 1.25rem;
+}
+
+.account-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.5rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem 0;
+}
+
+.account-sub {
+  color: #7A766E;
+  font-size: 0.9rem;
+}
+
+.account-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 3.5rem;
+  align-items: flex-start;
+}
+
+.account-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.account-user-card {
+  background: #FFFDF9;
+  border: 1px solid #ECE7DE;
+  border-radius: 4px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.account-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #1A1A1A;
+  color: #C9A96E;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+}
+
+.account-user-name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+}
+
+.account-user-email {
+  font-size: 0.8rem;
+  color: #8C887B;
+  display: block;
+}
+
+.account-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #F4EFE6;
+  color: #8C6A2E;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 20px;
+  margin-top: 0.75rem;
+}
+
+.account-nav-links {
+  background: #FFFDF9;
+  border: 1px solid #ECE7DE;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.account-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  color: #4A4A4A;
+  text-decoration: none;
+  font-size: 0.88rem;
+  border-bottom: 1px solid #F0ECE4;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.account-nav-item:last-child {
+  border-bottom: none;
+}
+
+.account-nav-item:hover {
+  background: #F8F5EE;
+  color: #1A1A1A;
+}
+
+.account-signout-btn {
+  color: #D90429;
+}
+
+.account-card {
+  background: #FFFDF9;
+  border: 1px solid #ECE7DE;
+  border-radius: 4px;
+  padding: 2.5rem;
+}
+
+.account-card-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin: 0 0 1.5rem 0;
+}
+
+.account-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 500px;
+}
+
+/*
+  INPUT WRAPPER ARCHITECTURE — matches AuthModal proven pattern
+  ─────────────────────────────────────────────────────────────
+  Problem: Admin.css `.form-group input { padding: 0.65rem 0.9rem }`
+  was overriding this file's padding-left (equal specificity, Admin.css
+  loaded later) → icon and text occupied the same X position.
+
+  Fix:
+  - Wrapper: position:relative, display:block (NOT flex — flex was
+    interfering with absolute-positioned icon stacking context)
+  - Icon: position:absolute, left:16px, top:50%, transform:translateY(-50%)
+    → always vertically centred, never in text flow
+  - Input: box-sizing:border-box, padding-left:48px !important
+    → text starts at 48px; icon centre is at 16+9=25px → 23px clearance gap
+    The !important beats Admin.css `.form-group input` override.
+*/
+.input-wrap {
+  position: relative;
+  display: block;       /* NOT flex — keeps icon stacking context clean */
+  width: 100%;
+}
+
+.input-wrap .input-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8C887B;
+  pointer-events: none;   /* purely decorative — never intercepts clicks */
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Icon is 18×18px: sits from 16px → 34px.
+     Input padding-left is 48px → text starts at 48px.
+     Clearance gap = 48 - 34 = 14px. No overlap possible. */
+}
+
+.input-wrap input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;           /* padding included in 100% width */
+  height: 48px;
+  padding: 0 1rem 0 48px !important; /* !important overrides Admin.css
+                                         .form-group input { padding } */
+  border: 1px solid #D9D4C7;
+  border-radius: 3px;
+  background: #FFF;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: #1A1A1A;
+  line-height: 48px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+.input-wrap input:focus {
+  border-color: #C9A96E;
+  box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.2);
+}
+
+.input-wrap input::placeholder {
+  color: #B0A99E;
+}
+
+.input-disabled {
+  background: #F4EFE6 !important;
+  color: #7A766E !important;
+  cursor: not-allowed;
+}
+
+.input-hint {
+  font-size: 0.75rem;
+  color: #8C887B;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.account-save-btn {
+  width: fit-content;
+  padding: 0.75rem 1.75rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 850px) {
+  .account-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}

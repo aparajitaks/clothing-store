@@ -1,0 +1,115 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #F9F5F0;
+}
+
+.admin-sidebar {
+  width: 260px;
+  background: #1A1A1A;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.admin-brand-logo {
+  width: 42px;
+  height: 42px;
+  background: #181716;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  overflow: hidden;
+  padding: 4px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.admin-brand-logo:hover {
+  border-color: var(--color-gold);
+  transform: translateY(-1px);
+}
+
+.admin-brand-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.admin-brand-name {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: #fff;
+}
+
+.admin-brand-role {
+  color: var(--color-gold);
+  font-size: 0.6rem;
+}
+
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.admin-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.admin-nav-link:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+.admin-nav-link.active {
+  background: rgba(201,169,110,0.2);
+  color: var(--color-gold);
+}
+
+.admin-nav-arrow {
+  margin-left: auto;
+}
+
+.admin-sidebar-footer {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.admin-main {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .admin-sidebar { width: 200px; padding: 1rem; }
+  .admin-main    { padding: 1rem; }
+}

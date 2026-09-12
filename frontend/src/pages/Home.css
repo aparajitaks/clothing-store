@@ -1,0 +1,721 @@
+/* ============================================================
+   TEYA COLLECTIONS — BIBA Inspired Luxury Indian Ethnic Styling
+   ============================================================ */
+
+.biba-home {
+  position: relative;
+  overflow-x: hidden;
+  background-color: #FAF7F2;
+  color: #121212;
+}
+
+/* ── Typography & Section Headers ────────────────────────── */
+.biba-section {
+  padding-top: 4.5rem;
+  padding-bottom: 4.5rem;
+}
+
+.biba-section-head {
+  margin-bottom: 2.75rem;
+}
+
+.biba-section-tag {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-gold, #A88B58);
+  margin-bottom: 0.5rem;
+}
+
+.biba-section-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2rem, 3.8vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: #121212;
+  margin: 0;
+}
+
+.biba-section-divider {
+  width: 48px;
+  height: 2px;
+  background: var(--color-gold, #A88B58);
+  margin: 0.75rem auto 0;
+}
+
+.biba-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #121212;
+  text-decoration: none;
+  padding-bottom: 3px;
+  border-bottom: 1.5px solid var(--color-gold, #A88B58);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.biba-view-all:hover {
+  color: var(--color-gold, #A88B58);
+  border-color: var(--color-gold, #A88B58);
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.biba-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.95rem 2rem;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.biba-btn--primary {
+  background: #121212;
+  color: #FAF7F2;
+  border: 1px solid #121212;
+}
+
+.biba-btn--primary:hover {
+  background: #242220;
+  border-color: var(--color-gold, #A88B58);
+  color: #FAF7F2;
+}
+
+.biba-btn--outline {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  color: #121212;
+  border: 1px solid rgba(18, 18, 18, 0.25);
+}
+
+.biba-btn--outline:hover {
+  background: #121212;
+  color: #FAF7F2;
+  border-color: #121212;
+}
+
+/* ── 1. HERO CAMPAIGN BANNER ────────────────────────────── */
+.biba-hero {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #F3ECE2;
+}
+
+.biba-hero__picture {
+  display: block;
+  width: 100%;
+}
+
+.biba-hero__image {
+  width: 100%;
+  height: auto;
+  min-height: 480px;
+  max-height: 720px;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.biba-hero__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(
+    90deg,
+    rgba(250, 248, 245, 0.92) 0%,
+    rgba(250, 248, 245, 0.82) 36%,
+    rgba(250, 248, 245, 0.3) 65%,
+    transparent 100%
+  );
+}
+
+.biba-hero__content-wrap {
+  width: 100%;
+}
+
+.biba-hero__card {
+  max-width: 560px;
+  padding: 1rem 0;
+}
+
+.biba-hero__eyebrow {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #9E7B3B;
+  margin-bottom: 0.9rem;
+}
+
+.biba-hero__title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2.4rem, 5.2vw, 3.85rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: #1A1A1A;
+  margin: 0 0 1.25rem;
+}
+
+.biba-hero__desc {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #555047;
+  margin: 0 0 2rem;
+  max-width: 480px;
+}
+
+.biba-hero__actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ── 2. EXPLORE BY CATEGORY GRID ────────────────────────── */
+.biba-categories-section {
+  background: #FAF7F2;
+}
+
+.biba-cat-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.25rem;
+}
+
+.biba-cat-card {
+  border-radius: 4px;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border, #E8E0D5);
+  overflow: hidden;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.biba-cat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.07);
+}
+
+.biba-cat-card__link {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+}
+
+.biba-cat-card__img-box {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: #F5EFEB;
+  overflow: hidden;
+}
+
+.biba-cat-card__img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.biba-cat-card:hover .biba-cat-card__img-box img {
+  transform: scale(1.06);
+}
+
+.biba-cat-card__meta {
+  padding: 1.1rem 0.9rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.biba-cat-card__name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.22rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin: 0 0 0.25rem;
+  line-height: 1.2;
+}
+
+.biba-cat-card__sub {
+  font-size: 0.72rem;
+  color: #7A746B;
+  margin: 0 0 0.6rem;
+  line-height: 1.3;
+}
+
+.biba-cat-card__cta {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9E7B3B;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-top: auto;
+}
+
+/* ── 3. DUAL EDITORIAL SPOTLIGHT ────────────────────────── */
+.biba-spotlight {
+  padding-top: 1rem;
+}
+
+.biba-spotlight__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.75rem;
+}
+
+.biba-spotlight__card {
+  position: relative;
+  display: block;
+  text-decoration: none;
+  border-radius: 4px;
+  overflow: hidden;
+  aspect-ratio: 16 / 11;
+  background: #111;
+}
+
+.biba-spotlight__img-box {
+  position: absolute;
+  inset: 0;
+}
+
+.biba-spotlight__img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.biba-spotlight__card:hover .biba-spotlight__img-box img {
+  transform: scale(1.04);
+}
+
+.biba-spotlight__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(17, 14, 11, 0.85) 0%,
+    rgba(17, 14, 11, 0.3) 50%,
+    transparent 100%
+  );
+}
+
+.biba-spotlight__content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2.25rem 2rem;
+  color: #FAF8F5;
+  z-index: 1;
+}
+
+.biba-spotlight__tag {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #D6BD8A;
+  margin-bottom: 0.5rem;
+}
+
+.biba-spotlight__title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  font-weight: 400;
+  color: #FFFFFF;
+  margin: 0 0 0.6rem;
+  line-height: 1.15;
+}
+
+.biba-spotlight__desc {
+  font-size: 0.86rem;
+  color: rgba(250, 248, 245, 0.85);
+  line-height: 1.5;
+  margin: 0 0 1.25rem;
+  max-width: 480px;
+}
+
+.biba-spotlight__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #FAF8F5;
+  border-bottom: 1.5px solid #D6BD8A;
+  padding-bottom: 3px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.biba-spotlight__card:hover .biba-spotlight__btn {
+  color: #D6BD8A;
+}
+
+/* ── 4. FEATURED PRODUCTS ────────────────────────────────── */
+.biba-featured {
+  background: #FAF8F5;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.75rem;
+}
+
+/* ── 5. FULL-WIDTH MID-PAGE EDITORIAL BANNER ─────────────── */
+.biba-mid-banner {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #1A1A1A;
+}
+
+.biba-mid-banner__picture {
+  display: block;
+  width: 100%;
+}
+
+.biba-mid-banner img {
+  width: 100%;
+  height: auto;
+  min-height: 380px;
+  max-height: 520px;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+
+.biba-mid-banner__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(
+    to right,
+    rgba(10, 8, 6, 0.92) 0%,
+    rgba(10, 8, 6, 0.68) 50%,
+    rgba(10, 8, 6, 0.22) 100%
+  );
+}
+
+.biba-mid-banner__content {
+  max-width: 580px;
+  color: #FAF8F5;
+}
+
+.biba-mid-banner__tag {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #D6BD8A;
+  margin-bottom: 0.75rem;
+}
+
+.biba-mid-banner__title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 400;
+  color: #FFFFFF;
+  margin: 0 0 1rem;
+  line-height: 1.1;
+}
+
+.biba-mid-banner__desc {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: rgba(250, 248, 245, 0.85);
+  margin: 0 0 2rem;
+}
+
+/* ── 6. SEASON'S COLOR PALETTE ───────────────────────────── */
+.biba-palette-section {
+  background: #FAF7F2;
+}
+
+.biba-palette-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.biba-palette-card {
+  background: #FFFFFF;
+  border-radius: 4px;
+  border: 1px solid var(--color-border, #E8E0D5);
+  overflow: hidden;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.biba-palette-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+}
+
+.biba-palette-card__link {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+}
+
+.biba-palette-card__img-box {
+  aspect-ratio: 1 / 1;
+  background: #F4EFEA;
+  overflow: hidden;
+}
+
+.biba-palette-card__img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.biba-palette-card:hover .biba-palette-card__img-box img {
+  transform: scale(1.05);
+}
+
+.biba-palette-card__meta {
+  padding: 1.1rem;
+  text-align: center;
+}
+
+.biba-palette-card__title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin: 0 0 0.25rem;
+}
+
+.biba-palette-card__shade {
+  font-size: 0.74rem;
+  color: #7A746B;
+  margin: 0;
+}
+
+/* ── 7. TREND STORIES / CURATED LOOKS ───────────────────── */
+.biba-trends-section {
+  background: #FAF7F2;
+  padding-bottom: 5.5rem;
+}
+
+.biba-trends-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.biba-trend-card {
+  border-radius: 4px;
+  overflow: hidden;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border, #E8E0D5);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.biba-trend-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.biba-trend-card__link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.biba-trend-card__img-box {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #F0EAE2;
+}
+
+.biba-trend-card__img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.biba-trend-card:hover .biba-trend-card__img-box img {
+  transform: scale(1.06);
+}
+
+.biba-trend-card__meta {
+  padding: 1rem 0.8rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.biba-trend-card__title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin: 0 0 0.25rem;
+  line-height: 1.2;
+}
+
+.biba-trend-card__sub {
+  font-size: 0.7rem;
+  color: #7A746B;
+  margin: 0 0 0.65rem;
+  line-height: 1.3;
+}
+
+.biba-trend-card__cta {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9E7B3B;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  margin-top: auto;
+}
+
+/* ── 8. BRAND TRUST & SERVICE BAR ───────────────────────── */
+.biba-trust-bar {
+  background: #F3ECE2;
+  border-top: 1px solid var(--color-border, #E8E0D5);
+  border-bottom: 1px solid var(--color-border, #E8E0D5);
+  padding: 2.75rem 0;
+}
+
+.biba-trust-bar__inner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.biba-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.biba-trust-item__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(168, 139, 88, 0.12);
+  color: var(--color-gold, #A88B58);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.biba-trust-item__text h4 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin: 0 0 0.2rem;
+}
+
+.biba-trust-item__text p {
+  font-size: 0.76rem;
+  color: #7A746B;
+  margin: 0;
+}
+
+/* ── RESPONSIVE BREAKPOINTS ──────────────────────────────── */
+@media (max-width: 1200px) {
+  .biba-cat-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .biba-trends-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .biba-palette-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .biba-trust-bar__inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .biba-section {
+    padding-top: 3.25rem;
+    padding-bottom: 3.25rem;
+  }
+  .biba-hero__overlay {
+    background: linear-gradient(
+      to top,
+      rgba(250, 248, 245, 0.95) 0%,
+      rgba(250, 248, 245, 0.8) 45%,
+      rgba(250, 248, 245, 0.2) 100%
+    );
+    align-items: flex-end;
+  }
+  .biba-hero__card {
+    padding: 1.5rem 0 2rem;
+  }
+  .biba-spotlight__grid {
+    grid-template-columns: 1fr;
+  }
+  .biba-cat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .biba-trends-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .biba-trust-bar__inner {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}

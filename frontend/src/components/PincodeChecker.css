@@ -1,0 +1,119 @@
+.pincode-checker {
+  padding: var(--space-lg) 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.pincode-checker__label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.pincode-checker__form {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.pincode-checker__input {
+  flex: 1;
+  height: 40px;
+  padding: 0 var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  outline: none;
+  letter-spacing: 2px;
+  transition: border-color var(--transition-fast);
+}
+
+.pincode-checker__input:focus {
+  border-color: var(--color-text);
+}
+
+.pincode-checker__btn {
+  height: 40px;
+  padding: 0 var(--space-lg);
+  background: var(--color-text);
+  color: var(--color-surface);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pincode-checker__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pincode-checker__btn:not(:disabled):hover {
+  background: var(--color-gold);
+}
+
+.pincode-spinner {
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.pincode-checker__error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-error);
+  margin-top: var(--space-sm);
+}
+
+.pincode-checker__result {
+  margin-top: var(--space-md);
+  padding: var(--space-md) var(--space-md);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pincode-checker__result.deliverable {
+  background: #F0FBF4;
+  border: 1px solid #C3E6CB;
+}
+
+.pincode-checker__result.not-deliverable {
+  background: #FDF3F3;
+  border: 1px solid #F5C6CB;
+}
+
+.pincode-result__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.pincode-result__icon--ok {
+  color: var(--color-success);
+}
+
+.pincode-result__icon--err {
+  color: var(--color-error);
+}

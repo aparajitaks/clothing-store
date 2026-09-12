@@ -1,0 +1,169 @@
+/* ============================================================
+   TeyaCollections — Orders Page Styles
+   ============================================================ */
+
+.orders-page {
+  padding-top: calc(var(--nav-height, 92px) + 2rem);
+  padding-bottom: 6rem;
+}
+
+.orders-header {
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid #ECE7DE;
+  padding-bottom: 1.25rem;
+}
+
+.orders-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.5rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem 0;
+}
+
+.orders-sub {
+  color: #7A766E;
+  font-size: 0.9rem;
+}
+
+.orders-loading,
+.orders-empty {
+  text-align: center;
+  padding: 6rem 0;
+  color: #8C887B;
+}
+
+.orders-empty h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.75rem;
+  color: #1A1A1A;
+  margin: 1rem 0 0.5rem 0;
+}
+
+.orders-empty p {
+  margin-bottom: 2rem;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.order-card {
+  background: #FFFDF9;
+  border: 1px solid #ECE7DE;
+  border-radius: 4px;
+  padding: 1.75rem;
+}
+
+.order-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  border-bottom: 1px solid #F0ECE4;
+  padding-bottom: 1.25rem;
+}
+
+.order-card__meta {
+  display: flex;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.order-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #8C887B;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.2rem;
+}
+
+.order-id {
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.order-date, .order-total {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1A1A1A;
+}
+
+.order-card__status {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.status-pill {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: #ECE7DE;
+  color: #4A4A4A;
+}
+
+.status-paid, .status-delivered {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.status-payment_initiated, .status-pending {
+  background: #FFF3E0;
+  color: #E65100;
+}
+
+.view-order-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.view-order-link:hover {
+  color: #C9A96E;
+}
+
+.order-card__items {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding-top: 1.25rem;
+}
+
+.order-item-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #F9F6F0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+}
+
+.order-item-chip img {
+  width: 36px;
+  height: 46px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.chip-name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: block;
+}
+
+.chip-sub {
+  font-size: 0.72rem;
+  color: #7A766E;
+}

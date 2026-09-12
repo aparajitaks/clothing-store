@@ -1,0 +1,213 @@
+/* ============================================================
+   TeyaCollections — Auth Modal Styles
+   Scoped entirely to .auth-modal to prevent Admin.css conflicts
+   ============================================================ */
+
+/* ── Overlay & Backdrop ───────────────────────────────────── */
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.auth-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 8, 5, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* ── Modal Card ───────────────────────────────────────────── */
+.auth-modal {
+  position: relative;
+  background: #FFFDF9;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 440px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+/* ── Close Button ─────────────────────────────────────────── */
+.auth-modal__close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: none;
+  border: none;
+  color: #7A766E;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.auth-modal__close:hover {
+  color: #1A1A1A;
+  background: #F4EFE6;
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+.auth-modal__logo-mark {
+  height: 52px;
+  width: auto;
+  margin: 0 auto 0.75rem;
+  display: block;
+  object-fit: contain;
+}
+
+.auth-modal__brand {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #1A1816;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.auth-modal__title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin-bottom: 0.5rem;
+}
+
+.auth-modal__sub {
+  font-size: 0.85rem;
+  color: #7A766E;
+  line-height: 1.5;
+  margin-bottom: 1.75rem;
+}
+
+/* ── Form ─────────────────────────────────────────────────── */
+.auth-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Field group (label + input wrapper) ──────────────────── */
+/*
+   Using high-specificity selectors scoped to .auth-modal
+   to definitively override any global .form-group rules
+   (e.g., from Admin.css)
+*/
+.auth-modal .auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.auth-modal .auth-field__label {
+  font-size: 0.72rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #5A564F;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Input Wrapper ────────────────────────────────────────── */
+/*
+   ARCHITECTURE:
+   - Wrapper is position:relative, display:block (NOT flex)
+   - Icon is position:absolute, vertically centered with top/transform
+   - Input has box-sizing:border-box and enough padding-left (52px)
+     so text starts AFTER the icon (icon: left:16px + width:18px = 34px,
+     text starts at 52px → 18px clearance gap)
+*/
+.auth-modal .auth-input-wrapper {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.auth-modal .auth-input-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 2;
+  color: #9C9690;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Icon is 16x16 — sits from 16px to 32px.
+     Input padding-left is 52px — text starts at 52px.
+     Clearance gap = 52 - 32 = 20px. Never overlaps. */
+}
+
+.auth-modal .auth-input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;             /* ensures padding is included in width */
+  height: 48px;
+  padding: 0 16px 0 52px;            /* left: 52px clears the 16px icon */
+  border: 1px solid #D9D4C7;
+  border-radius: 3px;
+  background: #FDFBF7;
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 48px;
+  color: #1A1A1A;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  /* Explicitly reset any inherited padding that could come from
+     Admin.css .form-group input rule */
+  padding-left: 52px !important;
+}
+
+.auth-modal .auth-input:focus {
+  outline: none;
+  border-color: var(--color-gold, #A88B58);
+  box-shadow: 0 0 0 2px rgba(168, 139, 88, 0.2);
+}
+
+.auth-modal .auth-input::placeholder {
+  color: #B0A99E;
+  font-size: 0.875rem;
+}
+
+/* ── Footer ───────────────────────────────────────────────── */
+.auth-modal__footer {
+  margin-top: 1.75rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #7A766E;
+}
+
+.auth-modal__footer button {
+  background: none;
+  border: none;
+  color: var(--color-gold, #A88B58);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  margin-left: 0.25rem;
+}
+
+/* ── Spinner ──────────────────────────────────────────────── */
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}

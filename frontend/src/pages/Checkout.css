@@ -1,0 +1,314 @@
+/* ============================================================
+   TeyaCollections — Checkout Page Styles
+   ============================================================ */
+
+.checkout-page {
+  padding-top: calc(var(--nav-height, 92px) + 2rem);
+  padding-bottom: 6rem;
+}
+
+.checkout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ECE7DE;
+  padding-bottom: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.checkout-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.5rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.checkout-secure-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #2D6A4F;
+  background: #E8F5E9;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.checkout-alert {
+  background: #FFF3CD;
+  color: #856404;
+  border: 1px solid #FFEEBA;
+  padding: 1rem 1.25rem;
+  border-radius: 4px;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 3.5rem;
+  align-items: flex-start;
+}
+
+.checkout-card {
+  background: #FFFDF9;
+  border: 1px solid #ECE7DE;
+  border-radius: 4px;
+  padding: 2.25rem;
+  margin-bottom: 2rem;
+}
+
+.card-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.4rem 0;
+  color: #1A1A1A;
+}
+
+.card-sub {
+  font-size: 0.85rem;
+  color: #7A766E;
+  margin-bottom: 1.75rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.payment-option {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  border: 1.5px solid #1A1A1A;
+  border-radius: 4px;
+  padding: 1.25rem;
+  background: #FDFBF7;
+}
+
+.payment-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 5px solid #1A1A1A;
+  background: #FFF;
+  flex-shrink: 0;
+}
+
+.payment-details strong {
+  display: block;
+  font-size: 0.95rem;
+  color: #1A1A1A;
+  margin-bottom: 0.25rem;
+}
+
+.payment-details p {
+  font-size: 0.8rem;
+  color: #7A766E;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Order Review Box */
+.checkout-summary-card {
+  background: #FDFBF7;
+  border: 1px solid #ECE7DE;
+  border-radius: 4px;
+  padding: 2rem;
+  position: sticky;
+  top: 100px;
+}
+
+.checkout-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.checkout-item-mini {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.checkout-item-mini img {
+  width: 50px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 2px;
+  background: #EAE6DF;
+}
+
+.checkout-item-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+}
+
+.checkout-item-name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.checkout-item-variant {
+  font-size: 0.75rem;
+  color: #8C887B;
+}
+
+.checkout-item-price {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.checkout-pay-btn {
+  padding: 1rem;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.checkout-trust-note {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.75rem;
+  color: #8C887B;
+  margin-top: 1.25rem;
+  line-height: 1.4;
+}
+
+/* Promo form inside checkout summary */
+.promo-form {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.promo-input-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.promo-icon {
+  position: absolute;
+  left: 10px;
+  color: #8C887B;
+}
+
+.promo-input-wrap input {
+  width: 100%;
+  padding: 0.55rem 0.75rem 0.55rem 2.2rem;
+  border: 1px solid #D9D4C7;
+  border-radius: 3px;
+  font-size: 0.82rem;
+  background: #FDFBF7;
+  letter-spacing: 0.04em;
+}
+
+.promo-btn {
+  padding: 0.55rem 1rem;
+  background: #1A1A1A;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: background 0.2s;
+}
+
+.promo-btn:hover {
+  background: #333;
+}
+
+/* Checkout coupon badge */
+.checkout-coupon-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #E8F5E9;
+  border: 1px solid #A5D6A7;
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  margin: 0.75rem 0;
+  font-size: 0.8rem;
+}
+
+.checkout-coupon-code {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 700;
+  color: #1B5E20;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.04em;
+}
+
+.coupon-remove-btn {
+  background: none;
+  border: none;
+  color: #7A766E;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.coupon-remove-btn:hover { color: #D90429; }
+
+/* Summary discount row */
+.summary-discount {
+  font-size: 0.85rem;
+  color: #2D6A4F;
+}
+
+/* GST row */
+.checkout-gst-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: #8C887B;
+  background: #FDFBF7;
+  border: 1px dashed #D9D4C7;
+  border-radius: 3px;
+  padding: 0.5rem 0.75rem;
+  margin: 0.5rem 0;
+}
+
+@media (max-width: 900px) {
+  .checkout-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .form-row, .form-row-3 {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}

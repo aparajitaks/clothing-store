@@ -1,0 +1,224 @@
+/* ============================================================
+   TeyaCollections — Order Confirmation Page Styles
+   ============================================================ */
+
+.order-confirm-page {
+  padding-top: calc(var(--nav-height, 92px) + 2rem);
+  padding-bottom: 6rem;
+  display: flex;
+  justify-content: center;
+}
+
+.confirm-loading {
+  text-align: center;
+  padding: 6rem 0;
+  color: #8C887B;
+}
+
+.confirm-card {
+  background: #FFFDF9;
+  border: 1px solid #ECE7DE;
+  border-radius: 4px;
+  max-width: 680px;
+  width: 100%;
+  padding: 3.5rem;
+  text-align: center;
+}
+
+.confirm-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: #F4EFE6;
+  border-radius: 50%;
+  margin-bottom: 1.5rem;
+}
+
+.confirm-check {
+  color: #2D6A4F;
+}
+
+.confirm-tag {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #C9A96E;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.confirm-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.4rem;
+  font-weight: 500;
+  color: #1A1A1A;
+  margin: 0 0 0.75rem 0;
+}
+
+.confirm-sub {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #6E6A61;
+  max-width: 500px;
+  margin: 0 auto 2.5rem auto;
+}
+
+.confirm-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  background: #F8F5EE;
+  padding: 1.25rem;
+  border-radius: 4px;
+  margin-bottom: 2.5rem;
+  text-align: left;
+}
+
+.meta-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.meta-label {
+  font-size: 0.7rem;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #8C887B;
+}
+
+.meta-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.status-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 3px;
+  width: fit-content;
+}
+
+.status-paid {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.status-pending {
+  background: #FFF3E0;
+  color: #EF6C00;
+}
+
+.confirm-address-box {
+  border: 1px solid #ECE7DE;
+  border-radius: 4px;
+  padding: 1.5rem;
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+.box-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #C9A96E;
+  margin-bottom: 0.75rem;
+}
+
+.box-header h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #1A1A1A;
+  margin: 0;
+}
+
+.confirm-address-box p {
+  margin: 0.25rem 0;
+  font-size: 0.85rem;
+  color: #5A564F;
+}
+
+.confirm-items-box {
+  text-align: left;
+  margin-bottom: 2.5rem;
+}
+
+.confirm-items-box h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8C887B;
+  margin-bottom: 1rem;
+}
+
+.confirm-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.confirm-item-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #F0ECE4;
+}
+
+.confirm-item-row img {
+  width: 45px;
+  height: 58px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.confirm-item-info {
+  flex: 1;
+}
+
+.confirm-item-info h5 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 0.2rem 0;
+}
+
+.confirm-item-info span {
+  font-size: 0.75rem;
+  color: #8C887B;
+}
+
+.confirm-item-price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+@media (max-width: 650px) {
+  .confirm-meta-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  .confirm-actions {
+    flex-direction: column;
+  }
+}

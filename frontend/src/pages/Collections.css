@@ -1,0 +1,211 @@
+.collections-page {
+  padding-bottom: var(--space-4xl);
+}
+
+.collections-hero {
+  background: var(--color-bg-alt);
+  padding: calc(var(--nav-height) + var(--space-4xl)) var(--space-xl) var(--space-3xl);
+  text-align: center;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.collections-hero__eyebrow {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: var(--space-md);
+}
+
+.collections-hero__title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  font-weight: 300;
+  color: var(--color-text);
+  letter-spacing: -1px;
+  margin-bottom: var(--space-lg);
+}
+
+.collections-hero__subtitle {
+  max-width: 520px;
+  margin: 0 auto;
+  font-size: 15px;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+/* Editorial Collections */
+.collections-featured {
+  padding: var(--space-4xl) var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4xl);
+}
+
+.col-editorial {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3xl);
+  align-items: center;
+}
+
+.col-editorial--reverse {
+  direction: rtl;
+}
+
+.col-editorial--reverse > * {
+  direction: ltr;
+}
+
+.col-editorial__image-wrap {
+  aspect-ratio: 4/5;
+  overflow: hidden;
+}
+
+.col-editorial__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+
+.col-editorial__image-wrap:hover .col-editorial__image {
+  transform: scale(1.03);
+}
+
+.col-editorial__content {
+  padding: var(--space-xl);
+}
+
+.col-editorial__eyebrow {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: var(--space-md);
+}
+
+.col-editorial__name {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  font-weight: 400;
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+}
+
+.col-editorial__tagline {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-lg);
+}
+
+.col-editorial__desc {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin-bottom: var(--space-xl);
+}
+
+.col-editorial__cta {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Other Collections Grid */
+.collections-grid-section {
+  padding: 0 var(--space-xl) var(--space-4xl);
+}
+
+.collections-grid-title {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--color-text);
+  margin-bottom: var(--space-2xl);
+}
+
+.collections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-xl);
+}
+
+.collection-card {
+  display: block;
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.collection-card__image-wrap {
+  aspect-ratio: 3/2;
+  overflow: hidden;
+  margin-bottom: var(--space-md);
+}
+
+.collection-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.collection-card:hover .collection-card__image {
+  transform: scale(1.04);
+}
+
+.collection-card__name {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+
+.collection-card__tagline {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .collections-hero {
+    padding: calc(var(--nav-height) + var(--space-2xl)) var(--space-md) var(--space-2xl);
+  }
+
+  .collections-featured {
+    padding: var(--space-2xl) var(--space-md);
+    gap: var(--space-3xl);
+  }
+
+  .col-editorial {
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+
+  .col-editorial--reverse {
+    direction: ltr;
+  }
+
+  .col-editorial__content {
+    padding: 0;
+  }
+
+  .collections-grid-section {
+    padding: 0 var(--space-md) var(--space-2xl);
+  }
+
+  .collections-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .collections-grid {
+    grid-template-columns: 1fr;
+  }
+}
