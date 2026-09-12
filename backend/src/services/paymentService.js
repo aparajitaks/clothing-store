@@ -27,7 +27,7 @@ const paymentService = {
     const amountInPaise = Math.round(amountInInr * 100);
 
     // If Razorpay is configured and not requested as simulation
-    if (paymentService.isConfigured() && !isSimulated) {
+    if (paymentService.isConfigured() && razorpay && !isSimulated) {
       try {
         const rzpOrder = await razorpay.orders.create({
           amount: amountInPaise,
