@@ -16,8 +16,8 @@
 }
 
 .confirm-card {
-  background: #FFFDF9;
-  border: 1px solid #ECE7DE;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 4px;
   max-width: 680px;
   width: 100%;
@@ -31,7 +31,7 @@
   justify-content: center;
   width: 80px;
   height: 80px;
-  background: #F4EFE6;
+  background: #F8F9FA;
   border-radius: 50%;
   margin-bottom: 1.5rem;
 }
@@ -71,7 +71,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
-  background: #F8F5EE;
+  background: #F8F9FA;
   padding: 1.25rem;
   border-radius: 4px;
   margin-bottom: 2.5rem;
@@ -118,7 +118,7 @@
 }
 
 .confirm-address-box {
-  border: 1px solid #ECE7DE;
+  border: 1px solid #E5E7EB;
   border-radius: 4px;
   padding: 1.5rem;
   text-align: left;

@@ -17,7 +17,7 @@
   width: 440px;
   max-width: 90vw;
   height: 100vh;
-  background: #FFFDF9;
+  background: #FFFFFF;
   box-shadow: -15px 0 40px rgba(0, 0, 0, 0.15);
   z-index: 1001;
   display: flex;
@@ -29,7 +29,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem 1.75rem;
-  border-bottom: 1px solid #ECE7DE;
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .cart-drawer__title {
@@ -57,16 +57,16 @@
 
 .cart-drawer__close:hover {
   color: #1A1A1A;
-  background-color: #F4EFE6;
+  background-color: #F8F9FA;
 }
 
 /* Shipping Progress Bar */
 .cart-drawer__shipping-bar {
-  background: #F3ECE3;
+  background: #F8F9FA;
   padding: 0.85rem 1.75rem;
   font-size: 0.8rem;
   color: #4A4A4A;
-  border-bottom: 1px solid var(--color-border, #E8E0D5);
+  border-bottom: 1px solid var(--color-border, #E5E7EB);
 }
 
 .cart-drawer__shipping-bar span {
@@ -82,7 +82,7 @@
 .shipping-progress {
   width: 100%;
   height: 4px;
-  background: #E5DDD3;
+  background: #E5E7EB;
   border-radius: 2px;
   margin-top: 0.5rem;
   overflow: hidden;
@@ -131,7 +131,7 @@
   display: flex;
   gap: 1rem;
   padding-bottom: 1.25rem;
-  border-bottom: 1px solid #F0ECE4;
+  border-bottom: 1px solid #F3F4F6;
 }
 
 .cart-item__image {
@@ -139,7 +139,7 @@
   height: 104px;
   object-fit: cover;
   border-radius: 3px;
-  background: #EAE6DF;
+  background: #E5E7EB;
 }
 
 .cart-item__info {
@@ -213,7 +213,7 @@
 }
 
 .quantity-stepper button:hover:not(:disabled) {
-  background-color: #F4EFE6;
+  background-color: #F8F9FA;
 }
 
 .quantity-stepper button:disabled {
@@ -239,8 +239,8 @@
 /* Footer */
 .cart-drawer__footer {
   padding: 1.5rem 1.75rem;
-  border-top: 1px solid #ECE7DE;
-  background: #FAF7F0;
+  border-top: 1px solid #E5E7EB;
+  background: #FFFFFF;
 }
 
 .cart-drawer__subtotal {
@@ -270,4 +270,34 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+}
+
+@media (max-width: 480px) {
+  .cart-drawer {
+    width: 100vw;
+    max-width: 100vw;
+  }
+  .cart-drawer__header {
+    padding: 1.15rem 1.25rem;
+  }
+  .cart-drawer__footer {
+    padding: 1.15rem 1.25rem;
+  }
+  .cart-drawer__items {
+    padding: 1rem 1.25rem;
+  }
+  .cart-drawer__shipping-bar {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.75rem;
+  }
+  .cart-drawer__title {
+    font-size: 1.2rem;
+  }
+  .cart-item__image {
+    width: 68px;
+    height: 88px;
+  }
+  .cart-item__name {
+    font-size: 1rem;
+  }
 }

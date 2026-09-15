@@ -10,7 +10,7 @@ const CATEGORY_META = {
   'everyday-kurtas': {
     title: 'Everyday Kurtas',
     desc: 'Effortlessly wearable kurtas in breathable cotton and linen — designed for daily elegance from morning to evening.',
-    banner: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1600',
+    banner: '/hero_luxury.jpg',
   },
   'embroidered-kurtas': {
     title: 'Embroidered Kurtas',
@@ -41,7 +41,7 @@ const CATEGORY_META = {
   'kurtas-suits': {
     title: 'Kurtas & Suits',
     desc: 'Explore our full kurta collection — from everyday cotton to festive embroidered pieces.',
-    banner: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1600',
+    banner: '/hero_luxury.jpg',
   },
 };
 

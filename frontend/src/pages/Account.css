@@ -9,7 +9,7 @@
 
 .account-header {
   margin-bottom: 2.5rem;
-  border-bottom: 1px solid #ECE7DE;
+  border-bottom: 1px solid #E5E7EB;
   padding-bottom: 1.25rem;
 }
 
@@ -39,8 +39,8 @@
 }
 
 .account-user-card {
-  background: #FFFDF9;
-  border: 1px solid #ECE7DE;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 4px;
   padding: 2rem;
   text-align: center;
@@ -78,7 +78,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  background: #F4EFE6;
+  background: #F8F9FA;
   color: #8C6A2E;
   font-size: 0.72rem;
   font-weight: 600;
@@ -90,8 +90,8 @@
 }
 
 .account-nav-links {
-  background: #FFFDF9;
-  border: 1px solid #ECE7DE;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 4px;
   overflow: hidden;
 }
@@ -104,7 +104,7 @@
   color: #4A4A4A;
   text-decoration: none;
   font-size: 0.88rem;
-  border-bottom: 1px solid #F0ECE4;
+  border-bottom: 1px solid #F3F4F6;
   background: none;
   border-top: none;
   border-left: none;
@@ -120,7 +120,7 @@
 }
 
 .account-nav-item:hover {
-  background: #F8F5EE;
+  background: #F8F9FA;
   color: #1A1A1A;
 }
 
@@ -129,8 +129,8 @@
 }
 
 .account-card {
-  background: #FFFDF9;
-  border: 1px solid #ECE7DE;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 4px;
   padding: 2.5rem;
 }
@@ -194,7 +194,7 @@
   height: 48px;
   padding: 0 1rem 0 48px !important; /* !important overrides Admin.css
                                          .form-group input { padding } */
-  border: 1px solid #D9D4C7;
+  border: 1px solid #E5E7EB;
   border-radius: 3px;
   background: #FFF;
   font-family: inherit;
@@ -215,7 +215,7 @@
 }
 
 .input-disabled {
-  background: #F4EFE6 !important;
+  background: #F8F9FA !important;
   color: #7A766E !important;
   cursor: not-allowed;
 }
@@ -237,5 +237,28 @@
   .account-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .account-page {
+    padding-top: calc(var(--nav-height, 66px) + 1.25rem);
+    padding-bottom: 3.5rem;
+  }
+  .account-header h1 {
+    font-size: 2rem;
+  }
+  .account-user-card {
+    padding: 1.25rem 1rem;
+  }
+  .account-content {
+    padding: 1.25rem 1rem;
+  }
+  .account-save-btn {
+    width: 100%;
+  }
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }

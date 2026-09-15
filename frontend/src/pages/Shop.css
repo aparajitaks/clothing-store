@@ -46,7 +46,7 @@
   flex-wrap: wrap;
   gap: 1.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid #ECE7DE;
+  border-bottom: 1px solid #E5E7EB;
   margin-bottom: 1.5rem;
 }
 
@@ -58,7 +58,7 @@
 
 .shop-category-btn {
   background: none;
-  border: 1px solid #E2DCD1;
+  border: 1px solid #E5E7EB;
   padding: 0.55rem 1.15rem;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.75rem;
@@ -105,7 +105,7 @@
 .search-input {
   padding: 0.55rem 1rem 0.55rem 2.2rem;
   font-size: 0.82rem;
-  border: 1px solid #D9D4C7;
+  border: 1px solid #E5E7EB;
   border-radius: 20px;
   background: #FFF;
   font-family: inherit;
@@ -127,7 +127,7 @@
 }
 
 .sort-select {
-  border: 1px solid #D9D4C7;
+  border: 1px solid #E5E7EB;
   border-radius: 20px;
   padding: 0.55rem 1.25rem 0.55rem 0.75rem;
   background: #FFF;
@@ -203,6 +203,15 @@
     overflow-x: auto;
     padding-bottom: 0.5rem;
     flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .shop-categories::-webkit-scrollbar {
+    display: none;
+  }
+  .shop-category-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
   }
   .shop-filters {
     width: 100%;
@@ -213,6 +222,41 @@
   }
   .search-input {
     width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .shop-page {
+    padding-top: calc(var(--nav-height, 66px) + 1.25rem);
+    padding-bottom: 3.5rem;
+  }
+  .shop-title {
+    font-size: 2rem;
+  }
+  .shop-subtitle {
+    font-size: 0.82rem;
+  }
+  .shop-filters {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .search-input-wrap {
+    width: 100%;
+  }
+  .sort-wrap {
+    width: 100%;
+  }
+  .sort-select {
+    width: 100%;
+    padding: 0.5rem 1rem;
+  }
+  .shop-category-btn {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.7rem;
+  }
+  .shop-count {
+    font-size: 0.75rem;
+    margin-bottom: 1.25rem;
   }
 }
 

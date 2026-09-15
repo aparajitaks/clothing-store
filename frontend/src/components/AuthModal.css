@@ -25,7 +25,7 @@
 /* ── Modal Card ───────────────────────────────────────────── */
 .auth-modal {
   position: relative;
-  background: #FFFDF9;
+  background: #FFFFFF;
   border-radius: 4px;
   width: 100%;
   max-width: 440px;
@@ -53,7 +53,7 @@
 
 .auth-modal__close:hover {
   color: #1A1A1A;
-  background: #F4EFE6;
+  background: #F8F9FA;
 }
 
 /* ── Header ───────────────────────────────────────────────── */
@@ -158,9 +158,9 @@
   box-sizing: border-box;             /* ensures padding is included in width */
   height: 48px;
   padding: 0 16px 0 52px;            /* left: 52px clears the 16px icon */
-  border: 1px solid #D9D4C7;
+  border: 1px solid #E5E7EB;
   border-radius: 3px;
-  background: #FDFBF7;
+  background: #FFFFFF;
   font-family: inherit;
   font-size: 0.9rem;
   line-height: 48px;
@@ -210,4 +210,21 @@
 @keyframes spin {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
+}
+
+@media (max-width: 480px) {
+  .auth-overlay {
+    padding: 0.75rem;
+  }
+  .auth-modal {
+    padding: 1.75rem 1.25rem;
+    max-width: 100%;
+  }
+  .auth-modal__title {
+    font-size: 1.45rem;
+  }
+  .auth-modal__input-wrap input {
+    font-size: 16px;
+    padding: 0.75rem 0.85rem;
+  }
 }

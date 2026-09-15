@@ -11,7 +11,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #ECE7DE;
+  border-bottom: 1px solid #E5E7EB;
   padding-bottom: 1.25rem;
   margin-bottom: 2.5rem;
 }
@@ -57,8 +57,8 @@
 }
 
 .checkout-card {
-  background: #FFFDF9;
-  border: 1px solid #ECE7DE;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 4px;
   padding: 2.25rem;
   margin-bottom: 2rem;
@@ -97,7 +97,7 @@
   border: 1.5px solid #1A1A1A;
   border-radius: 4px;
   padding: 1.25rem;
-  background: #FDFBF7;
+  background: #FFFFFF;
 }
 
 .payment-radio {
@@ -125,8 +125,8 @@
 
 /* Order Review Box */
 .checkout-summary-card {
-  background: #FDFBF7;
-  border: 1px solid #ECE7DE;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 4px;
   padding: 2rem;
   position: sticky;
@@ -220,10 +220,10 @@
 .promo-input-wrap input {
   width: 100%;
   padding: 0.55rem 0.75rem 0.55rem 2.2rem;
-  border: 1px solid #D9D4C7;
+  border: 1px solid #E5E7EB;
   border-radius: 3px;
   font-size: 0.82rem;
-  background: #FDFBF7;
+  background: #FFFFFF;
   letter-spacing: 0.04em;
 }
 
@@ -295,8 +295,8 @@
   justify-content: space-between;
   font-size: 0.78rem;
   color: #8C887B;
-  background: #FDFBF7;
-  border: 1px dashed #D9D4C7;
+  background: #F8F9FA;
+  border: 1px dashed #E5E7EB;
   border-radius: 3px;
   padding: 0.5rem 0.75rem;
   margin: 0.5rem 0;
@@ -310,5 +310,35 @@
   .form-row, .form-row-3 {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .checkout-page {
+    padding-top: calc(var(--nav-height, 66px) + 1.25rem);
+    padding-bottom: 3.5rem;
+  }
+  .checkout-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1.75rem;
+  }
+  .checkout-title {
+    font-size: 1.85rem;
+  }
+  .checkout-section {
+    padding: 1.25rem 1rem;
+  }
+  .form-group input,
+  .form-group select {
+    font-size: 16px;
+    padding: 0.65rem 0.85rem;
+  }
+  .payment-option {
+    padding: 1rem 0.85rem;
+  }
+  .order-summary-box {
+    padding: 1.25rem 1rem;
   }
 }

@@ -17,11 +17,11 @@ const FALLBACK_FEATURED = [
     price: 6499,
     compare_price: 7999,
     images: [
-      { url: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800', isPrimary: true },
+      { url: '/hero_luxury.jpg', isPrimary: true },
       { url: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800' },
     ],
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
-    colors: [{ name: 'Ivory Mist', hex: '#FAF7F2' }, { name: 'Soft Sage', hex: '#9CAF88' }],
+    colors: [{ name: 'Ivory Mist', hex: '#FFFFFF' }, { name: 'Soft Sage', hex: '#9CAF88' }],
     stock: 47,
     is_featured: true,
     categories: { name: 'Kurta Sets' },
@@ -36,7 +36,7 @@ const FALLBACK_FEATURED = [
       { url: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800', isPrimary: true },
     ],
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
-    colors: [{ name: 'Blush Rose', hex: '#E8C5C8' }, { name: 'Deep Emerald', hex: '#1B4332' }],
+    colors: [{ name: 'Champagne Mist', hex: '#EDE8DF' }, { name: 'Deep Emerald', hex: '#1B4332' }],
     stock: 37,
     is_featured: true,
     categories: { name: 'Embroidered Kurtas' },
@@ -128,9 +128,9 @@ const COLOR_STORIES = [
     link: '/category/festive-kurtas',
   },
   {
-    name: 'Rose & Blush',
-    shade: 'Gulabi, Coral & Peach',
-    image: 'https://www.biba.in/dw/image/v2/BKQK_PRD/on/demandware.static/-/Library-Sites-BibaSharedLibrary/en_US/dw40087686/A-A-SS26/Pink.png',
+    name: 'Champagne & Gold',
+    shade: 'Ecru, Zari & Honey',
+    image: 'https://www.biba.in/dw/image/v2/BKQK_PRD/on/demandware.static/-/Library-Sites-BibaSharedLibrary/en_US/dw0494d244/A-A-SS26/Fusion_INTL-n.png',
     link: '/category/kurta-sets',
   },
   {
@@ -176,7 +176,7 @@ const TREND_STORIES = [
   {
     title: 'The Tailored Trouser Set',
     subtitle: 'Structured Shoulders & Fluid Drapes',
-    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&q=80&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=80&auto=format&fit=crop',
     link: '/category/kurta-sets',
   },
 ];
@@ -230,14 +230,14 @@ export default function HomePage() {
           <picture className="biba-hero__picture">
             <source
               media="(max-width: 768px)"
-              srcSet="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=900&q=85&auto=format&fit=crop"
+              srcSet="/hero_luxury.jpg"
             />
             <source
               media="(min-width: 769px)"
-              srcSet="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1920&q=85&auto=format&fit=crop"
+              srcSet="/hero_luxury.jpg"
             />
             <img
-              src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1920&q=85&auto=format&fit=crop"
+              src="/hero_luxury.jpg"
               alt="TEYA COLLECTIONS Autumn Winter Collection"
               className="biba-hero__image"
             />

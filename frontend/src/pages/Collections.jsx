@@ -11,7 +11,7 @@ const FALLBACK_COLLECTIONS = [
     name: 'The Everyday Edit',
     tagline: 'Kurtas designed for effortless daily wear',
     description: 'A curated selection of breathable, beautifully draped kurtas that move with you through every part of your day.',
-    image_url: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1200',
+    image_url: '/hero_luxury.jpg',
     is_featured: true,
   },
   {

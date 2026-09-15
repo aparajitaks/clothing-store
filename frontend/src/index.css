@@ -8,16 +8,16 @@
 /* ─── CSS Custom Properties ─────────────────────────────── */
 :root {
   /* Colors aligned with haute-couture logo */
-  --color-bg:          #FAF7F2;
-  --color-bg-alt:      #F3ECE2;
+  --color-bg:          #FFFFFF;
+  --color-bg-alt:      #F8F9FA;
   --color-surface:     #FFFFFF;
-  --color-border:      #E8E0D5;
+  --color-border:      #E5E7EB;
   --color-text:        #121212;
   --color-text-muted:  #6A635B;
   --color-text-light:  #9C9388;
   --color-gold:        #A88B58;
   --color-gold-dark:   #866E40;
-  --color-gold-light:  #E8DFC8;
+  --color-gold-light:  #F0EAE1;
   --color-black:       #121212;
   --color-error:       #C0392B;
   --color-success:     #27AE60;
@@ -59,6 +59,18 @@
   --nav-height: 92px;
 }
 
+@media (max-width: 900px) {
+  :root {
+    --nav-height: 78px;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --nav-height: 66px;
+  }
+}
+
 /* ─── Reset ──────────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -70,6 +82,8 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 body {
@@ -79,6 +93,7 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   overflow-x: hidden;
+  width: 100%;
 }
 
 img, video {
@@ -162,12 +177,55 @@ h1, h2, h3, h4, h5, h6 {
   .container { padding: 0 var(--space-md); }
 }
 
+@media (max-width: 480px) {
+  .container { padding: 0 0.85rem; }
+}
+
 .section {
   padding: var(--space-4xl) 0;
 }
 
 @media (max-width: 768px) {
   .section { padding: var(--space-3xl) 0; }
+}
+
+@media (max-width: 480px) {
+  .section { padding: var(--space-2xl) 0; }
+}
+
+/* ─── Shared Products Grid ───────────────────────────────── */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.75rem;
+}
+
+@media (max-width: 1200px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 860px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+  }
+}
+
+@media (max-width: 330px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
 }
 
 /* ─── Buttons ────────────────────────────────────────────── */

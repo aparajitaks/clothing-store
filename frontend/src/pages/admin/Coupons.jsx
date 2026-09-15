@@ -197,7 +197,7 @@ export default function AdminCoupons() {
                         <td>{c.min_order_amount ? `₹${c.min_order_amount}` : 'None'}</td>
                         <td>
                           {c.usage_count ?? 0} / {c.usage_limit ?? '∞'}
-                          <div style={{ marginTop: '4px', background: '#ECE7DE', borderRadius: '2px', height: '4px', width: '80px' }}>
+                          <div style={{ marginTop: '4px', background: '#E5E7EB', borderRadius: '2px', height: '4px', width: '80px' }}>
                             <div
                               style={{
                                 height: '100%',

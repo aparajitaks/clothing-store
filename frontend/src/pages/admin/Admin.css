@@ -39,7 +39,7 @@
 
 .admin-stat-card {
   background: #FFF;
-  border: 1px solid #ECE7DE;
+  border: 1px solid #E5E7EB;
   border-radius: 4px;
   padding: 1.5rem;
   display: flex;
@@ -92,7 +92,7 @@
 /* Section Card */
 .admin-section-card {
   background: #FFF;
-  border: 1px solid #ECE7DE;
+  border: 1px solid #E5E7EB;
   border-radius: 4px;
   padding: 1.75rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
@@ -186,13 +186,13 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #8C887B;
-  border-bottom: 1px solid #ECE7DE;
-  background: #FDFBF7;
+  border-bottom: 1px solid #E5E7EB;
+  background: #F8F9FA;
 }
 
 .admin-table td {
   padding: 1rem;
-  border-bottom: 1px solid #F4EFE6;
+  border-bottom: 1px solid #F3F4F6;
   color: #333;
 }
 
@@ -255,7 +255,7 @@
 }
 
 .table-action-btn:hover {
-  background: #F4EFE6;
+  background: #F8F9FA;
   color: #1A1A1A;
 }
 
@@ -268,14 +268,14 @@
   padding: 4px 8px;
   font-size: 0.75rem;
   border-radius: 3px;
-  border: 1px solid #D9D4C7;
+  border: 1px solid #E5E7EB;
   cursor: pointer;
 }
 
 /* Modal */
 .admin-modal {
   position: relative;
-  background: #FFFDF9;
+  background: #FFFFFF;
   border-radius: 4px;
   width: 100%;
   max-width: 650px;
@@ -332,14 +332,14 @@
   align-items: center;
   gap: 0.75rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #ECE7DE;
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .inspect-items-list {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  border-bottom: 1px solid #ECE7DE;
+  border-bottom: 1px solid #E5E7EB;
   padding-bottom: 1rem;
 }
 
@@ -370,7 +370,7 @@
 .total-row {
   font-size: 1.05rem;
   font-weight: 700;
-  border-top: 1px solid #ECE7DE;
+  border-top: 1px solid #E5E7EB;
   padding-top: 0.5rem;
   margin-top: 0.25rem;
 }
@@ -407,7 +407,7 @@
   gap: 0.4rem;
   padding: 0.6rem 1.25rem;
   background: transparent;
-  border: 1px solid #D9D4C7;
+  border: 1px solid #E5E7EB;
   border-radius: 3px;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.8rem;
@@ -418,7 +418,7 @@
 }
 
 .btn-secondary:hover {
-  background: #F4EFE6;
+  background: #F8F9FA;
   border-color: #C9A96E;
   color: #1A1A1A;
 }
@@ -443,10 +443,10 @@
 .form-group textarea,
 .form-group select {
   padding: 0.65rem 0.9rem;
-  border: 1px solid #D9D4C7;
+  border: 1px solid #E5E7EB;
   border-radius: 3px;
   font-size: 0.85rem;
-  background: #FDFBF7;
+  background: #FFFFFF;
   color: #1A1A1A;
   transition: border-color 0.2s;
 }

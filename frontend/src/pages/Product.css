@@ -75,7 +75,7 @@
   overflow: hidden;
   border: 1px solid transparent;
   padding: 0;
-  background: #F4EFE6;
+  background: #F8F9FA;
   cursor: pointer;
   transition: border-color 0.2s ease, opacity 0.2s ease;
 }
@@ -99,7 +99,7 @@
   aspect-ratio: 3 / 4;
   border-radius: 4px;
   overflow: hidden;
-  background: #F4EFE6;
+  background: #F8F9FA;
 }
 
 .pdp-main-image {
@@ -209,7 +209,7 @@
   height: 32px;
   border-radius: 50%;
   border: 2px solid #FFF;
-  outline: 1px solid #D9D4C7;
+  outline: 1px solid #E5E7EB;
   cursor: pointer;
   transition: transform 0.2s ease, outline-color 0.2s ease;
 }
@@ -227,7 +227,7 @@
 
 .pdp-size-btn {
   background: #FFF;
-  border: 1px solid #D9D4C7;
+  border: 1px solid #E5E7EB;
   min-width: 48px;
   height: 42px;
   padding: 0 12px;
@@ -267,7 +267,7 @@
 .pdp-wishlist-btn {
   width: 48px;
   height: 48px;
-  border: 1px solid #D9D4C7;
+  border: 1px solid #E5E7EB;
   border-radius: 2px;
   background: #FFF;
   display: flex;
@@ -304,7 +304,7 @@
 .pdp-qty-stepper {
   display: inline-flex;
   align-items: center;
-  border: 1px solid #D9D4C7;
+  border: 1px solid #E5E7EB;
   border-radius: 2px;
   background: #FFF;
   height: 48px;
@@ -322,7 +322,7 @@
 }
 
 .pdp-qty-stepper button:hover {
-  background-color: #F4EFE6;
+  background-color: #F8F9FA;
 }
 
 .pdp-qty-stepper span {
@@ -349,7 +349,7 @@
   flex-direction: column;
   gap: 0.85rem;
   padding: 1.5rem;
-  background: #F9F6F0;
+  background: #F8F9FA;
   border-radius: 4px;
   margin-bottom: 2rem;
 }
@@ -369,11 +369,11 @@
 
 /* Accordions */
 .pdp-accordions {
-  border-top: 1px solid #ECE7DE;
+  border-top: 1px solid #E5E7EB;
 }
 
 .pdp-accordion-item {
-  border-bottom: 1px solid #ECE7DE;
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .pdp-accordion-trigger {
@@ -412,7 +412,7 @@
 @media (max-width: 990px) {
   .pdp-grid {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
   }
   .pdp-gallery {
     position: static;
@@ -422,8 +422,66 @@
     flex-direction: row;
     width: 100%;
     overflow-x: auto;
+    padding-bottom: 4px;
   }
   .pdp-thumb {
-    width: 70px;
+    width: 68px;
+    height: 85px;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .product-detail-page {
+    padding-top: calc(var(--nav-height, 66px) + 1.25rem);
+    padding-bottom: 3.5rem;
+  }
+  .pdp-breadcrumb {
+    margin-bottom: 1.25rem;
+    font-size: 0.72rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 4px;
+  }
+  .pdp-grid {
+    gap: 1.5rem;
+  }
+  .pdp-thumb {
+    width: 56px;
+    height: 70px;
+  }
+  .pdp-title {
+    font-size: 1.65rem;
+    line-height: 1.2;
+  }
+  .pdp-price {
+    font-size: 1.35rem;
+  }
+  .pdp-actions {
+    gap: 0.5rem;
+  }
+  .pdp-actions .biba-btn {
+    flex: 1;
+    padding: 0.85rem 0.75rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+  }
+  .pdp-wishlist-btn {
+    width: 44px;
+    height: 44px;
+  }
+  .pdp-buy-btn {
+    padding: 0.85rem 1rem;
+    font-size: 0.75rem;
+  }
+  .pdp-size-btn {
+    min-width: 44px;
+    height: 42px;
+    font-size: 0.8rem;
+    padding: 0 8px;
+  }
+  .pdp-accordion-header {
+    padding: 0.9rem 0;
+    font-size: 0.8rem;
   }
 }

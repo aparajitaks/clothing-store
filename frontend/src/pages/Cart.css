@@ -12,7 +12,7 @@
   align-items: baseline;
   gap: 1rem;
   margin-bottom: 2.5rem;
-  border-bottom: 1px solid #ECE7DE;
+  border-bottom: 1px solid #E5E7EB;
   padding-bottom: 1rem;
 }
 
@@ -62,7 +62,7 @@
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #ECE7DE;
+  border-bottom: 1px solid #E5E7EB;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.75rem;
   font-weight: 600;
@@ -76,7 +76,7 @@
   grid-template-columns: 2fr 1fr 1fr;
   align-items: center;
   padding: 1.75rem 0;
-  border-bottom: 1px solid #F0ECE4;
+  border-bottom: 1px solid #F3F4F6;
 }
 
 .cart-row__product {
@@ -178,8 +178,8 @@
 
 /* Order Summary Box */
 .cart-summary {
-  background: #FDFBF7;
-  border: 1px solid #ECE7DE;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 4px;
   padding: 2rem;
 }
@@ -208,7 +208,7 @@
 
 .summary-divider {
   height: 1px;
-  background: #EAE6DF;
+  background: #E5E7EB;
   margin: 1.25rem 0;
 }
 
@@ -235,7 +235,7 @@
   width: 100%;
   padding: 0.6rem 0.75rem 0.6rem 2.2rem;
   font-size: 0.8rem;
-  border: 1px solid #D9D4C7;
+  border: 1px solid #E5E7EB;
   border-radius: 2px;
   background: #FFF;
   text-transform: uppercase;
@@ -263,8 +263,8 @@
 
 /* GST Breakdown */
 .summary-gst-box {
-  background: #FDFBF7;
-  border: 1px dashed #D9D4C7;
+  background: #F8F9FA;
+  border: 1px dashed #E5E7EB;
   border-radius: 4px;
   padding: 0.75rem;
   margin: 0.5rem 0;
@@ -367,7 +367,7 @@
 @media (max-width: 900px) {
   .cart-grid {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
   }
   .cart-table-head {
     display: none;
@@ -396,5 +396,38 @@
     text-align: left;
     padding: 0;
     cursor: pointer;
+  }
+}
+
+@media (max-width: 600px) {
+  .cart-page {
+    padding-top: calc(var(--nav-height, 66px) + 1.25rem);
+    padding-bottom: 3.5rem;
+  }
+  .cart-title {
+    font-size: 2rem;
+  }
+  .cart-header {
+    margin-bottom: 1.5rem;
+  }
+  .cart-row__img {
+    width: 72px;
+    height: 92px;
+  }
+  .cart-row__product {
+    gap: 0.75rem;
+  }
+  .cart-row__name {
+    font-size: 1.05rem;
+  }
+  .order-summary-box {
+    padding: 1.25rem 1rem;
+  }
+  .coupon-form {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .coupon-btn {
+    width: 100%;
   }
 }
