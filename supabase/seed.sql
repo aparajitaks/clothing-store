@@ -156,4 +156,15 @@ insert into public.products (name, slug, category_id, description, price, compar
     '["L","XL","XXL"]',
     '[{"name":"Midnight Navy","hex":"#182449"}]',
     45, true
+  ),
+  (
+    'Champagne Beige Kalamkari Kurta Set',
+    'beige-teal-kalamkari-kurta-set',
+    '11111111-0000-0000-0000-000000000001',
+    'An exquisite three-piece champagne beige jacquard kurta set accented with a teal floral embroidered yoke framed by real mirrorwork, intricate beaded three-quarter sleeve cuffs, and Kalamkari-inspired teal print along the tassel-trimmed hem. Completed with tailored beige trousers and a luminous Kalamkari floral printed silk-blend dupatta with antique zari woven borders.',
+    2294.00, 2699.00,
+    '[{"url":"/products/beige-teal-kalamkari-kurta-set/front.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/beige-teal-kalamkari-kurta-set/back.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Back View","type":"image"},{"url":"/products/beige-teal-kalamkari-kurta-set/left.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Left Side Profile","type":"image"},{"url":"/products/beige-teal-kalamkari-kurta-set/drape.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Dupatta Drape","type":"image"},{"url":"/products/beige-teal-kalamkari-kurta-set/detail.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Yoke Mirrorwork Detail","type":"image"},{"url":"/products/beige-teal-kalamkari-kurta-set/video.mp4","poster":"/products/beige-teal-kalamkari-kurta-set/video-poster.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Model Video Shoot","type":"video"}]',
+    '["L","XL","3XL"]',
+    '[{"name":"Beige & Teal","hex":"#CBB99B"}]',
+    45, true
   );
