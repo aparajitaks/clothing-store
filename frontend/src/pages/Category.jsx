@@ -4,6 +4,7 @@ import { ChevronRight, ArrowLeft } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { supabase } from '../lib/supabase';
 import api from '../lib/axios';
+import { DEFAULT_PRODUCTS } from '../data/products';
 import './Shop.css';
 
 const CATEGORY_META = {
@@ -74,9 +75,21 @@ export default function CategoryPage() {
           .eq('categories.slug', slug)
           .eq('is_active', true);
 
-        if (data) setProducts(data);
+        if (data && data.length > 0) {
+          setProducts(data);
+          return;
+        }
+
+        const filtered = DEFAULT_PRODUCTS.filter(
+          (p) => (p.categories && p.categories.slug === slug) || p.category_slug === slug
+        );
+        setProducts(filtered.length > 0 ? filtered : DEFAULT_PRODUCTS);
       } catch (err) {
         console.warn('Fallback category load:', err);
+        const filtered = DEFAULT_PRODUCTS.filter(
+          (p) => (p.categories && p.categories.slug === slug) || p.category_slug === slug
+        );
+        setProducts(filtered.length > 0 ? filtered : DEFAULT_PRODUCTS);
       } finally {
         setLoading(false);
       }

@@ -40,12 +40,30 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
+// Stricter limit for coupon validation — prevents brute-force enumeration
+const couponLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many coupon attempts, please try again later.' },
+});
+
+// Stricter limit for order creation — prevents order flooding
+const orderLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many order attempts, please try again later.' },
+});
+
 // ─── Webhook route MUST come before body parser (raw body needed for HMAC) ──
 app.use('/api/webhooks', webhookRoutes);
 
 // ─── Body Parsers ────────────────────────────────────────────
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '2mb' }));
+app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 
 // ─── Logging ─────────────────────────────────────────────────
 if (process.env.NODE_ENV !== 'test') {
@@ -66,7 +84,11 @@ app.use('/api/admin',      adminRoutes);
 app.use('/api/profiles',   profileRoutes);
 app.use('/api/wishlist',   wishlistRoutes);
 app.use('/api/reviews',    reviewRoutes);
+// Apply coupon rate limiter before coupon routes
+app.use('/api/coupons/validate', couponLimiter);
 app.use('/api/coupons',    couponRoutes);
+// Apply order rate limiter to creation endpoint
+app.use('/api/orders/create', orderLimiter);
 app.use('/api/shipping',   shippingRoutes);
 app.use('/api/settings',   settingsRoutes);
 

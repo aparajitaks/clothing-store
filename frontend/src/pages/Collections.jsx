@@ -2,46 +2,10 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import api from '../lib/axios';
+import { DEFAULT_COLLECTIONS } from '../data/products';
 import './Collections.css';
 
-const FALLBACK_COLLECTIONS = [
-  {
-    id: 'col-1',
-    slug: 'everyday-edit',
-    name: 'The Everyday Edit',
-    tagline: 'Kurtas designed for effortless daily wear',
-    description: 'A curated selection of breathable, beautifully draped kurtas that move with you through every part of your day.',
-    image_url: '/hero_luxury.jpg',
-    is_featured: true,
-  },
-  {
-    id: 'col-2',
-    slug: 'festive-noor',
-    name: 'Festive Noor',
-    tagline: 'Luminous kurtas for celebrations',
-    description: 'Rich embroidery, jewel tones, and heirloom craftsmanship — designed to shine at every occasion.',
-    image_url: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=1200',
-    is_featured: true,
-  },
-  {
-    id: 'col-3',
-    slug: 'craft-weave',
-    name: 'Craft & Weave',
-    tagline: 'Honoring India\'s handloom heritage',
-    description: 'Handwoven Chanderi, hand-block prints, and hand-embroidered Chanderi sets from artisans across India.',
-    image_url: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=1200',
-    is_featured: true,
-  },
-  {
-    id: 'col-4',
-    slug: 'new-arrivals',
-    name: 'New Arrivals',
-    tagline: 'Fresh kurtas, just landed',
-    description: 'The latest additions to the Teya Collections kurta wardrobe.',
-    image_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1200',
-    is_featured: false,
-  },
-];
+const FALLBACK_COLLECTIONS = DEFAULT_COLLECTIONS;
 
 export default function CollectionsPage() {
   const [collections, setCollections] = useState(FALLBACK_COLLECTIONS);

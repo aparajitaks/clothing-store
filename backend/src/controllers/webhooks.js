@@ -11,12 +11,16 @@ const razorpayWebhook = async (req, res) => {
     const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
     const signature     = req.headers['x-razorpay-signature'];
 
-    if (!webhookSecret || !signature) {
+    if (!webhookSecret || !signature || webhookSecret.includes('xxxx')) {
       console.warn('Webhook: missing secret or signature header');
-      return res.status(400).json({ success: false });
+      return res.status(400).json({ success: false, message: 'Webhook not configured' });
     }
 
-    // Verify HMAC
+    if (!supabase) {
+      console.warn('Webhook: Supabase client unavailable in fallback mode, skipping processing');
+      return res.status(200).json({ success: true, message: 'Accepted (fallback mode)' });
+    }
+
     const expectedSig = crypto
       .createHmac('sha256', webhookSecret)
       .update(req.rawBody)
@@ -31,19 +35,19 @@ const razorpayWebhook = async (req, res) => {
     const eventId   = event.id;
     const eventType = event.event;
 
-    // Idempotency — skip already-processed events
-    const { data: existing } = await supabase
-      .from('webhook_events')
-      .select('id, processed')
-      .eq('event_id', eventId)
-      .single();
+    try {
+      const { data: existing } = await supabase
+        .from('webhook_events')
+        .select('id, processed')
+        .eq('event_id', eventId)
+        .single();
 
-    if (existing?.processed) {
-      console.log(`Webhook: event ${eventId} already processed, skipping`);
-      return res.status(200).json({ success: true });
-    }
+      if (existing?.processed) {
+        console.log(`Webhook: event ${eventId} already processed, skipping`);
+        return res.status(200).json({ success: true });
+      }
+    } catch (e) { /* not found — continue */ }
 
-    // Store the event
     await supabase
       .from('webhook_events')
       .upsert({
@@ -53,7 +57,6 @@ const razorpayWebhook = async (req, res) => {
         processed:  false,
       }, { onConflict: 'event_id' });
 
-    // Handle event types
     if (eventType === 'payment.captured') {
       await handlePaymentCaptured(event);
     } else if (eventType === 'payment.failed') {
@@ -62,7 +65,6 @@ const razorpayWebhook = async (req, res) => {
       await handleRefund(event);
     }
 
-    // Mark event as processed
     await supabase
       .from('webhook_events')
       .update({ processed: true, processed_at: new Date().toISOString() })
@@ -71,30 +73,33 @@ const razorpayWebhook = async (req, res) => {
     return res.status(200).json({ success: true });
   } catch (err) {
     console.error('Webhook error:', err);
-    // Return 200 to prevent Razorpay retrying on our internal errors
     return res.status(200).json({ success: false, message: 'Internal error' });
   }
 };
 
 async function handlePaymentCaptured(event) {
+  if (!supabase) return;
   const payment = event.payload?.payment?.entity;
   if (!payment) return;
 
   const razorpayOrderId  = payment.order_id;
   const razorpayPaymentId = payment.id;
 
-  const { data: order } = await supabase
-    .from('orders')
-    .select('id, status, order_items(*)')
-    .eq('razorpay_order_id', razorpayOrderId)
-    .single();
+  let order;
+  try {
+    const { data } = await supabase
+      .from('orders')
+      .select('id, status, order_items(*)')
+      .eq('razorpay_order_id', razorpayOrderId)
+      .single();
+    order = data;
+  } catch (e) { /* not found */ }
 
   if (!order) {
     console.warn(`Webhook: order not found for razorpay_order_id=${razorpayOrderId}`);
     return;
   }
 
-  // Idempotent — only update if not already paid
   if (order.status === 'paid' || order.status === 'processing' || order.status === 'shipped' || order.status === 'delivered') {
     console.log(`Webhook: order ${order.id} already in status ${order.status}, skipping`);
     return;
@@ -109,14 +114,35 @@ async function handlePaymentCaptured(event) {
     })
     .eq('id', order.id);
 
-  // Decrement stock for each item
+  // Deduct stock atomically using a database RPC (prevents race conditions)
+  // Falls back to simple update if RPC is not available
   for (const item of order.order_items || []) {
     if (item.product_id) {
-      await supabase
-        .from('products')
-        .update({ stock: supabase.raw(`stock - ${item.quantity}`) })
-        .eq('id', item.product_id)
-        .gt('stock', 0);
+      try {
+        // Use rpc for atomic decrement; if the function doesn't exist, use manual approach
+        const { error: rpcError } = await supabase.rpc('decrement_stock', {
+          p_product_id: item.product_id,
+          p_quantity: item.quantity,
+        });
+
+        if (rpcError) {
+          // Fallback: read current stock and update (non-atomic but better than nothing)
+          const { data: prod } = await supabase
+            .from('products')
+            .select('stock')
+            .eq('id', item.product_id)
+            .single();
+
+          if (prod && prod.stock > 0) {
+            await supabase
+              .from('products')
+              .update({ stock: Math.max(0, prod.stock - item.quantity) })
+              .eq('id', item.product_id);
+          }
+        }
+      } catch (e) {
+        console.warn(`Stock decrement failed for product ${item.product_id}:`, e.message);
+      }
     }
   }
 
@@ -124,14 +150,19 @@ async function handlePaymentCaptured(event) {
 }
 
 async function handlePaymentFailed(event) {
+  if (!supabase) return;
   const payment = event.payload?.payment?.entity;
   if (!payment) return;
 
-  const { data: order } = await supabase
-    .from('orders')
-    .select('id, status')
-    .eq('razorpay_order_id', payment.order_id)
-    .single();
+  let order;
+  try {
+    const { data } = await supabase
+      .from('orders')
+      .select('id, status')
+      .eq('razorpay_order_id', payment.order_id)
+      .single();
+    order = data;
+  } catch (e) { /* not found */ }
 
   if (!order || order.status === 'paid') return;
 
@@ -144,14 +175,19 @@ async function handlePaymentFailed(event) {
 }
 
 async function handleRefund(event) {
+  if (!supabase) return;
   const refund = event.payload?.refund?.entity;
   if (!refund) return;
 
-  const { data: order } = await supabase
-    .from('orders')
-    .select('id')
-    .eq('razorpay_payment_id', refund.payment_id)
-    .single();
+  let order;
+  try {
+    const { data } = await supabase
+      .from('orders')
+      .select('id')
+      .eq('razorpay_payment_id', refund.payment_id)
+      .single();
+    order = data;
+  } catch (e) { /* not found */ }
 
   if (!order) return;
 

@@ -14,8 +14,10 @@ export default function AdminRoute() {
     );
   }
 
-  // Allow if user is admin, or during dev/preview mode if profile role is admin
-  if (!user || profile?.role !== 'admin') {
+  // Strictly require DB role = 'admin' — no email shortcut, no blanket DEV bypass
+  const isAdmin = profile?.role === 'admin';
+
+  if (!user || !isAdmin) {
     return <Navigate to="/" replace />;
   }
 

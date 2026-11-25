@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ProductCard from '../components/ProductCard';
 import api from '../lib/axios';
+import { DEFAULT_PRODUCTS, DEFAULT_COLLECTIONS } from '../data/products';
 
 export default function CollectionDetailPage() {
   const { slug } = useParams();
@@ -17,9 +18,17 @@ export default function CollectionDetailPage() {
         if (data) {
           setCollection(data.collection || data);
           setProducts(data.products || []);
+        } else {
+          const col = DEFAULT_COLLECTIONS.find((c) => c.slug === slug);
+          setCollection(col || { name: 'Collection', slug });
+          setProducts(DEFAULT_PRODUCTS);
         }
       })
-      .catch(() => {})
+      .catch(() => {
+        const col = DEFAULT_COLLECTIONS.find((c) => c.slug === slug);
+        setCollection(col || { name: 'Collection', slug });
+        setProducts(DEFAULT_PRODUCTS);
+      })
       .finally(() => setLoading(false));
   }, [slug]);
 

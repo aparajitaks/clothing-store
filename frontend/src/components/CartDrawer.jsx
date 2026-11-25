@@ -119,9 +119,16 @@ export default function CartDrawer() {
                               <Plus size={14} />
                             </button>
                           </div>
-                          <span className="cart-item__price">
-                            ₹{(item.price * item.quantity).toLocaleString('en-IN')}
-                          </span>
+                          <div className="cart-item__price-wrap">
+                            <span className="cart-item__price">
+                              ₹{(item.price * item.quantity).toLocaleString('en-IN')}
+                            </span>
+                            {item.compare_price && item.compare_price > item.price && (
+                              <span className="cart-item__compare-price">
+                                ₹{(item.compare_price * item.quantity).toLocaleString('en-IN')}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>

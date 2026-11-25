@@ -114,10 +114,24 @@
   color: #7A766E;
 }
 
+.cart-row__price-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
 .cart-row__unit-price {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.85rem;
-  color: #4A4A4A;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.cart-row__compare-price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  color: #9C968B;
+  text-decoration: line-through;
 }
 
 .cart-row__delete-mobile {

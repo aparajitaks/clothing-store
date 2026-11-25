@@ -1,9 +1,10 @@
-const { createClient } = require('@supabase/supabase-js');
+// Reuse the singleton service-role client; never create one per-request
+const supabase = require('../config/db');
 const { unauthorized } = require('../utils/apiResponse');
 
 /**
  * Verifies Supabase JWT from Authorization header.
- * Attaches req.user = { id, email, role } on success.
+ * Attaches req.user = { id, email } on success.
  */
 const authenticate = async (req, res, next) => {
   try {
@@ -14,13 +15,12 @@ const authenticate = async (req, res, next) => {
 
     const token = authHeader.split(' ')[1];
 
-    // Create a temporary client with the user's JWT to verify it
-    const supabaseClient = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY
-    );
+    if (!supabase) {
+      // Supabase not configured — cannot verify JWT
+      return unauthorized(res, 'Authentication service unavailable');
+    }
 
-    const { data: { user }, error } = await supabaseClient.auth.getUser(token);
+    const { data: { user }, error } = await supabase.auth.getUser(token);
 
     if (error || !user) {
       return unauthorized(res, 'Invalid or expired token');

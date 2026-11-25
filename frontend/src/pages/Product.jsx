@@ -1,6 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Heart, ShieldCheck, Truck, RefreshCw, ChevronDown, ChevronUp, Star, Share2, ArrowRight } from 'lucide-react';
+import {
+  ShoppingBag,
+  Heart,
+  ShieldCheck,
+  Truck,
+  RefreshCw,
+  ChevronDown,
+  ChevronUp,
+  ChevronLeft,
+  ChevronRight,
+  ZoomIn,
+  Maximize2,
+  X,
+  Play,
+  RotateCcw
+} from 'lucide-react';
 import toast from 'react-hot-toast';
 import useCartStore from '../store/cartStore';
 import useUIStore from '../store/uiStore';
@@ -12,12 +27,15 @@ import { supabase } from '../lib/supabase';
 import api from '../lib/axios';
 import analytics from '../utils/analytics';
 import SEO, { buildProductSchema, buildBreadcrumbSchema } from '../components/SEO';
+import { DEFAULT_PRODUCTS } from '../data/products';
 import './Product.css';
 
 const DEFAULT_IMAGES = [
-  'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=1000',
-  'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=1000',
-  'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=1000',
+  { url: '/products/rust-embroidered-kurta-set/front.jpg', label: 'Front Pose', type: 'image' },
+  { url: '/products/rust-embroidered-kurta-set/back.jpg', label: 'Back Pose', type: 'image' },
+  { url: '/products/rust-embroidered-kurta-set/right.jpg', label: 'Right Side', type: 'image' },
+  { url: '/products/rust-embroidered-kurta-set/left.jpg', label: 'Left Side', type: 'image' },
+  { url: '/products/rust-embroidered-kurta-set/video.mp4', label: 'Model Shoot', type: 'video', poster: '/products/rust-embroidered-kurta-set/video-poster.jpg' },
 ];
 
 export default function ProductPage() {
@@ -28,94 +46,132 @@ export default function ProductPage() {
   const wishlistToggle = useWishlistStore((s) => s.toggle);
   const isWishlisted = useWishlistStore((s) => s.isInWishlist);
 
-  const [product, setProduct] = useState(null);
+  // Synchronous initial product to ensure 0ms instantaneous loading (No spinner lock!)
+  const initialProduct = useMemo(
+    () => DEFAULT_PRODUCTS.find((p) => p.slug === slug || p.id === slug) || null,
+    [slug]
+  );
+
+  const [product, setProduct] = useState(initialProduct);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedSize, setSelectedSize] = useState(null);
-  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(initialProduct?.sizes?.[0] || 'M');
+  const [selectedColor, setSelectedColor] = useState(
+    initialProduct?.colors?.[0]?.name || (initialProduct?.colors?.[0] || 'Rust Orange')
+  );
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('details');
-  const [related, setRelated] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [related, setRelated] = useState(DEFAULT_PRODUCTS.filter((p) => p.slug !== slug));
+  const [loading, setLoading] = useState(!initialProduct);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
 
+  // Amazon-style Zoom state
+  const [isZooming, setIsZooming] = useState(false);
+  const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
+  const imageWrapRef = useRef(null);
+
+  // Amazon-style Lightbox Modal state
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  // Reset selected image when slug changes
   useEffect(() => {
+    setSelectedImage(0);
+    const found = DEFAULT_PRODUCTS.find((p) => p.slug === slug || p.id === slug);
+    if (found) {
+      setProduct(found);
+      setLoading(false);
+      if (Array.isArray(found.sizes) && found.sizes.length > 0) setSelectedSize(found.sizes[0]);
+    }
+  }, [slug]);
+
+  // Background fetch to refresh data if API or DB is available
+  useEffect(() => {
+    let isMounted = true;
     async function loadProduct() {
-      setLoading(true);
       try {
-        // Try Express API
-        const res = await api.get(`/products/${slug}`);
-        if (res.data?.data) {
+        // Fast timeout check so it doesn't block UI
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+        const res = await api.get(`/products/${slug}`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (isMounted && res.data?.data) {
           const p = res.data.data;
           setProduct(p);
-          if (Array.isArray(p.sizes) && p.sizes.length > 0) setSelectedSize(p.sizes[0]);
-          if (Array.isArray(p.colors) && p.colors.length > 0) {
+          if (Array.isArray(p.sizes) && p.sizes.length > 0 && !selectedSize) setSelectedSize(p.sizes[0]);
+          if (Array.isArray(p.colors) && p.colors.length > 0 && !selectedColor) {
             setSelectedColor(typeof p.colors[0] === 'string' ? p.colors[0] : p.colors[0].name);
-          }
-          return;
-        }
-
-        // Direct Supabase fallback
-        const { data, error } = await supabase
-          .from('products')
-          .select('*, categories(name, slug)')
-          .eq('slug', slug)
-          .single();
-
-        if (data) {
-          setProduct(data);
-          if (Array.isArray(data.sizes) && data.sizes.length > 0) setSelectedSize(data.sizes[0]);
-          if (Array.isArray(data.colors) && data.colors.length > 0) {
-            setSelectedColor(typeof data.colors[0] === 'string' ? data.colors[0] : data.colors[0].name);
           }
         }
       } catch (err) {
-        console.warn('Product load error:', err);
+        // Quiet fallback to local product (already displayed)
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     }
     loadProduct();
+    return () => { isMounted = false; };
   }, [slug]);
 
-  // Load related products
-  useEffect(() => {
-    async function loadRelated() {
-      try {
-        const { data } = await supabase
-          .from('products')
-          .select('*, categories(name, slug)')
-          .neq('slug', slug)
-          .limit(4);
-        if (data) setRelated(data);
-      } catch (e) {
-        // quiet
-      }
+  // Parse media (images & video) with descriptive pose labels
+  const mediaList = useMemo(() => {
+    if (Array.isArray(product?.images) && product.images.length > 0) {
+      const defaultLabels = ['Front Pose', 'Back Pose', 'Right Profile', 'Left Profile', 'Video Shoot'];
+      return product.images.map((item, index) => {
+        if (typeof item === 'string') {
+          const isVid = item.endsWith('.mp4') || item.includes('video');
+          return {
+            url: item,
+            type: isVid ? 'video' : 'image',
+            label: isVid ? 'Video Shoot' : (defaultLabels[index] || `Pose ${index + 1}`),
+            poster: product.video_poster || null,
+          };
+        }
+        const isVid = item.type === 'video' || item.url?.endsWith('.mp4');
+        return {
+          url: item.url,
+          type: isVid ? 'video' : 'image',
+          label: isVid ? 'Video Shoot' : (item.alt?.replace('Rust Embroidered Kurta Set — ', '') || defaultLabels[index] || `Pose ${index + 1}`),
+          alt: item.alt || product.name,
+          poster: item.poster || product.video_poster || null,
+        };
+      });
     }
-    loadRelated();
-  }, [slug]);
+    return DEFAULT_IMAGES;
+  }, [product]);
 
-  if (loading) {
-    return (
-      <div className="product-page-loading container">
-        <p>Unfolding garment details...</p>
-      </div>
-    );
-  }
+  const currentMedia = mediaList[selectedImage] || mediaList[0];
 
-  if (!product) {
-    return (
-      <div className="product-page-empty container">
-        <h2>Piece Not Found</h2>
-        <p>The garment you are looking for may have been archived.</p>
-        <Link to="/shop" className="btn-primary">Browse All Pieces</Link>
-      </div>
-    );
-  }
+  // Amazon-style mouse move zoom calculation
+  const handleMouseMove = (e) => {
+    if (!imageWrapRef.current || currentMedia?.type === 'video') return;
+    const { left, top, width, height } = imageWrapRef.current.getBoundingClientRect();
+    const x = Math.max(0, Math.min(100, ((e.clientX - left) / width) * 100));
+    const y = Math.max(0, Math.min(100, ((e.clientY - top) / height) * 100));
+    setZoomPos({ x, y });
+  };
 
-  // Parse images
-  const imagesList = Array.isArray(product.images) && product.images.length > 0
-    ? product.images.map((img) => (typeof img === 'string' ? img : img.url))
-    : DEFAULT_IMAGES;
+  const handlePrevMedia = (e) => {
+    e?.stopPropagation();
+    setSelectedImage((prev) => (prev === 0 ? mediaList.length - 1 : prev - 1));
+  };
+
+  const handleNextMedia = (e) => {
+    e?.stopPropagation();
+    setSelectedImage((prev) => (prev === mediaList.length - 1 ? 0 : prev + 1));
+  };
+
+  // Keyboard navigation for Lightbox
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setLightboxOpen(false);
+      if (e.key === 'ArrowLeft') handlePrevMedia();
+      if (e.key === 'ArrowRight') handleNextMedia();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxOpen, mediaList.length]);
 
   const handleAddToCart = () => {
     addItem(product, quantity, selectedSize, selectedColor);
@@ -137,7 +193,28 @@ export default function ProductPage() {
     });
   };
 
-  const hasDiscount = product.compare_price && Number(product.compare_price) > Number(product.price);
+  const hasDiscount = product?.compare_price && Number(product.compare_price) > Number(product.price);
+  const discountPercent = hasDiscount
+    ? Math.round(((Number(product.compare_price) - Number(product.price)) / Number(product.compare_price)) * 100)
+    : 0;
+
+  if (loading && !product) {
+    return (
+      <div className="product-page-loading container">
+        <p>Unfolding garment details...</p>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="product-page-empty container">
+        <h2>Piece Not Found</h2>
+        <p>The garment you are looking for may have been archived.</p>
+        <Link to="/shop" className="btn-primary">Browse All Pieces</Link>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -145,7 +222,7 @@ export default function ProductPage() {
         title={product.name}
         description={product.description || `Buy ${product.name} from TK TeyaCollections — premium handcrafted traditional Indian fashion.`}
         canonical={`/product/${product.slug}`}
-        image={product.images?.[0]}
+        image={product.images?.[0]?.url || product.images?.[0]}
         type="product"
         jsonLd={[
           buildProductSchema(product),
@@ -156,222 +233,408 @@ export default function ProductPage() {
           ]),
         ]}
       />
-    <div className="product-page container">
-      {/* Breadcrumb */}
-      <nav className="pdp-breadcrumb">
-        <Link to="/">Home</Link>
-        <span>/</span>
-        <Link to="/shop">Shop</Link>
-        <span>/</span>
-        {product.categories && (
-          <>
-            <Link to={`/category/${product.categories.slug}`}>{product.categories.name}</Link>
-            <span>/</span>
-          </>
-        )}
-        <span className="current">{product.name}</span>
-      </nav>
 
-      {/* Main PDP Grid */}
-      <div className="pdp-grid">
-        {/* Gallery */}
-        <div className="pdp-gallery">
-          <div className="pdp-thumbnails">
-            {imagesList.map((img, i) => (
+      <div className="product-page container">
+        {/* Breadcrumb */}
+        <nav className="pdp-breadcrumb">
+          <Link to="/">Home</Link>
+          <span>/</span>
+          <Link to="/shop">Shop</Link>
+          <span>/</span>
+          {product.categories && (
+            <>
+              <Link to={`/category/${product.categories.slug}`}>{product.categories.name}</Link>
+              <span>/</span>
+            </>
+          )}
+          <span className="current">{product.name}</span>
+        </nav>
+
+        {/* Main PDP Grid */}
+        <div className="pdp-grid">
+          {/* Amazon-Style Gallery */}
+          <div className="pdp-gallery amazon-gallery">
+            {/* Vertical Thumbnail Strip with Hover-to-Switch */}
+            <div className="pdp-thumbnails amazon-thumbnails">
+              {mediaList.map((item, i) => {
+                const isActive = selectedImage === i;
+                return (
+                  <button
+                    key={i}
+                    className={`pdp-thumb amazon-thumb ${isActive ? 'active' : ''}`}
+                    onMouseEnter={() => setSelectedImage(i)}
+                    onClick={() => setSelectedImage(i)}
+                    aria-label={`View ${item.label || (item.type === 'video' ? 'Video' : 'Pose ' + (i + 1))}`}
+                  >
+                    <div className="amazon-thumb__img-wrap">
+                      <img
+                        src={item.type === 'video' ? (item.poster || item.url) : item.url}
+                        alt={`${product.name} — ${item.label}`}
+                      />
+                      {item.type === 'video' && (
+                        <span className="amazon-thumb__video-badge">
+                          <Play size={11} fill="#FFF" color="#FFF" />
+                          <span>VIDEO</span>
+                        </span>
+                      )}
+                    </div>
+                    <span className="amazon-thumb__label">{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Main Image Viewer with Amazon-Style Hover Zoom */}
+            <div
+              className={`pdp-main-image-wrap amazon-main-viewer ${isZooming ? 'is-zoomed' : ''}`}
+              ref={imageWrapRef}
+              onMouseEnter={() => currentMedia?.type !== 'video' && setIsZooming(true)}
+              onMouseLeave={() => setIsZooming(false)}
+              onMouseMove={handleMouseMove}
+              onClick={() => currentMedia?.type !== 'video' && setLightboxOpen(true)}
+              title={currentMedia?.type !== 'video' ? 'Click to open expanded view' : undefined}
+            >
+              {currentMedia?.type === 'video' ? (
+                <div className="amazon-video-wrapper">
+                  <video
+                    key={currentMedia.url}
+                    src={currentMedia.url}
+                    poster={currentMedia.poster}
+                    controls
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="pdp-main-video"
+                  />
+                  <div className="amazon-video-badge-pill">
+                    <Play size={12} fill="#FFF" color="#FFF" />
+                    <span>Model Shoot • 45s HD</span>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <img
+                    src={currentMedia?.url || mediaList[0]?.url}
+                    alt={`${product.name} — ${currentMedia?.label}`}
+                    className={`pdp-main-image ${isZooming ? 'zooming' : ''}`}
+                    style={
+                      isZooming
+                        ? {
+                            transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
+                            transform: 'scale(2.35)',
+                          }
+                        : undefined
+                    }
+                  />
+
+                  {/* Amazon Zoom Hint & Fullscreen Icon */}
+                  <div className="amazon-zoom-pill">
+                    <ZoomIn size={13} />
+                    <span>Roll over image to zoom • Click to expand</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="amazon-expand-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setLightboxOpen(true);
+                    }}
+                    aria-label="Expand image fullscreen"
+                  >
+                    <Maximize2 size={16} />
+                  </button>
+                </>
+              )}
+
+              {/* Prev / Next Arrows for quick flipping between poses */}
               <button
-                key={i}
-                className={`pdp-thumb ${selectedImage === i ? 'active' : ''}`}
-                onClick={() => setSelectedImage(i)}
+                type="button"
+                className="amazon-nav-arrow amazon-nav-arrow--left"
+                onClick={handlePrevMedia}
+                aria-label="Previous pose"
               >
-                <img src={img} alt={`${product.name} view ${i + 1}`} />
+                <ChevronLeft size={22} />
               </button>
-            ))}
+              <button
+                type="button"
+                className="amazon-nav-arrow amazon-nav-arrow--right"
+                onClick={handleNextMedia}
+                aria-label="Next pose"
+              >
+                <ChevronRight size={22} />
+              </button>
+
+              {/* Active Pose Counter Badge */}
+              <div className="amazon-pose-indicator">
+                <span>{selectedImage + 1} / {mediaList.length}</span>
+                <span className="amazon-pose-separator">•</span>
+                <span>{currentMedia?.label}</span>
+              </div>
+            </div>
           </div>
 
-          <div className="pdp-main-image-wrap">
-            <img
-              src={imagesList[selectedImage] || imagesList[0]}
-              alt={product.name}
-              className="pdp-main-image"
-            />
+          {/* Product Details Column */}
+          <div className="pdp-details">
+            {product.categories?.name && (
+              <span className="pdp-category">{product.categories.name}</span>
+            )}
+            <h1 className="pdp-title">{product.name}</h1>
+
+            {/* Pricing: Original MRP strikethrough & Discounted Selling Price */}
+            <div className="pdp-price-row">
+              <span className="pdp-price">₹{Number(product.price).toLocaleString('en-IN')}</span>
+              {hasDiscount && (
+                <>
+                  <span className="pdp-compare-price">MRP ₹{Number(product.compare_price).toLocaleString('en-IN')}</span>
+                  <span className="pdp-save-badge">
+                    {discountPercent}% OFF • LAUNCH OFFER
+                  </span>
+                </>
+              )}
+            </div>
+            <p className="pdp-tax-note">
+              Final Selling Price (All taxes included). You save ₹{(Number(product.compare_price) - Number(product.price)).toLocaleString('en-IN')} (15% off). Free express delivery across India.
+            </p>
+
+            {/* Color Selector */}
+            {Array.isArray(product.colors) && product.colors.length > 0 && (
+              <div className="pdp-option-group">
+                <label className="pdp-label">
+                  Color: <strong>{selectedColor}</strong>
+                </label>
+                <div className="pdp-colors-list">
+                  {product.colors.map((c) => {
+                    const name = typeof c === 'string' ? c : c.name;
+                    const hex = typeof c === 'string' ? '#C2542D' : c.hex;
+                    return (
+                      <button
+                        key={name}
+                        className={`pdp-color-swatch ${selectedColor === name ? 'active' : ''}`}
+                        style={{ backgroundColor: hex }}
+                        title={name}
+                        onClick={() => setSelectedColor(name)}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Size Selector */}
+            {Array.isArray(product.sizes) && product.sizes.length > 0 && (
+              <div className="pdp-option-group">
+                <div className="flex-between">
+                  <label className="pdp-label">
+                    Select Size: <strong>{selectedSize}</strong>
+                  </label>
+                  <button className="pdp-size-guide-btn" onClick={() => setSizeGuideOpen(true)}>Size Guide</button>
+                </div>
+                <div className="pdp-sizes-list">
+                  {product.sizes.map((s) => (
+                    <button
+                      key={s}
+                      className={`pdp-size-btn ${selectedSize === s ? 'active' : ''}`}
+                      onClick={() => setSelectedSize(s)}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Quantity & Add to Cart */}
+            <div className="pdp-actions">
+              <div className="pdp-qty-stepper">
+                <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</button>
+                <span>{quantity}</span>
+                <button onClick={() => setQuantity(quantity + 1)}>+</button>
+              </div>
+
+              <button onClick={handleAddToCart} className="btn-primary pdp-add-btn">
+                <ShoppingBag size={18} /> Add to Wardrobe
+              </button>
+
+              <button
+                className={`pdp-wishlist-btn ${isWishlisted(product?.id) ? 'wishlisted' : ''}`}
+                onClick={handleWishlistToggle}
+                aria-label={isWishlisted(product?.id) ? 'Remove from wishlist' : 'Add to wishlist'}
+              >
+                <Heart size={18} fill={isWishlisted(product?.id) ? 'currentColor' : 'none'} />
+              </button>
+            </div>
+
+            <button onClick={handleBuyNow} className="btn-secondary pdp-buy-btn">
+              Instant Checkout
+            </button>
+
+            {/* Pincode Checker */}
+            <PincodeChecker />
+
+            {/* Value Props Guarantee */}
+            <div className="pdp-guarantees">
+              <div className="pdp-guarantee-item">
+                <Truck size={18} />
+                <span>Complimentary express delivery in 3-5 business days</span>
+              </div>
+              <div className="pdp-guarantee-item">
+                <RefreshCw size={18} />
+                <span>7-day door-step trial & seamless returns</span>
+              </div>
+              <div className="pdp-guarantee-item">
+                <ShieldCheck size={18} />
+                <span>100% authentic hand-inspected artisan garment</span>
+              </div>
+            </div>
+
+            {/* Accordion Tabs */}
+            <div className="pdp-accordions">
+              <div className="pdp-accordion-item">
+                <button
+                  className="pdp-accordion-trigger"
+                  onClick={() => setActiveTab(activeTab === 'details' ? null : 'details')}
+                >
+                  <span>Garment Description & Fit</span>
+                  {activeTab === 'details' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                </button>
+                {activeTab === 'details' && (
+                  <div className="pdp-accordion-body">
+                    <p>{product.description || 'A striking two-piece ensemble in a rich rust hue, featuring a button-down tunic with mandarin collar and scalloped floral embroidery.'}</p>
+                    <ul>
+                      <li>Fabric: {product.fabric || 'Pure Silk Blend'}</li>
+                      <li>Fit: {product.fit || 'Relaxed Straight Fit'}</li>
+                      <li>Neckline: {product.neckline || 'Mandarin Collar with Front Button Placket'}</li>
+                      <li>Sleeves: {product.sleeves || 'Three-Quarter Sleeves with Scalloped Embroidery'}</li>
+                      <li>Occasion: {product.occasion || 'Festive, Celebrations, Evening Gatherings'}</li>
+                      <li>Gentle hand wash in cold water or dry clean recommended</li>
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              <div className="pdp-accordion-item">
+                <button
+                  className="pdp-accordion-trigger"
+                  onClick={() => setActiveTab(activeTab === 'shipping' ? null : 'shipping')}
+                >
+                  <span>Shipping & Bespoke Packaging</span>
+                  {activeTab === 'shipping' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                </button>
+                {activeTab === 'shipping' && (
+                  <div className="pdp-accordion-body">
+                    <p>All Teya pieces are delivered in our signature ivory presentation boxes with magnetic ribbon closure, protecting your garment during transit.</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Product Details Column */}
-        <div className="pdp-details">
-          {product.categories?.name && (
-            <span className="pdp-category">{product.categories.name}</span>
-          )}
-          <h1 className="pdp-title">{product.name}</h1>
+        {/* Amazon-Style Fullscreen Lightbox Modal */}
+        {lightboxOpen && (
+          <div className="amazon-lightbox" onClick={() => setLightboxOpen(false)}>
+            <div className="amazon-lightbox__content" onClick={(e) => e.stopPropagation()}>
+              <button
+                className="amazon-lightbox__close"
+                onClick={() => setLightboxOpen(false)}
+                aria-label="Close expanded view"
+              >
+                <X size={26} />
+              </button>
 
-          {/* Pricing */}
-          <div className="pdp-price-row">
-            <span className="pdp-price">₹{Number(product.price).toLocaleString('en-IN')}</span>
-            {hasDiscount && (
-              <>
-                <span className="pdp-compare-price">₹{Number(product.compare_price).toLocaleString('en-IN')}</span>
-                <span className="pdp-save-badge">
-                  Save {Math.round(((Number(product.compare_price) - Number(product.price)) / Number(product.compare_price)) * 100)}%
+              <div className="amazon-lightbox__header">
+                <h3>{product.name}</h3>
+                <span className="amazon-lightbox__counter">
+                  Pose {selectedImage + 1} of {mediaList.length}: {currentMedia?.label}
                 </span>
-              </>
-            )}
-          </div>
-          <p className="pdp-tax-note">Taxes included. Free express shipping on this piece.</p>
+              </div>
 
-          {/* Color Selector */}
-          {Array.isArray(product.colors) && product.colors.length > 0 && (
-            <div className="pdp-option-group">
-              <label className="pdp-label">
-                Color: <strong>{selectedColor}</strong>
-              </label>
-              <div className="pdp-colors-list">
-                {product.colors.map((c) => {
-                  const name = typeof c === 'string' ? c : c.name;
-                  const hex = typeof c === 'string' ? '#1A1A1A' : c.hex;
-                  return (
-                    <button
-                      key={name}
-                      className={`pdp-color-swatch ${selectedColor === name ? 'active' : ''}`}
-                      style={{ backgroundColor: hex }}
-                      title={name}
-                      onClick={() => setSelectedColor(name)}
+              <div className="amazon-lightbox__main">
+                <button
+                  className="amazon-lightbox__nav-btn amazon-lightbox__nav-btn--prev"
+                  onClick={handlePrevMedia}
+                  aria-label="Previous photo"
+                >
+                  <ChevronLeft size={36} />
+                </button>
+
+                <div className="amazon-lightbox__stage">
+                  {currentMedia?.type === 'video' ? (
+                    <video
+                      key={currentMedia.url}
+                      src={currentMedia.url}
+                      poster={currentMedia.poster}
+                      controls
+                      autoPlay
+                      className="amazon-lightbox__video"
                     />
-                  );
-                })}
-              </div>
-            </div>
-          )}
+                  ) : (
+                    <img
+                      src={currentMedia?.url}
+                      alt={`${product.name} — ${currentMedia?.label}`}
+                      className="amazon-lightbox__img"
+                    />
+                  )}
+                </div>
 
-          {/* Size Selector */}
-          {Array.isArray(product.sizes) && product.sizes.length > 0 && (
-            <div className="pdp-option-group">
-              <div className="flex-between">
-                <label className="pdp-label">
-                  Select Size: <strong>{selectedSize}</strong>
-                </label>
-                <button className="pdp-size-guide-btn" onClick={() => setSizeGuideOpen(true)}>Size Guide</button>
+                <button
+                  className="amazon-lightbox__nav-btn amazon-lightbox__nav-btn--next"
+                  onClick={handleNextMedia}
+                  aria-label="Next photo"
+                >
+                  <ChevronRight size={36} />
+                </button>
               </div>
-              <div className="pdp-sizes-list">
-                {product.sizes.map((s) => (
+
+              {/* Bottom Thumbnail Strip */}
+              <div className="amazon-lightbox__thumbs">
+                {mediaList.map((item, i) => (
                   <button
-                    key={s}
-                    className={`pdp-size-btn ${selectedSize === s ? 'active' : ''}`}
-                    onClick={() => setSelectedSize(s)}
+                    key={i}
+                    className={`amazon-lightbox__thumb ${selectedImage === i ? 'active' : ''}`}
+                    onClick={() => setSelectedImage(i)}
                   >
-                    {s}
+                    <img
+                      src={item.type === 'video' ? (item.poster || item.url) : item.url}
+                      alt={item.label}
+                    />
+                    {item.type === 'video' && (
+                      <span className="amazon-lightbox__video-icon">
+                        <Play size={10} fill="#FFF" color="#FFF" />
+                      </span>
+                    )}
                   </button>
                 ))}
               </div>
             </div>
-          )}
-
-          {/* Quantity & Add to Cart */}
-          <div className="pdp-actions">
-            <div className="pdp-qty-stepper">
-              <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</button>
-              <span>{quantity}</span>
-              <button onClick={() => setQuantity(quantity + 1)}>+</button>
-            </div>
-
-            <button onClick={handleAddToCart} className="btn-primary pdp-add-btn">
-              <ShoppingBag size={18} /> Add to Wardrobe
-            </button>
-
-            <button
-              className={`pdp-wishlist-btn ${isWishlisted(product?.id) ? 'wishlisted' : ''}`}
-              onClick={handleWishlistToggle}
-              aria-label={isWishlisted(product?.id) ? 'Remove from wishlist' : 'Add to wishlist'}
-            >
-              <Heart size={18} fill={isWishlisted(product?.id) ? 'currentColor' : 'none'} />
-            </button>
           </div>
+        )}
 
-          <button onClick={handleBuyNow} className="btn-secondary pdp-buy-btn">
-            Instant Checkout
-          </button>
+        {/* Size Guide Modal */}
+        <SizeGuideModal
+          isOpen={sizeGuideOpen}
+          onClose={() => setSizeGuideOpen(false)}
+          category={product.categories?.name}
+          sizeChart={product.size_chart}
+        />
 
-          {/* Pincode Checker */}
-          <PincodeChecker />
-
-          {/* Value Props Guarantee */}
-          <div className="pdp-guarantees">
-            <div className="pdp-guarantee-item">
-              <Truck size={18} />
-              <span>Complimentary express delivery in 3-5 business days</span>
+        {/* Related Products */}
+        {related.length > 0 && (
+          <div className="pdp-related section">
+            <div className="section-header">
+              <span className="section-header__tag">Complementary Pieces</span>
+              <h2 className="section-header__title">You May Also Admire</h2>
             </div>
-            <div className="pdp-guarantee-item">
-              <RefreshCw size={18} />
-              <span>7-day door-step trial & seamless returns</span>
-            </div>
-            <div className="pdp-guarantee-item">
-              <ShieldCheck size={18} />
-              <span>100% authentic hand-inspected artisan garment</span>
+            <div className="products-grid">
+              {related.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
             </div>
           </div>
-
-          {/* Accordion Tabs */}
-          <div className="pdp-accordions">
-            <div className="pdp-accordion-item">
-              <button
-                className="pdp-accordion-trigger"
-                onClick={() => setActiveTab(activeTab === 'details' ? null : 'details')}
-              >
-                <span>Garment Description & Fit</span>
-                {activeTab === 'details' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-              </button>
-              {activeTab === 'details' && (
-                <div className="pdp-accordion-body">
-                  <p>{product.description || 'Crafted with extraordinary precision, this silhouette is tailored to drape softly over the body with a bespoke sense of luxury.'}</p>
-                  <ul>
-                    <li>Dry clean or gentle hand wash with natural pH detergent</li>
-                    <li>Low steam iron inside out</li>
-                    <li>Sustainably packaged in reusable organic linen bag</li>
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            <div className="pdp-accordion-item">
-              <button
-                className="pdp-accordion-trigger"
-                onClick={() => setActiveTab(activeTab === 'shipping' ? null : 'shipping')}
-              >
-                <span>Shipping & Bespoke Packaging</span>
-                {activeTab === 'shipping' ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-              </button>
-              {activeTab === 'shipping' && (
-                <div className="pdp-accordion-body">
-                  <p>All Teya pieces are delivered in our signature ivory presentation boxes with magnetic ribbon closure, protecting your garment during transit.</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        )}
       </div>
-
-      {/* Size Guide Modal */}
-      <SizeGuideModal
-        isOpen={sizeGuideOpen}
-        onClose={() => setSizeGuideOpen(false)}
-        category={product.categories?.name}
-        sizeChart={product.size_chart}
-      />
-
-      {/* Related Products */}
-      {related.length > 0 && (
-        <div className="pdp-related section">
-          <div className="section-header">
-            <span className="section-header__tag">Complementary Pieces</span>
-            <h2 className="section-header__title">You May Also Admire</h2>
-          </div>
-          <div className="products-grid">
-            {related.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ShieldCheck, Truck, ArrowRight, Lock, Loader2, AlertCircle, Tag, X } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -20,6 +20,19 @@ export default function CheckoutPage() {
   const [couponCode, setCouponCode] = useState(routeCoupon?.code || '');
   const [couponLoading, setCouponLoading] = useState(false);
 
+  // Store settings (shipping threshold/fee from backend)
+  const [storeSettings, setStoreSettings] = useState({
+    free_shipping_threshold: 2999,
+    default_shipping_fee: 149,
+  });
+
+  useEffect(() => {
+    api.get('/settings').then((res) => {
+      const d = res.data?.data || res.data;
+      if (d?.free_shipping_threshold) setStoreSettings(d);
+    }).catch(() => { /* use defaults */ });
+  }, []);
+
   const [shippingAddress, setShippingAddress] = useState({
     name: user?.user_metadata?.full_name || '',
     phone: '',
@@ -34,7 +47,7 @@ export default function CheckoutPage() {
   const [errorMsg, setErrorMsg] = useState(null);
 
   const subtotal = getSubtotal();
-  const shipping = subtotal >= 999 ? 0 : 99;
+  const shipping = subtotal >= storeSettings.free_shipping_threshold ? 0 : storeSettings.default_shipping_fee;
 
   const discountAmount = appliedCoupon
     ? appliedCoupon.discount_type === 'flat'
@@ -100,13 +113,13 @@ export default function CheckoutPage() {
 
       // 2. Call backend order creation
       const res = await api.post('/orders/create', payload);
-      const { orderId, razorpayOrderId, amount, currency, keyId } = res.data.data;
+      const { orderId, razorpayOrderId, amount, currency, keyId, isSimulated } = res.data.data;
 
-      // 3. Check if Razorpay script is loaded and Key is real
+      // 3. Check if Razorpay script is loaded and Key is real (not simulated backend mode)
       const razorpayKey = keyId || import.meta.env.VITE_RAZORPAY_KEY_ID;
       const isPlaceholderKey = !razorpayKey || razorpayKey.includes('xxxxxxxx');
 
-      if (isPlaceholderKey || !window.Razorpay) {
+      if (isSimulated || isPlaceholderKey || !window.Razorpay) {
         // Simulated checkout confirmation for test/dev environments without active Razorpay account
         toast('Simulating Razorpay payment gateway approval...', { icon: '💳' });
         

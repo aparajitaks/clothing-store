@@ -6,72 +6,11 @@ import ProductCard from '../components/ProductCard';
 import { supabase } from '../lib/supabase';
 import api from '../lib/axios';
 import SEO, { buildOrganizationSchema } from '../components/SEO';
+import { DEFAULT_PRODUCTS } from '../data/products';
 import './Home.css';
 
-// Fallback kurta products — only used if API is unreachable
-const FALLBACK_FEATURED = [
-  {
-    id: 'prod-1',
-    name: 'The Zoya Chanderi Kurta Set',
-    slug: 'zoya-handloom-chanderi-kurta',
-    price: 6499,
-    compare_price: 7999,
-    images: [
-      { url: '/hero_luxury.jpg', isPrimary: true },
-      { url: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=800' },
-    ],
-    sizes: ['XS', 'S', 'M', 'L', 'XL'],
-    colors: [{ name: 'Ivory Mist', hex: '#FFFFFF' }, { name: 'Soft Sage', hex: '#9CAF88' }],
-    stock: 47,
-    is_featured: true,
-    categories: { name: 'Kurta Sets' },
-  },
-  {
-    id: 'prod-2',
-    name: 'The Noor Embroidered Kurta',
-    slug: 'noor-hand-embroidered-anarkali-suit',
-    price: 8999,
-    compare_price: 11499,
-    images: [
-      { url: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800', isPrimary: true },
-    ],
-    sizes: ['XS', 'S', 'M', 'L', 'XL'],
-    colors: [{ name: 'Champagne Mist', hex: '#EDE8DF' }, { name: 'Deep Emerald', hex: '#1B4332' }],
-    stock: 37,
-    is_featured: true,
-    categories: { name: 'Embroidered Kurtas' },
-  },
-  {
-    id: 'prod-3',
-    name: 'The Aira Cotton Everyday Kurta',
-    slug: 'aira-cotton-everyday-kurta',
-    price: 2999,
-    compare_price: 3799,
-    images: [
-      { url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800', isPrimary: true },
-    ],
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
-    colors: [{ name: 'Natural White', hex: '#FAF8F4' }, { name: 'Sand Beige', hex: '#D8C8B8' }],
-    stock: 91,
-    is_featured: true,
-    categories: { name: 'Everyday Kurtas' },
-  },
-  {
-    id: 'prod-4',
-    name: 'The Gulnaar Block-Print Kurta',
-    slug: 'gulnaar-block-print-kurta',
-    price: 3499,
-    compare_price: 4499,
-    images: [
-      { url: 'https://images.unsplash.com/photo-1551163943-3f6a855d1153?w=800', isPrimary: true },
-    ],
-    sizes: ['XS', 'S', 'M', 'L', 'XL'],
-    colors: [{ name: 'Ochre & Ivory', hex: '#C27D38' }, { name: 'Indigo & White', hex: '#3A4F7A' }],
-    stock: 51,
-    is_featured: true,
-    categories: { name: 'Printed Kurtas' },
-  },
-];
+// Active launch products
+const FALLBACK_FEATURED = DEFAULT_PRODUCTS;
 
 // BIBA-style Category Tiles using BIBA's high-res category assets
 const BIBA_CATEGORIES = [

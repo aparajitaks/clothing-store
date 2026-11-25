@@ -33,6 +33,7 @@ const useCartStore = create(
             name: product.name,
             slug: product.slug,
             price: Number(product.price),
+            compare_price: product.compare_price ? Number(product.compare_price) : null,
             image: imgUrl,
             image_url: imgUrl,
             size,

@@ -4,9 +4,15 @@ const { forbidden } = require('../utils/apiResponse');
 /**
  * Must be used AFTER authenticate middleware.
  * Checks that the user has role='admin' in profiles table.
+ * If Supabase is unavailable, access is denied (fail-secure).
  */
 const requireAdmin = async (req, res, next) => {
   try {
+    if (!supabase) {
+      // Fail-secure: if DB is unavailable we cannot verify role, deny access
+      return forbidden(res, 'Admin verification service unavailable');
+    }
+
     const { data: profile, error } = await supabase
       .from('profiles')
       .select('role')
@@ -18,7 +24,7 @@ const requireAdmin = async (req, res, next) => {
     }
 
     req.user.role = 'admin';
-    next();
+    return next();
   } catch (err) {
     console.error('Admin middleware error:', err);
     return forbidden(res, 'Access denied');

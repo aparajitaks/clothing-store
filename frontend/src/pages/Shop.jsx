@@ -5,21 +5,20 @@ import ProductCard from '../components/ProductCard';
 import { supabase } from '../lib/supabase';
 import api from '../lib/axios';
 import SEO from '../components/SEO';
+import { DEFAULT_PRODUCTS } from '../data/products';
 import './Shop.css';
 
 const CATEGORIES = [
-  { slug: 'all', label: 'All Kurtas' },
-  { slug: 'everyday-kurtas', label: 'Everyday' },
+  { slug: 'all', label: 'All Pieces' },
+  { slug: 'kurta-sets', label: 'Kurta Sets' },
   { slug: 'embroidered-kurtas', label: 'Embroidered' },
   { slug: 'festive-kurtas', label: 'Festive' },
-  { slug: 'cotton-linen-kurtas', label: 'Cotton & Linen' },
-  { slug: 'printed-kurtas', label: 'Printed' },
-  { slug: 'kurta-sets', label: 'Kurta Sets' },
+  { slug: 'everyday-kurtas', label: 'Everyday' },
 ];
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(DEFAULT_PRODUCTS);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'all');
   const [sortBy, setSortBy] = useState('featured');
@@ -45,11 +44,15 @@ export default function ShopPage() {
           .eq('is_active', true)
           .order('created_at', { ascending: false });
 
-        if (!error && data) {
+        if (!error && data && data.length > 0) {
           setProducts(data);
+          return;
         }
+
+        setProducts(DEFAULT_PRODUCTS);
       } catch (err) {
-        console.warn('Fallback products loaded:', err);
+        console.warn('Using default catalog products:', err);
+        setProducts(DEFAULT_PRODUCTS);
       } finally {
         setLoading(false);
       }

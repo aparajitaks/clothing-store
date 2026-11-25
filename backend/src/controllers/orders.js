@@ -40,16 +40,42 @@ const createOrder = async (req, res, next) => {
 
     for (const item of items) {
       const pid = item.productId || item.id;
-      const product = inventoryService.getProductBySlug(pid) || inventoryService.getProducts().find((p) => p.id === pid);
+      let product = inventoryService.getProductBySlug(pid) || inventoryService.getProducts().find((p) => p.id === pid);
+
+      // If not in in-memory seed products, query real Supabase products
+      if (!product && supabase) {
+        try {
+          const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(pid);
+          let query = supabase.from('products').select('*');
+          if (isUuid) {
+            query = query.eq('id', pid);
+          } else {
+            query = query.eq('slug', pid);
+          }
+          const { data: dbProd } = await query.single();
+          if (dbProd) {
+            product = dbProd;
+          }
+        } catch (e) {
+          // ignore error and proceed
+        }
+      }
 
       if (!product) {
         return badRequest(res, `Product not found: ${pid}`);
       }
 
-      // Check variant level stock
-      const stockCheck = inventoryService.checkVariantStock(product.id, item.size, item.color, item.quantity);
-      if (!stockCheck.available) {
-        return badRequest(res, stockCheck.message);
+      // Check variant level stock if variant matrix exists
+      if (Array.isArray(product.variants) && product.variants.length > 0) {
+        const stockCheck = inventoryService.checkVariantStock(product.id, item.size, item.color, item.quantity);
+        if (!stockCheck.available) {
+          return badRequest(res, stockCheck.message);
+        }
+      } else {
+        const reqQty = Number(item.quantity || 1);
+        if (Number(product.stock) < reqQty) {
+          return badRequest(res, `Only ${product.stock} left in stock for "${product.name}"`);
+        }
       }
 
       const price = Number(product.price);
@@ -161,6 +187,8 @@ const createOrder = async (req, res, next) => {
             shipping_fee: shippingFee,
             discount,
             total,
+            coupon_code: appliedCoupon || null,
+            tax_breakdown: taxBreakdown,
             shipping_address: shippingAddress,
             payment_method: paymentMethod,
           })
@@ -169,8 +197,13 @@ const createOrder = async (req, res, next) => {
 
         if (!oErr && dbOrder) {
           orderRecord.id = dbOrder.id;
+          const isUuid = (id) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
           await supabase.from('order_items').insert(
-            orderItems.map((oi) => ({ ...oi, order_id: dbOrder.id }))
+            orderItems.map((oi) => ({
+              ...oi,
+              order_id: dbOrder.id,
+              product_id: isUuid(oi.product_id) ? oi.product_id : null
+            }))
           );
         }
       } catch (e) {
@@ -181,6 +214,7 @@ const createOrder = async (req, res, next) => {
     localOrders.unshift(orderRecord);
 
     return created(res, {
+      orderId: orderRecord.id,
       order: orderRecord,
       razorpayOrderId: paymentOrderData.orderId,
       isSimulated: paymentOrderData.isSimulated,
@@ -259,6 +293,18 @@ const verifyPayment = async (req, res, next) => {
           razorpay_signature: razorpaySignature,
         })
         .eq('id', order.id);
+
+      // Concurrency-safe atomic stock decrement in Supabase
+      const isUuid = (id) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+      for (const item of (order.order_items || [])) {
+        const pid = item.product_id || item.productId;
+        if (pid && isUuid(pid)) {
+          await supabase.rpc('decrement_stock', {
+            p_product_id: pid,
+            p_quantity: Number(item.quantity || 1)
+          });
+        }
+      }
     }
 
     return success(res, {
@@ -278,9 +324,16 @@ const verifyPayment = async (req, res, next) => {
 const getMyOrders = async (req, res, next) => {
   try {
     const userId = req.user?.id;
-    let orders = localOrders.filter((o) => !userId || o.user_id === userId || o.user_id === 'guest');
 
-    if (supabase && userId) {
+    // Must be authenticated to list orders
+    if (!userId) {
+      return success(res, []);
+    }
+
+    // Only return this specific user's orders from memory
+    let orders = localOrders.filter((o) => o.user_id === userId);
+
+    if (supabase) {
       try {
         const { data, error } = await supabase
           .from('orders')
@@ -288,7 +341,7 @@ const getMyOrders = async (req, res, next) => {
           .eq('user_id', userId)
           .order('created_at', { ascending: false });
 
-        if (!error && data && data.length > 0) {
+        if (!error && data) {
           orders = data;
         }
       } catch (e) {
@@ -304,13 +357,17 @@ const getMyOrders = async (req, res, next) => {
 
 /**
  * GET /api/orders/:id
+ * Ownership check: authenticated user must own the order.
+ * Guest orders (user_id null) can be fetched via razorpay_order_id match only.
  */
 const getOrderById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    let order = localOrders.find((o) => o.id === id || o.razorpay_order_id === id);
+    const requestingUserId = req.user?.id || null;
 
-    if (!order && supabase) {
+    let order = null;
+
+    if (supabase) {
       try {
         const { data, error } = await supabase
           .from('orders')
@@ -319,11 +376,27 @@ const getOrderById = async (req, res, next) => {
           .single();
         if (!error && data) order = data;
       } catch (e) {
-        // quiet
+        // fallback to memory
       }
     }
 
+    // Memory fallback
+    if (!order) {
+      order = localOrders.find((o) => o.id === id || o.razorpay_order_id === id);
+    }
+
     if (!order) return notFound(res, 'Order not found');
+
+    // Authorization: user must own the order, or order must be a guest order
+    // and the requester must provide the razorpay_order_id as proof
+    if (order.user_id && requestingUserId && order.user_id !== requestingUserId) {
+      return notFound(res, 'Order not found'); // return 404 not 403 to avoid enumeration
+    }
+
+    // If order has a user_id but requester is unauthenticated, deny
+    if (order.user_id && !requestingUserId) {
+      return notFound(res, 'Order not found');
+    }
 
     return success(res, order);
   } catch (err) {
@@ -333,14 +406,37 @@ const getOrderById = async (req, res, next) => {
 
 /**
  * POST /api/orders/:id/return-request
+ * Requires authentication and ownership.
  */
 const submitReturnRequest = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { type, reason, selectedItems, replacementDetails } = req.body;
+    const requestingUserId = req.user?.id;
 
-    const order = localOrders.find((o) => o.id === id);
+    if (!requestingUserId) {
+      return unauthorized(res, 'Authentication required to submit return requests');
+    }
+
+    let order = localOrders.find((o) => o.id === id);
+
+    if (!order && supabase) {
+      try {
+        const { data } = await supabase
+          .from('orders')
+          .select('id, user_id, status, order_items(*)')
+          .eq('id', id)
+          .single();
+        if (data) order = data;
+      } catch (e) { /* quiet */ }
+    }
+
     if (!order) return notFound(res, 'Order not found');
+
+    // Ownership check
+    if (order.user_id && order.user_id !== requestingUserId) {
+      return notFound(res, 'Order not found');
+    }
 
     const returnRecord = {
       id: `RET-${Date.now().toString(36).toUpperCase()}`,

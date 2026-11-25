@@ -139,31 +139,53 @@ const getProducts = async (req, res, next) => {
         let query = supabase
           .from('products')
           .select(`
-            id, name, slug, price, compare_price, images, sizes, colors, stock, is_featured, material,
+            id, name, slug, price, compare_price, images, sizes, colors, stock, is_featured, material, category_id,
             categories(id, name, slug)
           `, { count: 'exact' })
           .eq('is_active', true)
           .range(from, to);
 
-        if (category) query = query.eq('categories.slug', category);
+        // Fix: In Supabase JS v2 you cannot filter on a joined table column directly.
+        // Resolve category slug → category_id first, then filter on the FK column.
+        if (category) {
+          // Try to find category in Supabase
+          const { data: catData } = await supabase
+            .from('categories')
+            .select('id')
+            .eq('slug', category)
+            .eq('is_active', true)
+            .single();
+
+          if (catData?.id) {
+            query = query.eq('category_id', catData.id);
+          } else {
+            // Fallback: try seed categories
+            const seedCat = SEED_CATEGORIES.find((c) => c.slug === category);
+            if (seedCat) {
+              query = query.eq('category_id', seedCat.id);
+            }
+          }
+        }
+
         if (featured === 'true') query = query.eq('is_featured', true);
         if (search) query = query.ilike('name', `%${search}%`);
         if (minPrice) query = query.gte('price', parseFloat(minPrice));
         if (maxPrice) query = query.lte('price', parseFloat(maxPrice));
+        if (inStock === 'true') query = query.gt('stock', 0);
 
         const allowedSortFields = ['created_at', 'price', 'name'];
         const sortField = allowedSortFields.includes(sort) ? sort : 'created_at';
         query = query.order(sortField, { ascending: order === 'asc' });
 
         const { data, error, count } = await query;
-        if (!error && data && data.length > 0) {
+        if (!error && data !== null) {
           return success(res, {
             products: data,
             pagination: {
               total: count,
               page: parseInt(page),
               limit: parseInt(limit),
-              totalPages: Math.ceil(count / parseInt(limit)),
+              totalPages: Math.ceil((count || 0) / parseInt(limit)),
             },
           });
         }

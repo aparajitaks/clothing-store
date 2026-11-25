@@ -282,22 +282,6 @@ const getDashboard = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  listProducts,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-  listOrders,
-  updateOrderStatus,
-  processReturnRequest,
-  getDashboard,
-  listReturns,
-  updateReturnStatus,
-};
-
-// ---------------------------------------------------------------
-// In-memory returns store for dev mode
-// ---------------------------------------------------------------
 const memoryReturns = [
   { id: 'RET-001', order_id: 'ORD-20241201-001', customer_name: 'Priya Sharma', customer_email: 'priya@example.com', item_name: 'Pure Silk Kanjivaram Saree', reason: 'Size issue', status: 'pending', refund_amount: 3999, created_at: new Date(Date.now() - 9 * 86400000).toISOString() },
   { id: 'RET-002', order_id: 'ORD-20241128-012', customer_name: 'Anita Mehta',  customer_email: 'anita@example.com', item_name: 'Chanderi Cotton Salwar Kameez', reason: 'Quality mismatch', status: 'approved', refund_amount: 2199, created_at: new Date(Date.now() - 12 * 86400000).toISOString() },
@@ -345,3 +329,16 @@ async function updateReturnStatus(req, res, next) {
     return success(res, ret || { id, status }, 'Return status updated');
   } catch (err) { next(err); }
 }
+
+module.exports = {
+  listProducts,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  listOrders,
+  updateOrderStatus,
+  processReturnRequest,
+  getDashboard,
+  listReturns,
+  updateReturnStatus,
+};

@@ -36,13 +36,16 @@ export default function AuthModal() {
       const msg = err.message || '';
       let friendlyMsg = 'Authentication failed. Please try again.';
 
-      if (msg.includes('Email not confirmed')) {
+      if (msg === 'Failed to fetch' || msg.includes('Network') || msg.includes('CORS') || !err.response && !msg) {
+        friendlyMsg =
+          'Network error (CORS). In Supabase Dashboard → Authentication → URL Configuration → Redirect URLs, add: http://localhost:5173  (and confirm your project URL/anon key are valid in frontend/.env).';
+      } else if (msg.includes('Email not confirmed')) {
         friendlyMsg = 'Please check your inbox and confirm your email before signing in.';
       } else if (msg.includes('Invalid login credentials') || msg.includes('email') || msg.includes('not found')) {
         friendlyMsg = 'Incorrect email or password. Please try again.';
-      } else if (msg.includes('already registered')) {
+      } else if (msg.includes('already registered') || msg.includes('User already registered')) {
         friendlyMsg = 'An account with this email already exists. Try signing in.';
-      } else if (msg.includes('Password should be')) {
+      } else if (msg.includes('Password should be') || msg.includes('password is too weak')) {
         friendlyMsg = 'Password must be at least 6 characters long.';
       } else if (msg.includes('rate limit') || msg.includes('too many')) {
         friendlyMsg = 'Too many attempts. Please wait a minute and try again.';
@@ -50,7 +53,7 @@ export default function AuthModal() {
         friendlyMsg = msg;
       }
 
-      toast.error(friendlyMsg, { duration: 5000 });
+      toast.error(friendlyMsg, { duration: 8000 });
     } finally {
       setLoading(false);
     }

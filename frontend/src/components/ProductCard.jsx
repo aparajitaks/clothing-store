@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, ShoppingBag, Eye } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Heart, ShoppingBag, Play, ChevronLeft, ChevronRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useCartStore from '../store/cartStore';
 import useUIStore from '../store/uiStore';
@@ -9,22 +8,50 @@ import './ProductCard.css';
 
 export default function ProductCard({ product }) {
   const [hovered, setHovered] = useState(false);
+  const [activePoseIndex, setActivePoseIndex] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const addItem = useCartStore((s) => s.addItem);
   const openCart = useUIStore((s) => s.openCart);
 
   if (!product) return null;
 
-  // Extract images
-  let primaryImage = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600';
-  let secondaryImage = null;
-
-  if (Array.isArray(product.images) && product.images.length > 0) {
-    primaryImage = typeof product.images[0] === 'string' ? product.images[0] : product.images[0].url;
-    if (product.images.length > 1) {
-      secondaryImage = typeof product.images[1] === 'string' ? product.images[1] : product.images[1].url;
+  // Extract all media poses (front, back, left, right, video)
+  const mediaList = useMemo(() => {
+    if (Array.isArray(product.images) && product.images.length > 0) {
+      return product.images.map((img) => {
+        if (typeof img === 'string') {
+          const isVid = img.endsWith('.mp4') || img.includes('video');
+          return {
+            url: img,
+            type: isVid ? 'video' : 'image',
+            poster: product.video_poster || null,
+          };
+        }
+        return {
+          url: img.url,
+          type: img.type || (img.url?.endsWith('.mp4') ? 'video' : 'image'),
+          poster: img.poster || product.video_poster || null,
+          alt: img.alt || product.name,
+        };
+      });
     }
-  }
+    const defaultUrl = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600';
+    return [{ url: defaultUrl, type: 'image' }];
+  }, [product]);
+
+  const currentPose = mediaList[activePoseIndex] || mediaList[0];
+
+  const handlePrevPose = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setActivePoseIndex((prev) => (prev === 0 ? mediaList.length - 1 : prev - 1));
+  };
+
+  const handleNextPose = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setActivePoseIndex((prev) => (prev === mediaList.length - 1 ? 0 : prev + 1));
+  };
 
   const handleQuickAdd = (e) => {
     e.preventDefault();
@@ -57,19 +84,38 @@ export default function ProductCard({ product }) {
     <div
       className="product-card"
       onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseLeave={() => {
+        setHovered(false);
+        setActivePoseIndex(0);
+      }}
     >
       <Link to={`/product/${product.slug}`} className="product-card__image-container">
-        <img
-          src={hovered && secondaryImage ? secondaryImage : primaryImage}
-          alt={product.name}
-          className="product-card__image"
-          loading="lazy"
-        />
+        {currentPose?.type === 'video' ? (
+          <video
+            src={currentPose.url}
+            poster={currentPose.poster}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="product-card__image product-card__video"
+          />
+        ) : (
+          <img
+            src={currentPose?.url}
+            alt={`${product.name} — view ${activePoseIndex + 1}`}
+            className="product-card__image"
+            loading="lazy"
+          />
+        )}
 
         {/* Badges */}
         <div className="product-card__badges">
+          {hasDiscount && <span className="badge badge--discount">{discountPercent}% OFF</span>}
           {product.is_featured && <span className="badge badge--gold">Featured</span>}
+          {mediaList.length > 1 && (
+            <span className="badge badge--poses">{mediaList.length} Poses</span>
+          )}
           {product.stock <= 3 && product.stock > 0 && (
             <span className="badge badge--low">Low Stock</span>
           )}
@@ -95,6 +141,52 @@ export default function ProductCard({ product }) {
             <ShoppingBag size={16} /> Quick Add
           </button>
         </div>
+
+        {/* Pose Navigation Arrows (visible on hover) */}
+        {mediaList.length > 1 && (
+          <>
+            <button
+              type="button"
+              className="product-card__pose-arrow product-card__pose-arrow--left"
+              onClick={handlePrevPose}
+              aria-label="Previous pose"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <button
+              type="button"
+              className="product-card__pose-arrow product-card__pose-arrow--right"
+              onClick={handleNextPose}
+              aria-label="Next pose"
+            >
+              <ChevronRight size={16} />
+            </button>
+
+            {/* Interactive Pose Thumbnails / Dots Bar */}
+            <div className="product-card__pose-strip" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+              {mediaList.map((item, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  className={`pose-strip-btn ${activePoseIndex === idx ? 'active' : ''}`}
+                  onMouseEnter={() => setActivePoseIndex(idx)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setActivePoseIndex(idx);
+                  }}
+                  title={item.type === 'video' ? 'Model Video shoot' : `Pose ${idx + 1}`}
+                >
+                  {item.type === 'video' ? (
+                    <span className="pose-strip-vid-icon"><Play size={7} fill="#FFF" color="#FFF" /></span>
+                  ) : (
+                    <span className="pose-strip-dot" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
       </Link>
 
       {/* Info Section */}
@@ -108,9 +200,12 @@ export default function ProductCard({ product }) {
         <div className="product-card__pricing">
           <span className="product-card__price">₹{Number(product.price).toLocaleString('en-IN')}</span>
           {hasDiscount && (
-            <span className="product-card__compare-price">
-              ₹{Number(product.compare_price).toLocaleString('en-IN')}
-            </span>
+            <>
+              <span className="product-card__compare-price">
+                ₹{Number(product.compare_price).toLocaleString('en-IN')}
+              </span>
+              <span className="product-card__discount-pill">{discountPercent}% OFF</span>
+            </>
           )}
         </div>
 

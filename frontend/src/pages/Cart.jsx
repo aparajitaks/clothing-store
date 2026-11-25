@@ -124,9 +124,16 @@ export default function CartPage() {
                             {item.color && <span>Color: {item.color}</span>}
                           </div>
                         )}
-                        <span className="cart-row__unit-price">
-                          ₹{Number(item.price).toLocaleString('en-IN')}
-                        </span>
+                        <div className="cart-row__price-wrap">
+                          <span className="cart-row__unit-price">
+                            ₹{Number(item.price).toLocaleString('en-IN')}
+                          </span>
+                          {item.compare_price && item.compare_price > item.price && (
+                            <span className="cart-row__compare-price">
+                              ₹{Number(item.compare_price).toLocaleString('en-IN')}
+                            </span>
+                          )}
+                        </div>
                         <button
                           onClick={() => removeItem(item.id, item.size, item.color)}
                           className="cart-row__delete-mobile"
