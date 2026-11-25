@@ -90,4 +90,15 @@ insert into public.products (name, slug, category_id, description, price, compar
     '["L","XXL"]',
     '[{"name":"Tropical Floral","hex":"#E8734A"}]',
     35, true
+  ),
+  (
+    'Wine Tissue Silk Floral Kurta Set',
+    'wine-tissue-silk-floral-kurta-set',
+    '11111111-0000-0000-0000-000000000001',
+    'A stunning three-piece ensemble in rich wine-purple tissue silk featuring scattered multicolor floral embroidery — yellow, pink and green blooms — across the kurta body and neckline, with a dense embroidered hem border. Paired with straight-fit matching trousers and a sheer tissue silk dupatta with scalloped lace edging and scattered floral buti.',
+    1699.00, 1999.00,
+    '[{"url":"/products/wine-tissue-silk-floral-kurta-set/front.jpg","alt":"Wine Tissue Silk Floral Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/wine-tissue-silk-floral-kurta-set/front-2.jpg","alt":"Wine Tissue Silk Floral Kurta Set — Dupatta Drape View","type":"image"},{"url":"/products/wine-tissue-silk-floral-kurta-set/back.jpg","alt":"Wine Tissue Silk Floral Kurta Set — Back View","type":"image"},{"url":"/products/wine-tissue-silk-floral-kurta-set/side.jpg","alt":"Wine Tissue Silk Floral Kurta Set — Side Profile","type":"image"},{"url":"/products/wine-tissue-silk-floral-kurta-set/video.mp4","poster":"/products/wine-tissue-silk-floral-kurta-set/video-poster.jpg","alt":"Wine Tissue Silk Floral Kurta Set — Video Shoot","type":"video"}]',
+    '["M","L","XL","XXL"]',
+    '[{"name":"Wine Purple","hex":"#6B2D5E"}]',
+    60, true
   );
