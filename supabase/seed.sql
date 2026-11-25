@@ -134,4 +134,15 @@ insert into public.products (name, slug, category_id, description, price, compar
     '["38","42","44","46"]',
     '[{"name":"Terracotta Rust","hex":"#B44B32"}]',
     60, true
+  ),
+  (
+    'Sage Olive Mirrorwork Printed Kurta Set',
+    'sage-olive-mirrorwork-kurta-set',
+    '11111111-0000-0000-0000-000000000001',
+    'An understated luxury three-piece ensemble in metallic-sheen sage olive linen silk featuring authentic mirrorwork embroidery along the V-neckline, artisanal rust, ochre, and olive geometric leaf prints along the lower kurta panel and cuffs, and delicate beaded tassel trims. Paired with matching sage straight-fit trousers and a statement woven silk-linen printed dupatta.',
+    2549.00, 2999.00,
+    '[{"url":"/products/sage-olive-mirrorwork-kurta-set/front.jpg","alt":"Sage Olive Mirrorwork Printed Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/sage-olive-mirrorwork-kurta-set/left.jpg","alt":"Sage Olive Mirrorwork Printed Kurta Set — Left Side Profile","type":"image"},{"url":"/products/sage-olive-mirrorwork-kurta-set/back.jpg","alt":"Sage Olive Mirrorwork Printed Kurta Set — Back View","type":"image"},{"url":"/products/sage-olive-mirrorwork-kurta-set/drape.jpg","alt":"Sage Olive Mirrorwork Printed Kurta Set — Dupatta Drape","type":"image"},{"url":"/products/sage-olive-mirrorwork-kurta-set/video.mp4","poster":"/products/sage-olive-mirrorwork-kurta-set/video-poster.jpg","alt":"Sage Olive Mirrorwork Printed Kurta Set — Model Video Shoot","type":"video"}]',
+    '["M","L","XL","XXL","3XL"]',
+    '[{"name":"Sage Olive","hex":"#8E977D"}]',
+    70, true
   );
