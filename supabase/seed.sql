@@ -189,4 +189,15 @@ insert into public.products (name, slug, category_id, description, price, compar
     '["M","L","XL","XXL"]',
     '[{"name":"Sage Green","hex":"#94AC8A"}]',
     60, true
+  ),
+  (
+    'Mustard Gold Zardosi Embroidered Kurta Set',
+    'mustard-gold-zardosi-kurta-set',
+    '11111111-0000-0000-0000-000000000001',
+    'A regal three-piece mustard gold kurta set crafted in a lustrous tissue-silk blend, featuring an intricate gold zardosi and aari embroidered neckline with delicate scrollwork motifs. The kurta is styled with matching straight-fit palazzo trousers and a matching tissue-silk dupatta with golden tassels — a celebration outfit that radiates warmth and elegance.',
+    2549.00, 2999.00,
+    '[{"url":"/products/mustard-gold-zardosi-kurta-set/front.jpg","alt":"Mustard Gold Zardosi Embroidered Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/mustard-gold-zardosi-kurta-set/back.jpg","alt":"Mustard Gold Zardosi Embroidered Kurta Set — Back View","type":"image"},{"url":"/products/mustard-gold-zardosi-kurta-set/right.jpg","alt":"Mustard Gold Zardosi Embroidered Kurta Set — Side Profile","type":"image"},{"url":"/products/mustard-gold-zardosi-kurta-set/detail.jpg","alt":"Mustard Gold Zardosi Embroidered Kurta Set — Neckline Embroidery Detail","type":"image"},{"url":"/products/mustard-gold-zardosi-kurta-set/video.mp4","poster":"/products/mustard-gold-zardosi-kurta-set/video-poster.jpg","alt":"Mustard Gold Zardosi Embroidered Kurta Set — Model Video Shoot","type":"video"}]',
+    '["M","L","XL","XXL"]',
+    '[{"name":"Mustard Gold","hex":"#D4A017"}]',
+    60, true
   );
