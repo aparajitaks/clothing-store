@@ -167,4 +167,15 @@ insert into public.products (name, slug, category_id, description, price, compar
     '["L","XL","3XL"]',
     '[{"name":"Beige & Teal","hex":"#CBB99B"}]',
     45, true
+  ),
+  (
+    'Buttercream Silk Cutwork Floral Kurta Set',
+    'buttercream-silk-cutwork-kurta-set',
+    '11111111-0000-0000-0000-000000000001',
+    'A luminous three-piece buttercream gold tissue-silk kurta set embellished with marigold-yellow and blush-peach floral embroidery, delicate gold zari neckline work, and a scalloped cutwork embroidered hemline. Styled with matching straight-fit buttercream trousers and a sheer tissue-silk dupatta with scalloped zari borders and scattered embroidered floral motifs.',
+    2294.00, 2699.00,
+    '[{"url":"/products/buttercream-silk-cutwork-kurta-set/front.jpg","alt":"Buttercream Silk Cutwork Floral Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/buttercream-silk-cutwork-kurta-set/back.jpg","alt":"Buttercream Silk Cutwork Floral Kurta Set — Back View","type":"image"},{"url":"/products/buttercream-silk-cutwork-kurta-set/left.jpg","alt":"Buttercream Silk Cutwork Floral Kurta Set — Left Side Profile","type":"image"},{"url":"/products/buttercream-silk-cutwork-kurta-set/video.mp4","poster":"/products/buttercream-silk-cutwork-kurta-set/video-poster.jpg","alt":"Buttercream Silk Cutwork Floral Kurta Set — Model Video Shoot","type":"video"}]',
+    '["L","XL","3XL"]',
+    '[{"name":"Buttercream Gold","hex":"#E6DFBA"}]',
+    45, true
   );
