@@ -1,0 +1,3 @@
+# Video files are served locally — not committed to git (they are large binary files)
+# Keep video-poster.jpg files committed (they are small thumbnails)
+*.mp4

@@ -112,4 +112,15 @@ insert into public.products (name, slug, category_id, description, price, compar
     '["M","L","XL","XXL"]',
     '[{"name":"Fuchsia Pink","hex":"#D63B6B"}]',
     60, true
+  ),
+  (
+    'Navy Rose Embroidered Kurta Set',
+    'navy-rose-embroidered-kurta-set',
+    '11111111-0000-0000-0000-000000000001',
+    'An elegant three-piece navy blue kurta set featuring large bold pink rose embroidery with green leaf motifs scattered across the straight-fit kurta body. V-neckline with silver gota trim, three-quarter sleeves, matching navy trousers and sheer printed chiffon dupatta.',
+    1614.00, 1899.00,
+    '[{"url":"/products/navy-rose-embroidered-kurta-set/front.jpg","alt":"Navy Rose Embroidered Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/navy-rose-embroidered-kurta-set/back.jpg","alt":"Navy Rose Embroidered Kurta Set — Back View","type":"image"},{"url":"/products/navy-rose-embroidered-kurta-set/left.jpg","alt":"Navy Rose Embroidered Kurta Set — Left Side Profile","type":"image"},{"url":"/products/navy-rose-embroidered-kurta-set/front-detail.jpg","alt":"Navy Rose Embroidered Kurta Set — Embroidery Detail","type":"image"},{"url":"/products/navy-rose-embroidered-kurta-set/front-2.jpg","alt":"Navy Rose Embroidered Kurta Set — Front Pose","type":"image"},{"url":"/products/navy-rose-embroidered-kurta-set/video.mp4","poster":"/products/navy-rose-embroidered-kurta-set/video-poster.jpg","alt":"Navy Rose Embroidered Kurta Set — Video Shoot","type":"video"}]',
+    '["M","L","XL","XXL"]',
+    '[{"name":"Navy Blue","hex":"#1B3D6F"}]',
+    60, true
   );
