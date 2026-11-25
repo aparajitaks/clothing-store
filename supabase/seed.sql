@@ -101,4 +101,15 @@ insert into public.products (name, slug, category_id, description, price, compar
     '["M","L","XL","XXL"]',
     '[{"name":"Wine Purple","hex":"#6B2D5E"}]',
     60, true
+  ),
+  (
+    'Fuchsia Floral Block Print Kurta Set',
+    'fuchsia-floral-block-print-kurta-set',
+    '11111111-0000-0000-0000-000000000001',
+    'A vibrant two-piece kurta set in bold fuchsia pink featuring an all-over dense white floral block print in a classic Indian botanical motif. Notched V-neckline with button placket and silver gota trim, three-quarter sleeves, A-line silhouette with side slits, matched with printed straight-cut trousers.',
+    1699.00, 1999.00,
+    '[{"url":"/products/fuchsia-floral-block-print-kurta-set/front.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/fuchsia-floral-block-print-kurta-set/right.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Right Side Profile","type":"image"},{"url":"/products/fuchsia-floral-block-print-kurta-set/front-2.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Front Pose","type":"image"},{"url":"/products/fuchsia-floral-block-print-kurta-set/back.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Back View","type":"image"},{"url":"/products/fuchsia-floral-block-print-kurta-set/back-2.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Back Detail","type":"image"},{"url":"/products/fuchsia-floral-block-print-kurta-set/video.mp4","poster":"/products/fuchsia-floral-block-print-kurta-set/video-poster.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Video Shoot","type":"video"}]',
+    '["M","L","XL","XXL"]',
+    '[{"name":"Fuchsia Pink","hex":"#D63B6B"}]',
+    60, true
   );
