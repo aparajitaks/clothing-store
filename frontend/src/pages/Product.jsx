@@ -131,7 +131,7 @@ export default function ProductPage() {
         return {
           url: item.url,
           type: isVid ? 'video' : 'image',
-          label: isVid ? 'Video Shoot' : (item.alt?.replace('Rust Embroidered Kurta Set — ', '') || defaultLabels[index] || `Pose ${index + 1}`),
+          label: isVid ? 'Video Shoot' : (item.label || (item.alt?.includes(' — ') ? item.alt.split(' — ')[1] : defaultLabels[index]) || `Pose ${index + 1}`),
           alt: item.alt || product.name,
           poster: item.poster || product.video_poster || null,
         };
