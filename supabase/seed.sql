@@ -123,4 +123,15 @@ insert into public.products (name, slug, category_id, description, price, compar
     '["M","L","XL","XXL"]',
     '[{"name":"Navy Blue","hex":"#1B3D6F"}]',
     60, true
+  ),
+  (
+    'Terracotta Phulkari Anarkali Kurta Set',
+    'terracotta-phulkari-anarkali-kurta-set',
+    '11111111-0000-0000-0000-000000000001',
+    'A graceful three-piece terracotta rust ensemble featuring a gathered flared anarkali kurta embellished with geometric ivory floral embroidery along the yoke, delicate tassel accents, and scattered star motifs across the body. Styled with matching straight-fit trousers and a sheer slub-textured terracotta dupatta finished with corner tassels.',
+    2124.00, 2499.00,
+    '[{"url":"/products/terracotta-phulkari-anarkali-kurta-set/front.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/terracotta-phulkari-anarkali-kurta-set/back.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Back View","type":"image"},{"url":"/products/terracotta-phulkari-anarkali-kurta-set/back-2.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Back Full Flared View","type":"image"},{"url":"/products/terracotta-phulkari-anarkali-kurta-set/right.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Right Side Profile","type":"image"},{"url":"/products/terracotta-phulkari-anarkali-kurta-set/front-2.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Yoke Embroidery Detail","type":"image"},{"url":"/products/terracotta-phulkari-anarkali-kurta-set/video.mp4","poster":"/products/terracotta-phulkari-anarkali-kurta-set/video-poster.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Model Video Shoot","type":"video"}]',
+    '["38","42","44","46"]',
+    '[{"name":"Terracotta Rust","hex":"#B44B32"}]',
+    60, true
   );
