@@ -211,4 +211,15 @@ insert into public.products (name, slug, category_id, description, price, compar
     '["M","L","XL","XXL"]',
     '[{"name":"Tangerine Orange","hex":"#D94F00"}]',
     60, true
+  ),
+  (
+    'Scarlet Red Kashmiri Embroidered Silk Kurta Set',
+    'scarlet-red-kashmiri-embroidered-kurta-set',
+    '11111111-0000-0000-0000-000000000001',
+    'A breathtaking three-piece scarlet red silk kurta set radiating festive opulence. The kurta features an exquisite multicolour Kashmiri-style embroidered yoke with mirror and zari detailing, paired with a full-length heavily printed floral hem panel. Complemented by a matching silk dupatta adorned with intricate geometric lattice borders, golden buti motifs, and a vivid floral printed pallu with tassel ends.',
+    2549.00, 2999.00,
+    '[{"url":"/products/scarlet-red-kashmiri-embroidered-kurta-set/front.jpg","alt":"Scarlet Red Kashmiri Embroidered Silk Kurta Set — Side Pose with Dupatta","isPrimary":true,"type":"image"},{"url":"/products/scarlet-red-kashmiri-embroidered-kurta-set/front-2.jpg","alt":"Scarlet Red Kashmiri Embroidered Silk Kurta Set — Front View","type":"image"},{"url":"/products/scarlet-red-kashmiri-embroidered-kurta-set/back.jpg","alt":"Scarlet Red Kashmiri Embroidered Silk Kurta Set — Back View","type":"image"},{"url":"/products/scarlet-red-kashmiri-embroidered-kurta-set/video.mp4","poster":"/products/scarlet-red-kashmiri-embroidered-kurta-set/video-poster.jpg","alt":"Scarlet Red Kashmiri Embroidered Silk Kurta Set — Model Video Shoot","type":"video"}]',
+    '["M","L"]',
+    '[{"name":"Scarlet Red","hex":"#CC2200"}]',
+    35, true
   );
