@@ -178,4 +178,15 @@ insert into public.products (name, slug, category_id, description, price, compar
     '["L","XL","3XL"]',
     '[{"name":"Buttercream Gold","hex":"#E6DFBA"}]',
     45, true
+  ),
+  (
+    'Sage Green Organza Zardosi Co-Ord Set',
+    'sage-green-organza-zardosi-coord-set',
+    '11111111-0000-0000-0000-000000000001',
+    'A contemporary two-piece sage green tissue-organza co-ord set featuring a collared tunic with a layered waistcoat-style overlay, side tie accents, and intricate gold-and-silver zardosi, gota, and coin-sequin chest embroidery over sheer three-quarter shimmer sleeves. Paired with matching wide-leg crinkled tissue-organza trousers for effortless fusion elegance.',
+    3144.00, 3699.00,
+    '[{"url":"/products/sage-green-organza-zardosi-coord-set/front.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/sage-green-organza-zardosi-coord-set/front-2.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Front Standing Pose","type":"image"},{"url":"/products/sage-green-organza-zardosi-coord-set/back.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Back View","type":"image"},{"url":"/products/sage-green-organza-zardosi-coord-set/right.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Side Profile","type":"image"},{"url":"/products/sage-green-organza-zardosi-coord-set/detail.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Zardosi Yoke Detail","type":"image"},{"url":"/products/sage-green-organza-zardosi-coord-set/video.mp4","poster":"/products/sage-green-organza-zardosi-coord-set/video-poster.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Model Video Shoot","type":"video"}]',
+    '["M","L","XL","XXL"]',
+    '[{"name":"Sage Green","hex":"#94AC8A"}]',
+    60, true
   );
