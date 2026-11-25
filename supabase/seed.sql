@@ -200,4 +200,15 @@ insert into public.products (name, slug, category_id, description, price, compar
     '["M","L","XL","XXL"]',
     '[{"name":"Mustard Gold","hex":"#D4A017"}]',
     60, true
+  ),
+  (
+    'Orange Floral Block Print Kurta Set',
+    'orange-floral-block-print-kurta-set',
+    '11111111-0000-0000-0000-000000000001',
+    'A vibrant three-piece orange kurta set in soft cotton-blend fabric, splashed with large bold floral block prints in purple, pink and green. Features a notched V-neck placket with mirror-embroidered trim, three-quarter sleeves with decorative kantha cuffs, and a matching floral dupatta with embroidered borders. Paired with straight-fit matching orange palazzo trousers — fresh, festive and effortlessly stylish.',
+    1699.00, 1999.00,
+    '[{"url":"/products/orange-floral-block-print-kurta-set/front.jpg","alt":"Orange Floral Block Print Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/orange-floral-block-print-kurta-set/back.jpg","alt":"Orange Floral Block Print Kurta Set — Back View","type":"image"},{"url":"/products/orange-floral-block-print-kurta-set/right.jpg","alt":"Orange Floral Block Print Kurta Set — Side Profile with Dupatta","type":"image"},{"url":"/products/orange-floral-block-print-kurta-set/detail.jpg","alt":"Orange Floral Block Print Kurta Set — Neckline & Embroidery Detail","type":"image"},{"url":"/products/orange-floral-block-print-kurta-set/video.mp4","poster":"/products/orange-floral-block-print-kurta-set/video-poster.jpg","alt":"Orange Floral Block Print Kurta Set — Model Video Shoot","type":"video"}]',
+    '["M","L","XL","XXL"]',
+    '[{"name":"Tangerine Orange","hex":"#D94F00"}]',
+    60, true
   );
