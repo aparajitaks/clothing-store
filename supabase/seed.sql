@@ -68,4 +68,26 @@ insert into public.products (name, slug, category_id, description, price, compar
     '["M","L","XL","XXL"]',
     '[{"name":"Rose Pink","hex":"#D9729D"}]',
     60, true
+  ),
+  (
+    'Midnight Black Zari Kurta Set',
+    'midnight-black-zari-kurta-set',
+    '11111111-0000-0000-0000-000000000001',
+    'An elegant three-piece black kurta set featuring scattered gold zari and sequin floral motifs across the body, a V-neckline with white and gold embroidery trim, and three-quarter sleeves. Paired with straight-fit black trousers and a sheer black chiffon dupatta adorned with gold buti embroidery and a heavy gold zari pallu border.',
+    2124.00, 2499.00,
+    '[{"url":"/products/midnight-black-zari-kurta-set/front.jpg","alt":"Midnight Black Zari Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/midnight-black-zari-kurta-set/back.jpg","alt":"Midnight Black Zari Kurta Set — Back View","type":"image"},{"url":"/products/midnight-black-zari-kurta-set/left.jpg","alt":"Midnight Black Zari Kurta Set — Left Side Profile","type":"image"},{"url":"/products/midnight-black-zari-kurta-set/video.mp4","poster":"/products/midnight-black-zari-kurta-set/video-poster.jpg","alt":"Midnight Black Zari Kurta Set — Video Shoot","type":"video"}]',
+    '["M","L","XL"]',
+    '[{"name":"Midnight Black","hex":"#1A1A1A"}]',
+    50, true
+  ),
+  (
+    'Tropical Floral Kaftan Palazzo Set',
+    'tropical-floral-kaftan-palazzo-set',
+    '11111111-0000-0000-0000-000000000001',
+    'A bold and vibrant two-piece ensemble featuring a loose-fit kaftan-style top with batwing/dolman sleeves in a striking tropical floral print — a mix of black and white illustrated botanicals with oversized coral pink, orange, yellow and green blooms. Paired with flowing navy black wide-leg palazzo pants.',
+    2124.00, 2499.00,
+    '[{"url":"/products/tropical-floral-kaftan-palazzo-set/front.jpg","alt":"Tropical Floral Kaftan Palazzo Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/tropical-floral-kaftan-palazzo-set/back.jpg","alt":"Tropical Floral Kaftan Palazzo Set — Back View","type":"image"},{"url":"/products/tropical-floral-kaftan-palazzo-set/left.jpg","alt":"Tropical Floral Kaftan Palazzo Set — Left Side Profile","type":"image"},{"url":"/products/tropical-floral-kaftan-palazzo-set/right.jpg","alt":"Tropical Floral Kaftan Palazzo Set — Right Side Profile","type":"image"},{"url":"/products/tropical-floral-kaftan-palazzo-set/video.mp4","poster":"/products/tropical-floral-kaftan-palazzo-set/video-poster.jpg","alt":"Tropical Floral Kaftan Palazzo Set — Video Shoot","type":"video"}]',
+    '["L","XXL"]',
+    '[{"name":"Tropical Floral","hex":"#E8734A"}]',
+    35, true
   );
