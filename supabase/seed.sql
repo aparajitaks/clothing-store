@@ -145,4 +145,15 @@ insert into public.products (name, slug, category_id, description, price, compar
     '["M","L","XL","XXL","3XL"]',
     '[{"name":"Sage Olive","hex":"#8E977D"}]',
     70, true
+  ),
+  (
+    'Midnight Navy Bandhani Foil Print Kurta Set',
+    'midnight-navy-bandhani-foil-kurta-set',
+    '11111111-0000-0000-0000-000000000001',
+    'A regal three-piece midnight navy kurta set showcasing antique gold and olive bandhani, paisley, and chevron geometric foil motifs across the straight-fit kurta silhouette. Finished with delicate pearl-and-beaded tassel edging along the three-quarter sleeve cuffs and straight hemline, paired with solid navy trousers and a flowing printed sheer dupatta.',
+    2634.00, 3099.00,
+    '[{"url":"/products/midnight-navy-bandhani-foil-kurta-set/front.jpg","alt":"Midnight Navy Bandhani Foil Print Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/midnight-navy-bandhani-foil-kurta-set/left.jpg","alt":"Midnight Navy Bandhani Foil Print Kurta Set — Left Side Profile","type":"image"},{"url":"/products/midnight-navy-bandhani-foil-kurta-set/back.jpg","alt":"Midnight Navy Bandhani Foil Print Kurta Set — Back View","type":"image"},{"url":"/products/midnight-navy-bandhani-foil-kurta-set/video.mp4","poster":"/products/midnight-navy-bandhani-foil-kurta-set/video-poster.jpg","alt":"Midnight Navy Bandhani Foil Print Kurta Set — Model Video Shoot","type":"video"}]',
+    '["L","XL","XXL"]',
+    '[{"name":"Midnight Navy","hex":"#182449"}]',
+    45, true
   );
