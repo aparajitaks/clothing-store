@@ -94,8 +94,8 @@ export default function Footer() {
           <ul className="footer__links">
             <li><Link to="/orders">Track Order</Link></li>
             <li><Link to="/faq">FAQ</Link></li>
-            <li><Link to="/faq">Shipping & Returns</Link></li>
-            <li><Link to="/faq">Size Guide</Link></li>
+            <li><Link to="/faq#shipping">Shipping &amp; Returns</Link></li>
+            <li><Link to="/faq#size-guide">Size Guide</Link></li>
             <li><Link to="/contact">Contact Us</Link></li>
           </ul>
         </div>
@@ -132,11 +132,11 @@ export default function Footer() {
           <span className="footer__payment-pill">Razorpay Secure</span>
         </div>
         <div className="footer__legal">
-          <Link to="/faq">Privacy Policy</Link>
+          <Link to="/faq#privacy">Privacy Policy</Link>
           <span>·</span>
-          <Link to="/faq">Terms of Service</Link>
+          <Link to="/faq#terms">Terms of Service</Link>
           <span>·</span>
-          <Link to="/faq">Shipping Policy</Link>
+          <Link to="/faq#shipping">Shipping Policy</Link>
         </div>
       </div>
     </footer>

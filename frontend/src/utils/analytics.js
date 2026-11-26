@@ -1,5 +1,5 @@
 /**
- * Event-driven analytics dispatcher for TK TiyaCollections
+ * Event-driven analytics dispatcher for TEYA COLLECTIONS
  * Fires events to GA4, Meta Pixel, and any additional configured platforms
  * All tracking respects user consent before firing
  */

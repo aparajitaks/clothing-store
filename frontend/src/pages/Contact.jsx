@@ -1,22 +1,58 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle } from 'lucide-react';
+import api from '../lib/axios';
 import './Contact.css';
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
 
-  const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  const handleChange = (e) => {
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+    // Clear field-level error on change
+    if (fieldErrors[e.target.name]) {
+      setFieldErrors((fe) => ({ ...fe, [e.target.name]: undefined }));
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+    setFieldErrors({});
+
+    const clientErrors = {};
+    if (!form.name || form.name.trim().length < 2) {
+      clientErrors.name = 'Name is required (min 2 characters).';
+    }
+    if (!form.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      clientErrors.email = 'Valid email address is required.';
+    }
+    if (!form.message || form.message.trim().length < 10) {
+      clientErrors.message = 'Message is required (min 10 characters).';
+    }
+    if (Object.keys(clientErrors).length > 0) {
+      setFieldErrors(clientErrors);
+      return;
+    }
+
     setSubmitting(true);
-    // Simulate sending — connect to real email API in production
-    await new Promise((r) => setTimeout(r, 1200));
-    setSubmitted(true);
-    setSubmitting(false);
+    try {
+      await api.post('/contact', form);
+      setSubmitted(true);
+    } catch (err) {
+      const data = err.response?.data;
+      if (data?.fields) {
+        setFieldErrors(data.fields);
+      } else {
+        setError(data?.error || 'Could not reach our concierge server. Please write directly to care@teyacollections.com.');
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -49,7 +85,7 @@ export default function ContactPage() {
             <div className="contact-info__icon"><Mail size={20} /></div>
             <div>
               <p className="contact-info__label">Email</p>
-              <a href="mailto:care@tiyacollections.com" className="contact-info__value">care@tiyacollections.com</a>
+              <a href="mailto:care@teyacollections.com" className="contact-info__value">care@teyacollections.com</a>
             </div>
           </div>
           <div className="contact-info__block">
@@ -93,10 +129,12 @@ export default function ContactPage() {
                 <div className="form-group">
                   <label htmlFor="contact-name">Full Name *</label>
                   <input id="contact-name" name="name" type="text" value={form.name} onChange={handleChange} required placeholder="Your name" />
+                  {fieldErrors.name && <span className="form-field-error">{fieldErrors.name}</span>}
                 </div>
                 <div className="form-group">
                   <label htmlFor="contact-email">Email Address *</label>
                   <input id="contact-email" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="your@email.com" />
+                  {fieldErrors.email && <span className="form-field-error">{fieldErrors.email}</span>}
                 </div>
               </div>
               <div className="form-group">
@@ -114,7 +152,14 @@ export default function ContactPage() {
               <div className="form-group">
                 <label htmlFor="contact-message">Message *</label>
                 <textarea id="contact-message" name="message" rows={5} value={form.message} onChange={handleChange} required placeholder="Tell us how we can help..." />
+                {fieldErrors.message && <span className="form-field-error">{fieldErrors.message}</span>}
               </div>
+              {error && (
+                <div className="contact-form__error">
+                  <AlertCircle size={16} />
+                  <span>{error}</span>
+                </div>
+              )}
               <button type="submit" className="btn-primary contact-form__submit" disabled={submitting}>
                 {submitting ? 'Sending...' : <><Send size={16} /> Send Message</>}
               </button>

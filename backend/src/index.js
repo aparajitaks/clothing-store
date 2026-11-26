@@ -17,6 +17,7 @@ const reviewRoutes    = require('./routes/reviews');
 const couponRoutes    = require('./routes/coupons');
 const shippingRoutes  = require('./routes/shipping');
 const settingsRoutes  = require('./routes/settings');
+const contactRoutes   = require('./routes/contact');
 const { errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
@@ -91,6 +92,7 @@ app.use('/api/coupons',    couponRoutes);
 app.use('/api/orders/create', orderLimiter);
 app.use('/api/shipping',   shippingRoutes);
 app.use('/api/settings',   settingsRoutes);
+app.use('/api/contact',    contactRoutes);
 
 // ─── 404 ─────────────────────────────────────────────────────
 app.use((req, res) => {

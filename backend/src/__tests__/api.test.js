@@ -413,3 +413,54 @@ describe('Tax Service Unit Tests', () => {
     expect(result.cgst).toBe(0);
   });
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+describe('Contact Form API & Email Notification', () => {
+  test('POST /api/contact — missing/short fields → 400 with field errors', async () => {
+    const res = await request(app)
+      .post('/api/contact')
+      .send({ name: 'A', email: 'not-an-email', message: 'Hi' });
+    expect(res.status).toBe(400);
+    expect(res.body.fields).toHaveProperty('name');
+    expect(res.body.fields).toHaveProperty('email');
+    expect(res.body.fields).toHaveProperty('message');
+  });
+
+  test('POST /api/contact — valid payload → 200 success and persists when DB available', async () => {
+    const insertMock = jest.fn().mockResolvedValue({ error: null });
+    supabase.from.mockImplementationOnce(() => ({ insert: insertMock }));
+    const res = await request(app)
+      .post('/api/contact')
+      .send({
+        name: 'Ananya Sharma',
+        email: 'ananya@example.com',
+        subject: 'Size Guidance',
+        message: 'Looking for sizing guidance on the Champagne Gold Zari Kurta Set.',
+      });
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(insertMock).toHaveBeenCalledTimes(1);
+    expect(insertMock.mock.calls[0][0]).toMatchObject({
+      name: 'Ananya Sharma',
+      email: 'ananya@example.com',
+      subject: 'Size Guidance',
+    });
+  });
+
+  test('emailService.sendContactNotification escapes HTML and resolves cleanly', async () => {
+    const emailService = require('../services/emailService');
+    const spy = jest.spyOn(emailService, 'send').mockResolvedValueOnce({ success: true, simulated: true });
+    const res = await emailService.sendContactNotification('owner@teyacollections.com', {
+      name: '<script>alert(1)</script>',
+      email: 'test@example.com',
+      subject: 'Order & Query',
+      message: 'Line 1\nLine 2',
+    });
+    expect(res.success).toBe(true);
+    expect(spy).toHaveBeenCalledTimes(1);
+    const callArg = spy.mock.calls[0][0];
+    expect(callArg.html).toContain('&lt;script&gt;alert(1)&lt;/script&gt;');
+    expect(callArg.html).not.toContain('<script>alert(1)</script>');
+    spy.mockRestore();
+  });
+});

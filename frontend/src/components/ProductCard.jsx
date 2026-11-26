@@ -9,6 +9,7 @@ import './ProductCard.css';
 export default function ProductCard({ product }) {
   const [activePoseIndex, setActivePoseIndex] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
   const touchStartRef = useRef({ x: 0, y: 0 });
   const didSwipeRef = useRef(false);
   const addItem = useCartStore((s) => s.addItem);
@@ -47,12 +48,14 @@ export default function ProductCard({ product }) {
     e.preventDefault();
     e.stopPropagation();
     setActivePoseIndex((prev) => (prev === 0 ? mediaList.length - 1 : prev - 1));
+    setVideoFailed(false);
   };
 
   const handleNextPose = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setActivePoseIndex((prev) => (prev === mediaList.length - 1 ? 0 : prev + 1));
+    setVideoFailed(false);
   };
 
   const handleQuickAdd = (e) => {
@@ -123,19 +126,23 @@ export default function ProductCard({ product }) {
         onTouchEnd={handleTouchEnd}
         onClick={handleImageLinkClick}
       >
-        {currentPose?.type === 'video' ? (
+        {currentPose?.type === 'video' && !videoFailed ? (
           <video
-            src={currentPose.url}
-            poster={currentPose.poster}
+            key={currentPose.url}
+            poster={currentPose.poster || undefined}
+            preload="metadata"
             autoPlay
             muted
             loop
             playsInline
+            onError={() => setVideoFailed(true)}
             className="product-card__image product-card__video"
-          />
+          >
+            <source src={currentPose.url} type="video/mp4" />
+          </video>
         ) : (
           <img
-            src={currentPose?.url}
+            src={currentPose?.type === 'video' ? (currentPose.poster || mediaList[0]?.url) : currentPose?.url}
             alt={`${product.name} — view ${activePoseIndex + 1}`}
             className="product-card__image"
             loading="lazy"

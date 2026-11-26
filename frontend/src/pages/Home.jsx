@@ -96,14 +96,14 @@ export default function HomePage() {
           <picture className="biba-hero__picture">
             <source
               media="(max-width: 768px)"
-              srcSet="/hero_luxury.jpg"
+              srcSet="/biba_hero_m.jpg"
             />
             <source
               media="(min-width: 769px)"
-              srcSet="/hero_luxury.jpg"
+              srcSet="/biba_hero.jpg"
             />
             <img
-              src="/hero_luxury.jpg"
+              src="/biba_hero.jpg"
               alt="TEYA COLLECTIONS Autumn Winter Collection"
               className="biba-hero__image"
             />
@@ -253,14 +253,14 @@ export default function HomePage() {
           <picture className="biba-mid-banner__picture">
             <source
               media="(max-width: 768px)"
-              srcSet="/hero_luxury.jpg"
+              srcSet="/biba_hero_m.jpg"
             />
             <source
               media="(min-width: 769px)"
-              srcSet="/hero_luxury.jpg"
+              srcSet="/biba_hero.jpg"
             />
             <img
-              src="/hero_luxury.jpg"
+              src="/biba_hero.jpg"
               alt="Artisanal Heritage Weaves"
               loading="lazy"
             />

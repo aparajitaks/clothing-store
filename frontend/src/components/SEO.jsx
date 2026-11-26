@@ -9,7 +9,7 @@ const DEFAULT_IMAGE = `${SITE_URL}/og-image.png`;
  * Supports OpenGraph, Twitter Cards, and JSON-LD structured data.
  *
  * Props:
- *  title        — page title (appended with " | TK TeyaCollections")
+ *  title        — page title (appended with " | TEYA COLLECTIONS")
  *  description  — meta description
  *  canonical    — canonical URL path (e.g. "/product/silk-saree")
  *  image        — OG image URL (absolute)

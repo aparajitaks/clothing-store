@@ -8,29 +8,43 @@ import './Collections.css';
 
 export default function CollectionDetailPage() {
   const { slug } = useParams();
-  const [collection, setCollection] = useState(null);
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const localCol = DEFAULT_COLLECTIONS.find((c) => c.slug === slug);
+  const localProds = DEFAULT_PRODUCTS.filter(
+    (p) => p.collection?.slug === slug || (localCol && p.collection_id === localCol.id)
+  );
+  const [collection, setCollection] = useState(localCol || { name: 'Collection', slug });
+  const [products, setProducts] = useState(localProds.length > 0 ? localProds : DEFAULT_PRODUCTS);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    api.get(`/products/collections/${slug}`)
+    let isMounted = true;
+    const col = DEFAULT_COLLECTIONS.find((c) => c.slug === slug);
+    const matching = DEFAULT_PRODUCTS.filter(
+      (p) => p.collection?.slug === slug || (col && p.collection_id === col.id)
+    );
+    setCollection(col || { name: 'Collection', slug });
+    setProducts(matching.length > 0 ? matching : DEFAULT_PRODUCTS);
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2500);
+    api.get(`/products/collections/${slug}`, { signal: controller.signal })
       .then((res) => {
+        clearTimeout(timeoutId);
         const data = res.data?.data;
-        if (data) {
+        if (isMounted && data) {
           setCollection(data.collection || data);
-          setProducts(data.products || []);
-        } else {
-          const col = DEFAULT_COLLECTIONS.find((c) => c.slug === slug);
-          setCollection(col || { name: 'Collection', slug });
-          setProducts(DEFAULT_PRODUCTS);
+          if (Array.isArray(data.products) && data.products.length > 0) {
+            setProducts(data.products);
+          }
         }
       })
       .catch(() => {
-        const col = DEFAULT_COLLECTIONS.find((c) => c.slug === slug);
-        setCollection(col || { name: 'Collection', slug });
-        setProducts(DEFAULT_PRODUCTS);
+        clearTimeout(timeoutId);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+    return () => { isMounted = false; };
   }, [slug]);
 
   if (loading) {

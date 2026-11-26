@@ -1,5 +1,5 @@
 /**
- * Centralized currency formatter for TK TiyaCollections
+ * Centralized currency formatter for TEYA COLLECTIONS
  * Primary: INR (₹) with Indian number formatting
  * Architecture supports future multi-currency expansion
  */

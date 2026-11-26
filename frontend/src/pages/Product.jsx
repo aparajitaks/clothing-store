@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   ShoppingBag,
@@ -14,7 +14,8 @@ import {
   Maximize2,
   X,
   Play,
-  RotateCcw
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useCartStore from '../store/cartStore';
@@ -71,10 +72,21 @@ export default function ProductPage() {
 
   // Amazon-style Lightbox Modal state
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxZoomed, setLightboxZoomed] = useState(false);
+  const [lightboxZoomPos, setLightboxZoomPos] = useState({ x: 50, y: 50 });
+
+  // Video player state
+  const videoRef = useRef(null);
+  const [videoPlaying, setVideoPlaying] = useState(false);
+  const [videoMuted, setVideoMuted] = useState(true);
+  const [videoError, setVideoError] = useState(false);
 
   // Reset selected image when slug changes
   useEffect(() => {
     setSelectedImage(0);
+    setVideoPlaying(false);
+    setVideoError(false);
+    setLightboxZoomed(false);
     const found = DEFAULT_PRODUCTS.find((p) => p.slug === slug || p.id === slug);
     if (found) {
       setProduct(found);
@@ -82,6 +94,17 @@ export default function ProductPage() {
       if (Array.isArray(found.sizes) && found.sizes.length > 0) setSelectedSize(found.sizes[0]);
     }
   }, [slug]);
+
+  // Reset video state when switching media items
+  useEffect(() => {
+    setVideoPlaying(false);
+    setVideoError(false);
+    setLightboxZoomed(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  }, [selectedImage]);
 
   // Background fetch to refresh data if API or DB is available
   useEffect(() => {
@@ -141,6 +164,45 @@ export default function ProductPage() {
   }, [product]);
 
   const currentMedia = mediaList[selectedImage] || mediaList[0];
+
+  // Video control handlers
+  const handleVideoPlay = useCallback(() => {
+    if (!videoRef.current) return;
+    setVideoError(false);
+    if (videoPlaying) {
+      videoRef.current.pause();
+      setVideoPlaying(false);
+    } else {
+      videoRef.current.play().then(() => {
+        setVideoPlaying(true);
+      }).catch(() => {
+        // Retry muted if browser blocked unmuted playback
+        if (videoRef.current && !videoRef.current.muted) {
+          videoRef.current.muted = true;
+          setVideoMuted(true);
+          videoRef.current.play().then(() => setVideoPlaying(true)).catch(() => setVideoPlaying(false));
+        } else {
+          setVideoPlaying(false);
+        }
+      });
+    }
+  }, [videoPlaying]);
+
+  const handleVideoRetry = useCallback((e) => {
+    e?.stopPropagation();
+    setVideoError(false);
+    if (videoRef.current) {
+      videoRef.current.load();
+      videoRef.current.play().then(() => setVideoPlaying(true)).catch(() => setVideoPlaying(false));
+    }
+  }, []);
+
+  const handleVideoMuteToggle = useCallback((e) => {
+    e.stopPropagation();
+    if (!videoRef.current) return;
+    videoRef.current.muted = !videoMuted;
+    setVideoMuted((m) => !m);
+  }, [videoMuted]);
 
   // Amazon-style mouse move zoom calculation (pointer/hover devices only)
   const canHover = typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
@@ -221,7 +283,7 @@ export default function ProductPage() {
     <>
       <SEO
         title={product.name}
-        description={product.description || `Buy ${product.name} from TK TeyaCollections — premium handcrafted traditional Indian fashion.`}
+        description={product.description || `Buy ${product.name} from TEYA COLLECTIONS — premium handcrafted traditional Indian fashion.`}
         canonical={`/product/${product.slug}`}
         image={product.images?.[0]?.url || product.images?.[0]}
         type="product"
@@ -298,19 +360,68 @@ export default function ProductPage() {
               {currentMedia?.type === 'video' ? (
                 <div className="amazon-video-wrapper">
                   <video
+                    ref={videoRef}
                     key={currentMedia.url}
-                    src={currentMedia.url}
-                    poster={currentMedia.poster}
-                    controls
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
                     className="pdp-main-video"
-                  />
+                    poster={currentMedia.poster || undefined}
+                    preload="metadata"
+                    controls={videoPlaying}
+                    playsInline
+                    muted={videoMuted}
+                    loop
+                    onEnded={() => setVideoPlaying(false)}
+                    onPlay={() => setVideoPlaying(true)}
+                    onPause={() => setVideoPlaying(false)}
+                    onError={() => {
+                      setVideoPlaying(false);
+                      setVideoError(true);
+                    }}
+                  >
+                    <source src={currentMedia.url} type="video/mp4" />
+                    Your browser does not support HTML5 video.
+                  </video>
+
+                  {/* Video load error fallback */}
+                  {videoError ? (
+                    <div className="amazon-video-play-overlay" onClick={handleVideoRetry}>
+                      <div className="amazon-video-error">
+                        <p>Video could not be loaded.</p>
+                        <button type="button" className="btn-primary" onClick={handleVideoRetry}>
+                          Retry Playback
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Play / Pause overlay — shown until playback starts */
+                    !videoPlaying && (
+                      <div className="amazon-video-play-overlay" onClick={handleVideoPlay}>
+                        <button
+                          type="button"
+                          className="amazon-video-play-btn"
+                          onClick={(e) => { e.stopPropagation(); handleVideoPlay(); }}
+                          aria-label="Play video"
+                        >
+                          <Play size={36} fill="#FFF" color="#FFF" />
+                        </button>
+                      </div>
+                    )
+                  )}
+
+                  {/* Quick mute toggle before playback starts (native controls handle audio while playing) */}
+                  {!videoPlaying && !videoError && (
+                    <button
+                      type="button"
+                      className="amazon-video-mute-btn"
+                      onClick={handleVideoMuteToggle}
+                      aria-label={videoMuted ? 'Unmute video' : 'Mute video'}
+                    >
+                      {videoMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                    </button>
+                  )}
+
                   <div className="amazon-video-badge-pill">
                     <Play size={12} fill="#FFF" color="#FFF" />
-                    <span>Model Shoot • 45s HD</span>
+                    <span>{selectedImage + 1} / {mediaList.length} · Model Shoot · HD</span>
                   </div>
                 </div>
               ) : (
@@ -323,10 +434,12 @@ export default function ProductPage() {
                       isZooming
                         ? {
                             transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
-                            transform: 'scale(2.35)',
+                            transform: 'scale(2.5)',
+                            willChange: 'transform',
                           }
                         : undefined
                     }
+                    draggable={false}
                   />
 
                   {/* Amazon Zoom Hint & Fullscreen Icon */}
@@ -367,12 +480,14 @@ export default function ProductPage() {
                 <ChevronRight size={22} />
               </button>
 
-              {/* Active Pose Counter Badge */}
-              <div className="amazon-pose-indicator">
-                <span>{selectedImage + 1} / {mediaList.length}</span>
-                <span className="amazon-pose-separator">•</span>
-                <span>{currentMedia?.label}</span>
-              </div>
+              {/* Active Pose Counter Badge (images only — video has its own combined badge) */}
+              {currentMedia?.type !== 'video' && (
+                <div className="amazon-pose-indicator">
+                  <span>{selectedImage + 1} / {mediaList.length}</span>
+                  <span className="amazon-pose-separator">•</span>
+                  <span>{currentMedia?.label}</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -561,21 +676,44 @@ export default function ProductPage() {
                   <ChevronLeft size={36} />
                 </button>
 
-                <div className="amazon-lightbox__stage">
+                <div
+                  className={`amazon-lightbox__stage ${lightboxZoomed ? 'is-zoomed' : ''}`}
+                  onMouseMove={(e) => {
+                    if (!lightboxZoomed) return;
+                    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+                    const x = Math.max(0, Math.min(100, ((e.clientX - left) / width) * 100));
+                    const y = Math.max(0, Math.min(100, ((e.clientY - top) / height) * 100));
+                    setLightboxZoomPos({ x, y });
+                  }}
+                >
                   {currentMedia?.type === 'video' ? (
                     <video
                       key={currentMedia.url}
-                      src={currentMedia.url}
-                      poster={currentMedia.poster}
+                      poster={currentMedia.poster || undefined}
+                      preload="metadata"
                       controls
-                      autoPlay
+                      playsInline
                       className="amazon-lightbox__video"
-                    />
+                    >
+                      <source src={currentMedia.url} type="video/mp4" />
+                      Your browser does not support HTML5 video.
+                    </video>
                   ) : (
                     <img
                       src={currentMedia?.url}
                       alt={`${product.name} — ${currentMedia?.label}`}
-                      className="amazon-lightbox__img"
+                      className={`amazon-lightbox__img ${lightboxZoomed ? 'zoomed' : ''}`}
+                      onClick={() => setLightboxZoomed((z) => !z)}
+                      style={
+                        lightboxZoomed
+                          ? {
+                              transformOrigin: `${lightboxZoomPos.x}% ${lightboxZoomPos.y}%`,
+                              transform: 'scale(2.2)',
+                            }
+                          : undefined
+                      }
+                      title={lightboxZoomed ? 'Click to reset zoom' : 'Click to zoom in'}
+                      draggable={false}
                     />
                   )}
                 </div>

@@ -134,6 +134,24 @@ a.contact-info__value:hover { color: var(--color-gold); }
 
 .form-group textarea { resize: vertical; }
 
+.form-field-error {
+  color: #D90429;
+  font-size: 0.75rem;
+  margin-top: 2px;
+}
+
+.contact-form__error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #D90429;
+  font-size: 0.82rem;
+  padding: 10px 14px;
+  background: #FFF5F5;
+  border-radius: 4px;
+  border: 1px solid #FFD0D0;
+}
+
 .contact-form__submit {
   display: inline-flex;
   align-items: center;

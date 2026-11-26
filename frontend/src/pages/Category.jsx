@@ -48,8 +48,11 @@ const CATEGORY_META = {
 
 export default function CategoryPage() {
   const { slug } = useParams();
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const initialFiltered = DEFAULT_PRODUCTS.filter(
+    (p) => (p.categories && p.categories.slug === slug) || p.category_slug === slug
+  );
+  const [products, setProducts] = useState(initialFiltered);
+  const [loading, setLoading] = useState(false);
 
   const meta = CATEGORY_META[slug] || {
     title: slug ? slug.replace('-', ' ').toUpperCase() : 'Category',
@@ -58,13 +61,21 @@ export default function CategoryPage() {
   };
 
   useEffect(() => {
+    let isMounted = true;
+    const localFiltered = DEFAULT_PRODUCTS.filter(
+      (p) => (p.categories && p.categories.slug === slug) || p.category_slug === slug
+    );
+    setProducts(localFiltered);
+
     async function loadCategoryProducts() {
-      setLoading(true);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
       try {
         // API shape: { data: { products: [...], pagination: {} } }
-        const res = await api.get(`/products?category=${slug}&limit=50`);
+        const res = await api.get(`/products?category=${slug}&limit=50`, { signal: controller.signal });
+        clearTimeout(timeoutId);
         const apiProducts = res.data?.data?.products ?? res.data?.data;
-        if (Array.isArray(apiProducts) && apiProducts.length > 0) {
+        if (isMounted && Array.isArray(apiProducts) && apiProducts.length > 0) {
           setProducts(apiProducts);
           return;
         }
@@ -75,26 +86,18 @@ export default function CategoryPage() {
           .eq('categories.slug', slug)
           .eq('is_active', true);
 
-        if (data && data.length > 0) {
+        if (isMounted && data && data.length > 0) {
           setProducts(data);
-          return;
         }
-
-        const filtered = DEFAULT_PRODUCTS.filter(
-          (p) => (p.categories && p.categories.slug === slug) || p.category_slug === slug
-        );
-        setProducts(filtered.length > 0 ? filtered : DEFAULT_PRODUCTS);
       } catch (err) {
-        console.warn('Fallback category load:', err);
-        const filtered = DEFAULT_PRODUCTS.filter(
-          (p) => (p.categories && p.categories.slug === slug) || p.category_slug === slug
-        );
-        setProducts(filtered.length > 0 ? filtered : DEFAULT_PRODUCTS);
+        clearTimeout(timeoutId);
+        // Keep local category items already rendered
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     }
     loadCategoryProducts();
+    return () => { isMounted = false; };
   }, [slug]);
 
   return (

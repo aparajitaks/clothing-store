@@ -122,7 +122,7 @@ export default function SizeGuideModal({ isOpen, onClose, sizeChart, category })
               </div>
 
               <div className="sgm-note">
-                <p>All our pieces are cut with a 1-inch ease. For a relaxed fit, size up. For fit queries, contact our concierge at <a href="mailto:care@tiyacollections.com">care@tiyacollections.com</a></p>
+                <p>All our pieces are cut with a 1-inch ease. For a relaxed fit, size up. For fit queries, contact our concierge at <a href="mailto:care@teyacollections.com">care@teyacollections.com</a></p>
               </div>
             </div>
           </motion.div>

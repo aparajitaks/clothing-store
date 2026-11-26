@@ -9,7 +9,7 @@ const taxService = {
    * In fashion/textiles:
    * - Garments <= ₹1,000 are taxed at 5% GST
    * - Garments > ₹1,000 are taxed at 12% GST
-   * All MRP prices on TK / TiyaCollections are GST-inclusive by default.
+   * All MRP prices on TEYA COLLECTIONS are GST-inclusive by default.
    */
   calculateTax: (items, isInclusive = true, state = 'Karnataka') => {
     let totalTax = 0;

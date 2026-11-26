@@ -36,6 +36,11 @@
   gap: var(--space-3xl);
 }
 
+.faq-section,
+.faq-item {
+  scroll-margin-top: calc(var(--nav-height, 92px) + 1.5rem);
+}
+
 .faq-section__title {
   font-family: var(--font-sans);
   font-size: 11px;

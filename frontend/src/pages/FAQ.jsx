@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import SEO, { buildFAQSchema } from '../components/SEO';
@@ -14,7 +15,7 @@ const FAQ_ITEMS = [
       },
       {
         q: 'Do you offer custom sizing or alterations?',
-        a: 'Yes — for select pieces we offer a bespoke tailoring service. Please contact our concierge at care@tiyacollections.com with your measurements and the product you\'re interested in, and we will provide a quotation.',
+        a: 'Yes — for select pieces we offer a bespoke tailoring service. Please contact our concierge at care@teyacollections.com with your measurements and the product you\'re interested in, and we will provide a quotation.',
       },
       {
         q: 'The size I want is out of stock. Will it be restocked?',
@@ -35,7 +36,7 @@ const FAQ_ITEMS = [
       },
       {
         q: 'Can I modify or cancel my order after placing it?',
-        a: 'Orders may be modified or cancelled within 2 hours of placement. After this window, your piece will have entered preparation. Contact care@tiyacollections.com immediately if you need to make changes.',
+        a: 'Orders may be modified or cancelled within 2 hours of placement. After this window, your piece will have entered preparation. Contact care@teyacollections.com immediately if you need to make changes.',
       },
       {
         q: 'Do you offer COD on all orders?',
@@ -52,7 +53,7 @@ const FAQ_ITEMS = [
       },
       {
         q: 'Do you ship internationally?',
-        a: 'Currently we ship within India only. International shipping to the US, UK, and Europe is planned for Q1 2025. Join our newsletter to be notified at launch.',
+        a: 'Currently we ship within India only. International shipping to the US, UK, and Europe is coming soon. Join our newsletter to be notified at launch.',
       },
       {
         q: 'What is the free shipping threshold?',
@@ -94,12 +95,27 @@ const FAQ_ITEMS = [
       },
     ],
   },
+  {
+    category: 'Privacy & Terms',
+    items: [
+      {
+        id: 'privacy',
+        q: 'Privacy Policy — How is my personal and payment information used?',
+        a: 'We collect only the details needed to fulfil orders and respond to support enquiries (such as name, contact details, and shipping address). Online payments are handled securely by Razorpay and card details are never stored on our servers. For data enquiries or deletion requests, write to care@teyacollections.com.',
+      },
+      {
+        id: 'terms',
+        q: 'Terms of Service — What terms apply to orders placed on TEYA COLLECTIONS?',
+        a: 'All listed prices are in Indian Rupees (INR) and inclusive of applicable GST. Orders are confirmed upon payment authorisation (or COD verification) and are subject to stock availability and 7-day return eligibility for unworn garments with original tags intact. For order assistance, contact care@teyacollections.com.',
+      },
+    ],
+  },
 ];
 
-function FAQItem({ q, a }) {
+function FAQItem({ id, q, a }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className={`faq-item ${open ? 'open' : ''}`}>
+    <div id={id} className={`faq-item ${open ? 'open' : ''}`}>
       <button className="faq-item__question" onClick={() => setOpen(!open)} aria-expanded={open}>
         <span>{q}</span>
         <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }}>
@@ -124,14 +140,25 @@ function FAQItem({ q, a }) {
 }
 
 export default function FAQPage() {
+  const { hash } = useLocation();
   // Flatten all FAQ items for JSON-LD schema
   const allFaqs = FAQ_ITEMS.flatMap((s) => s.items.map((i) => ({ question: i.q, answer: i.a })));
+
+  useEffect(() => {
+    if (!hash) return;
+    const id = hash.replace('#', '');
+    const timer = setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [hash]);
 
   return (
     <>
       <SEO
         title="FAQ — Frequently Asked Questions"
-        description="Find answers to common questions about sizing, shipping, returns, and payments at TK TeyaCollections."
+        description="Find answers to common questions about sizing, shipping, returns, and payments at TEYA COLLECTIONS."
         canonical="/faq"
         jsonLd={buildFAQSchema(allFaqs)}
       />
@@ -140,7 +167,7 @@ export default function FAQPage() {
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <p className="faq-eyebrow">Support</p>
           <h1 className="faq-title">Frequently Asked Questions</h1>
-          <p className="faq-subtitle">Can't find your answer? Write to us at <a href="mailto:care@tiyacollections.com">care@tiyacollections.com</a></p>
+          <p className="faq-subtitle">Can't find your answer? Write to us at <a href="mailto:care@teyacollections.com">care@teyacollections.com</a></p>
         </motion.div>
       </div>
 
@@ -148,6 +175,11 @@ export default function FAQPage() {
         {FAQ_ITEMS.map((section, si) => (
           <motion.section
             key={section.category}
+            id={section.category === 'Sizing & Fit' ? 'size-guide'
+              : section.category === 'Shipping & Delivery' ? 'shipping'
+              : section.category === 'Returns & Exchanges' ? 'returns'
+              : section.category === 'Orders & Payment' ? 'payment'
+              : undefined}
             className="faq-section"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -157,7 +189,7 @@ export default function FAQPage() {
             <h2 className="faq-section__title">{section.category}</h2>
             <div className="faq-list">
               {section.items.map((item) => (
-                <FAQItem key={item.q} q={item.q} a={item.a} />
+                <FAQItem key={item.q} id={item.id} q={item.q} a={item.a} />
               ))}
             </div>
           </motion.section>

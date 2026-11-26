@@ -1,18 +1,27 @@
 /**
  * Transactional Email Notification Service
- * Luxury branded email templates for TK / TiyaCollections
+ * Luxury branded email templates for TEYA COLLECTIONS
  * Integrates with Resend API when RESEND_API_KEY is configured,
  * otherwise logs cleanly in development.
  */
 
 const { STORE_SETTINGS } = require('../data/seedData');
 
+function escapeHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 const emailHeaderHtml = `
   <div style="background-color: #F9F5F0; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; text-align: center;">
     <div style="max-width: 600px; margin: 0 auto; background: #FFFFFF; border: 1px solid #E5DDD4; border-radius: 4px; overflow: hidden; text-align: left;">
       <div style="background-color: #111111; padding: 24px; text-align: center; border-bottom: 2px solid #C9A96E;">
-        <span style="font-family: Georgia, serif; font-size: 26px; letter-spacing: 2px; color: #FFFFFF; font-weight: 400;">TK</span>
-        <span style="font-size: 13px; letter-spacing: 4px; color: #C9A96E; text-transform: uppercase; display: block; margin-top: 4px;">TiyaCollections</span>
+        <span style="font-family: Georgia, serif; font-size: 26px; letter-spacing: 2px; color: #FFFFFF; font-weight: 400;">TEYA</span>
+        <span style="font-size: 13px; letter-spacing: 4px; color: #C9A96E; text-transform: uppercase; display: block; margin-top: 4px;">COLLECTIONS</span>
       </div>
       <div style="padding: 32px 28px; color: #1A1A1A; line-height: 1.6;">
 `;
@@ -43,7 +52,7 @@ const emailService = {
             Authorization: `Bearer ${resendApiKey}`,
           },
           body: JSON.stringify({
-            from: `TK TiyaCollections <${process.env.EMAIL_FROM || 'concierge@tiyacollections.com'}>`,
+            from: `TEYA COLLECTIONS <${process.env.EMAIL_FROM || 'concierge@teyacollections.com'}>`,
             to: [to],
             subject,
             html,
@@ -86,7 +95,7 @@ const emailService = {
     const html = `
       ${emailHeaderHtml}
       <h2 style="font-family: Georgia, serif; font-size: 22px; font-weight: 400; color: #111111; margin-top: 0;">Order Confirmed</h2>
-      <p>Thank you for acquiring traditional craftsmanship from TK TiyaCollections. Your order has been placed successfully and is being prepared with artisanal care.</p>
+      <p>Thank you for acquiring traditional craftsmanship from TEYA COLLECTIONS. Your order has been placed successfully and is being prepared with artisanal care.</p>
       
       <div style="background-color: #F9F5F0; padding: 16px; border-radius: 4px; margin: 20px 0;">
         <p style="margin: 0; font-size: 13px; color: #7A6F67;">Order Reference: <strong style="color: #1A1A1A;">#${(order.id || '').substring(0, 8).toUpperCase()}</strong></p>
@@ -117,7 +126,7 @@ const emailService = {
 
     return emailService.send({
       to: customerEmail,
-      subject: `Order Confirmation #${(order.id || '').substring(0, 8).toUpperCase()} — TK TiyaCollections`,
+      subject: `Order Confirmation #${(order.id || '').substring(0, 8).toUpperCase()} — TEYA COLLECTIONS`,
       html,
     });
   },
@@ -143,7 +152,37 @@ const emailService = {
 
     return emailService.send({
       to: customerEmail,
-      subject: `Your Handcrafted Order #${(order.id || '').substring(0, 8).toUpperCase()} has Shipped — TK TiyaCollections`,
+      subject: `Your Handcrafted Order #${(order.id || '').substring(0, 8).toUpperCase()} has Shipped — TEYA COLLECTIONS`,
+      html,
+    });
+  },
+
+  /**
+   * Contact Enquiry Alert to Store Owner
+   */
+  sendContactNotification: async (ownerEmail, submission) => {
+    const safeName = escapeHtml(submission.name);
+    const safeEmail = escapeHtml(submission.email);
+    const safeSubject = escapeHtml(submission.subject || 'General Enquiry');
+    const safeMessage = escapeHtml(submission.message).replace(/\n/g, '<br/>');
+
+    const html = `
+      ${emailHeaderHtml}
+      <h2 style="font-family: Georgia, serif; font-size: 22px; font-weight: 400; color: #111111; margin-top: 0;">New Concierge Enquiry</h2>
+      <div style="background-color: #F9F5F0; padding: 16px; border-radius: 4px; margin: 16px 0; font-size: 14px;">
+        <p style="margin: 0 0 6px;"><strong>Name:</strong> ${safeName}</p>
+        <p style="margin: 0 0 6px;"><strong>Email:</strong> ${safeEmail}</p>
+        <p style="margin: 0;"><strong>Topic:</strong> ${safeSubject}</p>
+      </div>
+      <div style="padding: 16px; border: 1px solid #E5DDD4; border-radius: 4px; font-size: 14px; color: #1A1A1A;">
+        ${safeMessage}
+      </div>
+      ${emailFooterHtml}
+    `;
+
+    return emailService.send({
+      to: ownerEmail,
+      subject: `[Contact Enquiry] ${submission.subject || 'General Enquiry'} — from ${submission.name}`,
       html,
     });
   },

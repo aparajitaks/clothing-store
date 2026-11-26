@@ -20,19 +20,22 @@ const CATEGORIES = [
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState(DEFAULT_PRODUCTS);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'all');
   const [sortBy, setSortBy] = useState('featured');
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
+    let isMounted = true;
     async function loadProducts() {
-      setLoading(true);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
       try {
         // Request full catalog (backend default limit is 12)
-        const res = await api.get('/products?limit=50');
+        const res = await api.get('/products?limit=50', { signal: controller.signal });
+        clearTimeout(timeoutId);
         const apiProducts = res.data?.data?.products ?? res.data?.data;
-        if (Array.isArray(apiProducts) && apiProducts.length > 0) {
+        if (isMounted && Array.isArray(apiProducts) && apiProducts.length > 0) {
           setProducts(apiProducts);
           return;
         }
@@ -44,20 +47,18 @@ export default function ShopPage() {
           .eq('is_active', true)
           .order('created_at', { ascending: false });
 
-        if (!error && data && data.length > 0) {
+        if (isMounted && !error && data && data.length > 0) {
           setProducts(data);
-          return;
         }
-
-        setProducts(DEFAULT_PRODUCTS);
       } catch (err) {
-        console.warn('Using default catalog products:', err);
-        setProducts(DEFAULT_PRODUCTS);
+        clearTimeout(timeoutId);
+        // Quiet fallback to instant catalog already rendered
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     }
     loadProducts();
+    return () => { isMounted = false; };
   }, []);
 
   // Filter & sort

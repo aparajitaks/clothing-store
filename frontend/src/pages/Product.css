@@ -172,6 +172,16 @@
   transition: transform 0.25s ease-out;
 }
 
+/* When zooming: overflow is hidden by parent, transform scales up — keep crisp */
+.pdp-main-image.zooming {
+  object-fit: cover;
+  will-change: transform;
+  image-rendering: auto;
+  /* Smooth the zoom transform without blurring below native resolution */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 /* Amazon Zoom Hint Pill */
 .amazon-zoom-pill {
   position: absolute;
@@ -296,14 +306,80 @@
   position: relative;
   width: 100%;
   height: 100%;
-  background: #000;
+  background: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .pdp-main-video {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;  /* contain keeps full frame visible — no crop */
   display: block;
+  /* Render at native sharpness — disable any browser interpolation hacks */
+  image-rendering: auto;
+}
+
+/* Play overlay shown before user interacts */
+.amazon-video-play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 5;
+  transition: background 0.2s ease;
+}
+
+.amazon-video-play-overlay:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.amazon-video-play-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(194, 84, 45, 0.92);
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #FFF;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.amazon-video-play-btn:hover {
+  transform: scale(1.1);
+  background: #C2542D;
+}
+
+/* Mute toggle */
+.amazon-video-mute-btn {
+  position: absolute;
+  bottom: 50px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 6;
+  transition: background 0.2s ease;
+}
+
+.amazon-video-mute-btn:hover {
+  background: rgba(0, 0, 0, 0.85);
 }
 
 .amazon-video-badge-pill {
@@ -321,8 +397,21 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  z-index: 3;
+  z-index: 6;
+  pointer-events: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.amazon-video-error {
+  text-align: center;
+  color: #FFF;
+  padding: 1.5rem;
+}
+
+.amazon-video-error p {
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
 }
 
 /* Amazon Fullscreen Lightbox Modal */
@@ -413,19 +502,38 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  border-radius: 4px;
 }
 
 .amazon-lightbox__img {
   max-width: 100%;
-  max-height: 60vh;
+  max-height: 68vh;
+  width: auto;
+  height: auto;
   object-fit: contain;
   border-radius: 4px;
+  display: block;
+  /* High-quality rendering for lightbox full-size view */
+  image-rendering: auto;
+  cursor: zoom-in;
+  transition: transform 0.15s ease-out;
+}
+
+.amazon-lightbox__img.zoomed {
+  cursor: zoom-out;
+  transition: transform 0.05s ease-out;
+  will-change: transform;
 }
 
 .amazon-lightbox__video {
   max-width: 100%;
-  max-height: 60vh;
+  max-height: 68vh;
+  width: auto;
+  height: auto;
   border-radius: 4px;
+  display: block;
+  background: #000;
 }
 
 .amazon-lightbox__nav-btn {
