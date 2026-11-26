@@ -342,3 +342,35 @@
     padding: 1.25rem 1rem;
   }
 }
+
+@media (max-width: 480px) {
+  .checkout-card {
+    padding: 1.25rem 1rem;
+  }
+  .checkout-summary-card {
+    padding: 1.25rem 1rem;
+    position: static;
+  }
+  .card-title {
+    font-size: 1.25rem;
+  }
+  .checkout-title {
+    font-size: 1.65rem;
+  }
+  .checkout-secure-badge {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+  }
+  .checkout-pay-btn {
+    padding: 0.9rem 1rem;
+    font-size: 0.82rem;
+  }
+  .promo-form {
+    flex-direction: column;
+  }
+  .promo-btn {
+    width: 100%;
+    padding: 0.65rem 1rem;
+    justify-content: center;
+  }
+}

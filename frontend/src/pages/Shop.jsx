@@ -11,9 +11,10 @@ import './Shop.css';
 const CATEGORIES = [
   { slug: 'all', label: 'All Pieces' },
   { slug: 'kurta-sets', label: 'Kurta Sets' },
-  { slug: 'embroidered-kurtas', label: 'Embroidered' },
-  { slug: 'festive-kurtas', label: 'Festive' },
-  { slug: 'everyday-kurtas', label: 'Everyday' },
+  { slug: 'everyday-kurtas', label: 'Kurtas & Tops' },
+  { slug: 'festive-kurtas', label: 'Festive Wear' },
+  { slug: 'cotton-linen-kurtas', label: 'Cotton & Linen' },
+  { slug: 'printed-kurtas', label: 'Artisan Prints' },
 ];
 
 export default function ShopPage() {

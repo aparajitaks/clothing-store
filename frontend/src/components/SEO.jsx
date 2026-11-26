@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 
-const SITE_NAME = 'TK TeyaCollections';
+const SITE_NAME = 'TEYA COLLECTIONS';
 const SITE_URL = 'https://teyacollections.com';
-const DEFAULT_IMAGE = `${SITE_URL}/og-default.jpg`;
+const DEFAULT_IMAGE = `${SITE_URL}/og-image.png`;
 
 /**
  * SEO component — drop-in <head> management via react-helmet-async.
@@ -19,14 +19,14 @@ const DEFAULT_IMAGE = `${SITE_URL}/og-default.jpg`;
  */
 export default function SEO({
   title,
-  description = 'Discover TK TeyaCollections — premium handcrafted traditional Indian fashion. Exquisite sarees, salwar kameez, lehengas and bridal wear crafted with artisanal precision.',
+  description = 'TEYA COLLECTIONS — Handcrafted premium kurtas, embroidered kurta sets, and breathable everyday cotton & linen silhouettes. Shop Indian ethnic wear online.',
   canonical,
   image = DEFAULT_IMAGE,
   type = 'website',
   jsonLd,
   noIndex = false,
 }) {
-  const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Premium Traditional Indian Fashion`;
+  const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Premium Indian Ethnic Wear`;
   const canonicalUrl = canonical ? `${SITE_URL}${canonical}` : SITE_URL;
 
   return (

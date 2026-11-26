@@ -667,13 +667,25 @@
 }
 
 /* ── RESPONSIVE BREAKPOINTS ──────────────────────────────── */
-/* ── RESPONSIVE BREAKPOINTS ──────────────────────────────── */
+@media (max-width: 1400px) {
+  .biba-cat-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
 @media (max-width: 1200px) {
   .biba-cat-grid {
     grid-template-columns: repeat(3, 1fr);
   }
   .biba-trends-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .biba-cat-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
   }
 }
 
@@ -691,9 +703,12 @@
     padding-top: 2.75rem;
     padding-bottom: 2.75rem;
   }
+  .biba-section-head {
+    margin-bottom: 1.75rem;
+  }
   .biba-hero__image {
-    min-height: 460px;
-    max-height: 560px;
+    min-height: 420px;
+    max-height: 520px;
     object-position: 70% center;
   }
   .biba-hero__overlay {
@@ -710,7 +725,7 @@
     max-width: 100%;
   }
   .biba-hero__title {
-    font-size: clamp(2rem, 6vw, 2.6rem);
+    font-size: clamp(1.9rem, 6vw, 2.5rem);
   }
   .biba-spotlight__grid {
     grid-template-columns: 1fr;
@@ -731,7 +746,7 @@
     gap: 1rem;
   }
   .biba-trust-bar__inner {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
   }
   .biba-mid-banner img {
@@ -748,6 +763,11 @@
   }
   .biba-mid-banner__title {
     font-size: 2rem;
+  }
+  .biba-section-head.flex-between {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
   }
 }
 
@@ -831,5 +851,121 @@
   .biba-mid-banner__desc {
     font-size: 0.82rem;
     line-height: 1.45;
+  }
+}
+
+
+/* ── ADDITIONAL MOBILE REFINEMENTS ──────────────────────── */
+@media (max-width: 480px) {
+  .biba-section {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  .biba-section-title {
+    font-size: 1.75rem;
+  }
+  .biba-section-head {
+    margin-bottom: 1.25rem;
+  }
+  .biba-hero__image {
+    min-height: 380px;
+    max-height: 480px;
+    object-position: 65% center;
+  }
+  .biba-hero__card {
+    padding: 1rem 0 1.25rem;
+  }
+  .biba-hero__title {
+    font-size: 1.75rem;
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+  }
+  .biba-hero__desc {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+  }
+  .biba-hero__actions {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .biba-hero__actions .biba-btn {
+    width: 100%;
+    text-align: center;
+    padding: 0.8rem 1.25rem;
+    font-size: 0.72rem;
+  }
+  .biba-cat-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+  }
+  .biba-cat-card__meta {
+    padding: 0.75rem 0.5rem;
+  }
+  .biba-cat-card__name {
+    font-size: 1rem;
+  }
+  .biba-cat-card__sub {
+    display: none;
+  }
+  .biba-trends-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+  }
+  .biba-palette-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+  }
+  .biba-spotlight__card {
+    aspect-ratio: 4 / 3;
+  }
+  .biba-spotlight__content {
+    padding: 1rem;
+  }
+  .biba-spotlight__title {
+    font-size: 1.4rem;
+  }
+  .biba-spotlight__desc {
+    font-size: 0.78rem;
+    margin-bottom: 0.85rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .biba-mid-banner img {
+    min-height: 260px;
+  }
+  .biba-mid-banner__title {
+    font-size: 1.6rem;
+  }
+  .biba-mid-banner__desc {
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+  .biba-trust-bar__inner {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .biba-trust-item {
+    gap: 0.75rem;
+  }
+  .biba-trust-item__icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 360px) {
+  .biba-cat-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  .biba-hero__title {
+    font-size: 1.55rem;
+  }
+  .biba-section-title {
+    font-size: 1.55rem;
   }
 }

@@ -12,113 +12,40 @@ import './Home.css';
 // Active launch products
 const FALLBACK_FEATURED = DEFAULT_PRODUCTS;
 
-// BIBA-style Category Tiles using BIBA's high-res category assets
+// Category tiles using real product images
 const BIBA_CATEGORIES = [
   {
-    name: 'Suit Sets',
+    name: 'Kurta Sets',
     slug: 'kurta-sets',
     subtitle: 'Matching Palazzos & Dupattas',
-    image: 'https://www.biba.in/dw/image/v2/BKQK_PRD/on/demandware.static/-/Library-Sites-BibaSharedLibrary/en_US/dwe4dba55e/A-A-SS26/Suit-sets-n.png',
+    image: '/products/rust-embroidered-kurta-set/front.jpg',
   },
   {
     name: 'Kurtas & Tops',
     slug: 'everyday-kurtas',
     subtitle: 'Everyday Straight & A-Line',
-    image: 'https://www.biba.in/dw/image/v2/BKQK_PRD/on/demandware.static/-/Library-Sites-BibaSharedLibrary/en_US/dw2d7ebf21/A-A-SS26/Kurtis_INTL-n.png',
+    image: '/products/navy-rose-embroidered-kurta-set/front.jpg',
   },
   {
     name: 'Festive Wear',
     slug: 'festive-kurtas',
     subtitle: 'Zari, Dabka & Organza',
-    image: 'https://www.biba.in/dw/image/v2/BKQK_PRD/on/demandware.static/-/Library-Sites-BibaSharedLibrary/en_US/dw992781ab/A-A-SS26/Lehenga_INTL-n.png',
+    image: '/products/champagne-gold-zari-kurta-set/front.jpg',
   },
   {
     name: 'Cotton & Linen',
     slug: 'cotton-linen-kurtas',
     subtitle: 'Pure Breathable Textures',
-    image: 'https://www.biba.in/dw/image/v2/BKQK_PRD/on/demandware.static/-/Library-Sites-BibaSharedLibrary/en_US/dw0494d244/A-A-SS26/Fusion_INTL-n.png',
-  },
-  {
-    name: 'Bottomwear',
-    slug: 'shop',
-    subtitle: 'Pants, Salwars & Skirts',
-    image: 'https://www.biba.in/dw/image/v2/BKQK_PRD/on/demandware.static/-/Library-Sites-BibaSharedLibrary/en_US/dwf04e15d6/A-A-SS26/Bottom-n.png',
+    image: '/products/botanical-printed-pink-kurta-set/front.jpg',
   },
   {
     name: 'Artisan Prints',
     slug: 'printed-kurtas',
-    subtitle: 'Hand-Block & Bagru Weaves',
-    image: 'https://www.biba.in/dw/image/v2/BKQK_PRD/on/demandware.static/-/Library-Sites-BibaSharedLibrary/en_US/dw21fe9f01/A-A-SS26/Girls_INTL-n.png',
+    subtitle: 'Hand-Block & Kalamkari Weaves',
+    image: '/products/fuchsia-floral-block-print-kurta-set/front.jpg',
   },
 ];
 
-// BIBA-style Season's Palette Tiles
-const COLOR_STORIES = [
-  {
-    name: 'Pristine Whites',
-    shade: 'Ivory, Ecru & Milk',
-    image: 'https://www.biba.in/dw/image/v2/BKQK_PRD/on/demandware.static/-/Library-Sites-BibaSharedLibrary/en_US/dw027621cd/A-A-SS26/White.png',
-    link: '/category/everyday-kurtas',
-  },
-  {
-    name: 'Emerald & Sage',
-    shade: 'Forest, Olive & Mint',
-    image: 'https://www.biba.in/dw/image/v2/BKQK_PRD/on/demandware.static/-/Library-Sites-BibaSharedLibrary/en_US/dw001ad7d5/A-A-SS26/Green.png',
-    link: '/category/festive-kurtas',
-  },
-  {
-    name: 'Champagne & Gold',
-    shade: 'Ecru, Zari & Honey',
-    image: 'https://www.biba.in/dw/image/v2/BKQK_PRD/on/demandware.static/-/Library-Sites-BibaSharedLibrary/en_US/dw0494d244/A-A-SS26/Fusion_INTL-n.png',
-    link: '/category/kurta-sets',
-  },
-  {
-    name: 'Midnight Noir',
-    shade: 'Kohl, Slate & Charcoal',
-    image: 'https://www.biba.in/dw/image/v2/BKQK_PRD/on/demandware.static/-/Library-Sites-BibaSharedLibrary/en_US/dw9c6bee30/A-A-SS26/Black.png',
-    link: '/category/cotton-linen-kurtas',
-  },
-];
-
-// BIBA-style Runway Looks / Editorial Stories
-const TREND_STORIES = [
-  {
-    title: 'The Chanderi Edit',
-    subtitle: 'Lustrous Silk With Gold Zari Accents',
-    image: 'https://images.unsplash.com/photo-1594938298603-c8148c4b4646?w=600&q=80&auto=format&fit=crop',
-    link: '/category/kurta-sets',
-  },
-  {
-    title: 'The Flared Anarkali',
-    subtitle: 'Imperial Volume & Intricate Necklines',
-    image: 'https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=600&q=80&auto=format&fit=crop',
-    link: '/category/festive-kurtas',
-  },
-  {
-    title: 'Artisanal Block-Prints',
-    subtitle: 'Natural Dyes & Floral Bootas',
-    image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600&q=80&auto=format&fit=crop',
-    link: '/category/printed-kurtas',
-  },
-  {
-    title: 'Festive Radiance',
-    subtitle: 'Heirloom Dabka on Organza',
-    image: 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=600&q=80&auto=format&fit=crop',
-    link: '/category/festive-kurtas',
-  },
-  {
-    title: 'Minimalist Linen Weaves',
-    subtitle: 'Pure Texture for Effortless Living',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop',
-    link: '/category/cotton-linen-kurtas',
-  },
-  {
-    title: 'The Tailored Trouser Set',
-    subtitle: 'Structured Shoulders & Fluid Drapes',
-    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=80&auto=format&fit=crop',
-    link: '/category/kurta-sets',
-  },
-];
 
 export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState(FALLBACK_FEATURED);
@@ -228,7 +155,7 @@ export default function HomePage() {
                 transition={{ delay: i * 0.08, duration: 0.5 }}
                 className="biba-cat-card"
               >
-                <Link to={cat.slug === 'shop' ? '/shop' : `/category/${cat.slug}`} className="biba-cat-card__link">
+                <Link to={`/category/${cat.slug}`} className="biba-cat-card__link">
                   <div className="biba-cat-card__img-box">
                     <img src={cat.image} alt={cat.name} loading="lazy" />
                   </div>
@@ -243,7 +170,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── 3. DUAL EDITORIAL SPOTLIGHT (BIBA Signature) ────────── */}
+        {/* ── 3. DUAL EDITORIAL SPOTLIGHT ──────────────────────────── */}
         <section className="biba-section biba-spotlight container">
           <div className="biba-spotlight__grid">
             <motion.div
@@ -256,7 +183,7 @@ export default function HomePage() {
               <Link to="/category/festive-kurtas" className="biba-spotlight__card">
                 <div className="biba-spotlight__img-box">
                   <img
-                    src="https://www.biba.in/dw/image/v2/BKQK_PRD/on/demandware.static/-/Library-Sites-BibaSharedLibrary/default/dw748b2fd8/A-A-AW26/AW'26_Lehengas.jpg"
+                    src="/products/scarlet-red-kashmiri-embroidered-kurta-set/front-2.jpg"
                     alt="The Celebratory Edit"
                     loading="lazy"
                   />
@@ -280,11 +207,11 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               className="biba-spotlight__col"
             >
-              <Link to="/category/everyday-kurtas" className="biba-spotlight__card">
+              <Link to="/category/cotton-linen-kurtas" className="biba-spotlight__card">
                 <div className="biba-spotlight__img-box">
                   <img
-                    src="https://www.biba.in/dw/image/v2/BKQK_PRD/on/demandware.static/-/Library-Sites-BibaSharedLibrary/default/dwfcd918b4/A-A-SS26/Biba_NXT-D.jpg"
-                    alt="Contemporary Minimalist"
+                    src="/products/sage-olive-mirrorwork-kurta-set/front.jpg"
+                    alt="Contemporary Silhouettes"
                     loading="lazy"
                   />
                   <div className="biba-spotlight__overlay" />
@@ -302,7 +229,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── 4. FEATURED NEW ARRIVALS PRODUCTS ───────────────────── */}
+
         <section className="biba-section biba-featured container">
           <div className="biba-section-head flex-between">
             <div>
@@ -326,14 +253,14 @@ export default function HomePage() {
           <picture className="biba-mid-banner__picture">
             <source
               media="(max-width: 768px)"
-              srcSet="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900&q=85&auto=format&fit=crop"
+              srcSet="/hero_luxury.jpg"
             />
             <source
               media="(min-width: 769px)"
-              srcSet="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=1920&q=85&auto=format&fit=crop"
+              srcSet="/hero_luxury.jpg"
             />
             <img
-              src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=1920&q=85&auto=format&fit=crop"
+              src="/hero_luxury.jpg"
               alt="Artisanal Heritage Weaves"
               loading="lazy"
             />
@@ -360,71 +287,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── 6. SEASON'S COLOR PALETTE ───────────────────────────── */}
-        <section className="biba-section biba-palette-section container">
-          <div className="biba-section-head text-center">
-            <span className="biba-section-tag">Color Stories</span>
-            <h2 className="biba-section-title">Palette of the Season</h2>
-            <div className="biba-section-divider" />
-          </div>
-
-          <div className="biba-palette-grid">
-            {COLOR_STORIES.map((color, i) => (
-              <motion.div
-                key={color.name}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="biba-palette-card"
-              >
-                <Link to={color.link} className="biba-palette-card__link">
-                  <div className="biba-palette-card__img-box">
-                    <img src={color.image} alt={color.name} loading="lazy" />
-                  </div>
-                  <div className="biba-palette-card__meta">
-                    <h3 className="biba-palette-card__title">{color.name}</h3>
-                    <p className="biba-palette-card__shade">{color.shade}</p>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── 7. TREND STORIES / CURATED LOOKS ───────────────────── */}
-        <section className="biba-section biba-trends-section container">
-          <div className="biba-section-head text-center">
-            <span className="biba-section-tag">Curated Looks</span>
-            <h2 className="biba-section-title">Stories in Weave</h2>
-            <div className="biba-section-divider" />
-          </div>
-
-          <div className="biba-trends-grid">
-            {TREND_STORIES.map((trend, i) => (
-              <motion.div
-                key={trend.title}
-                initial={{ opacity: 0, scale: 0.96 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08, duration: 0.45 }}
-                className="biba-trend-card"
-              >
-                <Link to={trend.link} className="biba-trend-card__link">
-                  <div className="biba-trend-card__img-box">
-                    <img src={trend.image} alt={trend.title} loading="lazy" />
-                    <div className="biba-trend-card__overlay" />
-                  </div>
-                  <div className="biba-trend-card__meta">
-                    <h3 className="biba-trend-card__title">{trend.title}</h3>
-                    <p className="biba-trend-card__sub">{trend.subtitle}</p>
-                    <span className="biba-trend-card__cta">Shop The Look <ArrowRight size={14} /></span>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </section>
 
         {/* ── 8. BRAND TRUST & SERVICE BAR ───────────────────────── */}
         <section className="biba-trust-bar">

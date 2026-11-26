@@ -1,225 +1,254 @@
--- TeyaCollections Seed Data
--- Run after 001_initial_schema.sql
+-- TeyaCollections Idempotent Seed Data (19 Products + Variants + Coupons)
+-- Run after 001_initial_schema.sql, 002_returns_and_improvements.sql, and 003_production_persistence.sql
 
 -- ============================================================
--- CATEGORIES
+-- 1. CATEGORIES
 -- ============================================================
-insert into public.categories (id, name, slug, description, image_url, sort_order) values
-  ('11111111-0000-0000-0000-000000000001', 'Kurta Sets',         'kurta-sets',         'Complete kurta sets with coordinated trousers or palazzos', '/products/rust-embroidered-kurta-set/front.jpg', 1),
-  ('11111111-0000-0000-0000-000000000002', 'Embroidered Kurtas', 'embroidered-kurtas', 'Hand-embroidered kurtas with intricate threadwork',          '/products/rust-embroidered-kurta-set/right.jpg', 2),
-  ('11111111-0000-0000-0000-000000000003', 'Festive Kurtas',     'festive-kurtas',     'Celebratory kurtas crafted for occasions',                  '/products/rust-embroidered-kurta-set/front.jpg', 3),
-  ('11111111-0000-0000-0000-000000000004', 'Everyday Kurtas',    'everyday-kurtas',    'Effortlessly wearable kurtas in breathable fabrics',        '/hero_luxury.jpg', 4);
+insert into public.categories (id, name, slug, description, image_url, sort_order, is_active) values
+  ('11111111-0000-0000-0000-000000000001', 'Kurta Sets', 'kurta-sets', 'Complete kurta sets with coordinated trousers, palazzos, or dupattas.', '/products/rust-embroidered-kurta-set/front.jpg', 1, true),
+  ('11111111-0000-0000-0000-000000000003', 'Festive Wear', 'festive-kurtas', 'Celebratory kurtas crafted for weddings, festivals, and auspicious occasions.', '/products/champagne-gold-zari-kurta-set/front.jpg', 2, true),
+  ('11111111-0000-0000-0000-000000000004', 'Kurtas & Tops', 'everyday-kurtas', 'Effortlessly wearable kurtas in breathable cotton and linen for daily elegance.', '/products/navy-rose-embroidered-kurta-set/front.jpg', 3, true),
+  ('11111111-0000-0000-0000-000000000005', 'Cotton & Linen', 'cotton-linen-kurtas', 'Breathable everyday cotton and linen silhouettes for all-day comfort.', '/products/botanical-printed-pink-kurta-set/front.jpg', 4, true),
+  ('11111111-0000-0000-0000-000000000006', 'Artisan Prints', 'printed-kurtas', 'Hand-block, kalamkari, bandhani, and phulkari printed kurtas.', '/products/fuchsia-floral-block-print-kurta-set/front.jpg', 5, true),
+  ('11111111-0000-0000-0000-000000000002', 'Embroidered Kurtas', 'embroidered-kurtas', 'Archived category (merged into Kurta Sets & Festive Wear)', '/products/rust-embroidered-kurta-set/right.jpg', 99, false)
+on conflict (slug) do update set
+  name = excluded.name,
+  description = excluded.description,
+  image_url = excluded.image_url,
+  sort_order = excluded.sort_order,
+  is_active = excluded.is_active;
 
 -- ============================================================
--- PRODUCTS (Original Launch Collection - 15% Launch Offer)
+-- 2. PRODUCTS (19 unique pieces with variant SKUs & stock)
 -- ============================================================
-insert into public.products (name, slug, category_id, description, price, compare_price, images, sizes, colors, stock, is_featured) values
+insert into public.products (
+  name, slug, category_id, collection_id, description, price, compare_price, discount_percent,
+  images, video, video_poster, sizes, colors, variants, stock, is_featured, is_active,
+  material, care_instructions, fabric, fit, neckline, sleeves, kurta_length, occasion, size_chart,
+  meta_title, meta_description
+) values
   (
-    'Rust Embroidered Kurta Set',
-    'rust-embroidered-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'A striking two-piece ensemble in a rich rust hue, featuring a button-down tunic with a mandarin collar, 3/4th sleeves, and intricate floral cutwork scalloped embroidery along the hem and sleeve cuffs. Complemented with relaxed straight-fit trousers for effortless festive and celebratory elegance.',
-    1784.00, 2099.00,
-    '[{"url":"/products/rust-embroidered-kurta-set/front.jpg","alt":"Rust Embroidered Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/rust-embroidered-kurta-set/back.jpg","alt":"Rust Embroidered Kurta Set — Back View","type":"image"},{"url":"/products/rust-embroidered-kurta-set/right.jpg","alt":"Rust Embroidered Kurta Set — Right Side Profile","type":"image"},{"url":"/products/rust-embroidered-kurta-set/left.jpg","alt":"Rust Embroidered Kurta Set — Left Side Profile","type":"image"},{"url":"/products/rust-embroidered-kurta-set/video.mp4","poster":"/products/rust-embroidered-kurta-set/video-poster.jpg","alt":"Rust Embroidered Kurta Set — Video Shoot","type":"video"}]',
-    '["M","L","XL","XXL"]',
-    '[{"name":"Rust Orange","hex":"#C2542D"}]',
-    60, true
+    'Rust Embroidered Kurta Set', 'rust-embroidered-kurta-set', (select id from public.categories where slug = 'kurta-sets' limit 1), 'col-4', 'A striking two-piece ensemble in a rich rust hue, featuring a button-down tunic with a mandarin collar, 3/4th sleeves, and intricate floral cutwork scalloped embroidery along the hem and sleeve cuffs. Complemented with relaxed straight-fit trousers for effortless festive and celebratory elegance.',
+    1784.00, 2099.00, 15,
+    '[{"url":"/products/rust-embroidered-kurta-set/front.jpg","alt":"Rust Embroidered Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/rust-embroidered-kurta-set/back.jpg","alt":"Rust Embroidered Kurta Set — Back View","type":"image"},{"url":"/products/rust-embroidered-kurta-set/right.jpg","alt":"Rust Embroidered Kurta Set — Right Side Profile","type":"image"},{"url":"/products/rust-embroidered-kurta-set/left.jpg","alt":"Rust Embroidered Kurta Set — Left Side Profile","type":"image"},{"url":"/products/rust-embroidered-kurta-set/video.mp4","poster":"/products/rust-embroidered-kurta-set/video-poster.jpg","alt":"Rust Embroidered Kurta Set — Video Shoot","type":"video"}]'::jsonb, '/products/rust-embroidered-kurta-set/video.mp4', '/products/rust-embroidered-kurta-set/video-poster.jpg',
+    '["M","L","XL","XXL"]'::jsonb, '[{"name":"Rust Orange","hex":"#C2542D"}]'::jsonb, '[{"size":"M","color":"Rust Orange","sku":"TC-RST-M","stock":15},{"size":"L","color":"Rust Orange","sku":"TC-RST-L","stock":20},{"size":"XL","color":"Rust Orange","sku":"TC-RST-XL","stock":15},{"size":"XXL","color":"Rust Orange","sku":"TC-RST-XXL","stock":10}]'::jsonb,
+    60, true, true,
+    'Pure Silk Blend Kurta with Matching Relaxed Trousers', 'Gentle hand wash in cold water or dry clean recommended. Iron inside out on medium heat.', 'Pure Silk Blend', 'Relaxed Straight Fit',
+    'Mandarin Collar with Front Button Placket', 'Three-Quarter Sleeves with Scalloped Floral Embroidery', 'Midi (40 inches)', 'Festive, Celebrations, Evening Gatherings', '[{"size":"M","chest":"38","waist":"32","hip":"42","kurta_length":"40","shoulder":"15.5"},{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"41","shoulder":"16"},{"size":"XL","chest":"42","waist":"36","hip":"46","kurta_length":"41","shoulder":"16.5"},{"size":"XXL","chest":"44","waist":"38","hip":"48","kurta_length":"42","shoulder":"17"}]'::jsonb,
+    'Rust Embroidered Kurta Set | TEYA COLLECTIONS', 'Pure silk blend rust embroidered kurta set with scalloped floral hem, mandarin collar, and matching trousers. Launch offer flat 15% discount.'
   ),
   (
-    'Ice Blue Embroidered Kurta Set',
-    'ice-blue-embroidered-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'An ethereal three-piece ensemble in serene ice blue, featuring delicate white floral embroidery framing the scalloped V-neckline and scattered motifs across the kurta. Paired with matching straight-fit trousers and a sheer lace-trimmed dupatta for timeless daytime and festive grace.',
-    2464.00, 2899.00,
-    '[{"url":"/products/ice-blue-embroidered-kurta-set/front.jpg","alt":"Ice Blue Embroidered Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/ice-blue-embroidered-kurta-set/back.jpg","alt":"Ice Blue Embroidered Kurta Set — Back View","type":"image"},{"url":"/products/ice-blue-embroidered-kurta-set/left.jpg","alt":"Ice Blue Embroidered Kurta Set — Left Side Profile","type":"image"},{"url":"/products/ice-blue-embroidered-kurta-set/detail.jpg","alt":"Ice Blue Embroidered Kurta Set — Front Detail","type":"image"},{"url":"/products/ice-blue-embroidered-kurta-set/video.mp4","poster":"/products/ice-blue-embroidered-kurta-set/video-poster.jpg","alt":"Ice Blue Embroidered Kurta Set — Video Shoot","type":"video"}]',
-    '["M","L","XL","XXL"]',
-    '[{"name":"Ice Blue","hex":"#9EC5D0"}]',
-    60, true
+    'Ice Blue Embroidered Kurta Set', 'ice-blue-embroidered-kurta-set', (select id from public.categories where slug = 'kurta-sets' limit 1), 'col-4', 'An ethereal three-piece ensemble in serene ice blue, featuring delicate white floral embroidery framing the scalloped V-neckline and scattered motifs across the kurta. Paired with matching straight-fit trousers and a sheer lace-trimmed dupatta for timeless daytime and festive grace.',
+    2464.00, 2899.00, 15,
+    '[{"url":"/products/ice-blue-embroidered-kurta-set/front.jpg","alt":"Ice Blue Embroidered Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/ice-blue-embroidered-kurta-set/back.jpg","alt":"Ice Blue Embroidered Kurta Set — Back View","type":"image"},{"url":"/products/ice-blue-embroidered-kurta-set/left.jpg","alt":"Ice Blue Embroidered Kurta Set — Left Side Profile","type":"image"},{"url":"/products/ice-blue-embroidered-kurta-set/detail.jpg","alt":"Ice Blue Embroidered Kurta Set — Front Detail","type":"image"},{"url":"/products/ice-blue-embroidered-kurta-set/video.mp4","poster":"/products/ice-blue-embroidered-kurta-set/video-poster.jpg","alt":"Ice Blue Embroidered Kurta Set — Video Shoot","type":"video"}]'::jsonb, '/products/ice-blue-embroidered-kurta-set/video.mp4', '/products/ice-blue-embroidered-kurta-set/video-poster.jpg',
+    '["M","L","XL","XXL"]'::jsonb, '[{"name":"Ice Blue","hex":"#9EC5D0"}]'::jsonb, '[{"size":"M","color":"Ice Blue","sku":"TC-ICE-M","stock":15},{"size":"L","color":"Ice Blue","sku":"TC-ICE-L","stock":20},{"size":"XL","color":"Ice Blue","sku":"TC-ICE-XL","stock":15},{"size":"XXL","color":"Ice Blue","sku":"TC-ICE-XXL","stock":10}]'::jsonb,
+    60, true, true,
+    'Chanderi Silk Blend Kurta with Trousers & Lace-Trimmed Organza Dupatta', 'Dry clean recommended or gentle cold hand wash separately. Steam iron on low heat.', 'Chanderi Silk Blend', 'Straight Classic Fit',
+    'V-Neckline with Delicate White Floral Threadwork', 'Three-Quarter Sleeves with Lace Edging', 'Calf-Length (44 inches)', 'Daytime Festivities, Intimate Celebrations, Brunch, Puja', '[{"size":"M","chest":"38","waist":"32","hip":"42","kurta_length":"44","shoulder":"15.5"},{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"44","shoulder":"16"},{"size":"XL","chest":"42","waist":"36","hip":"46","kurta_length":"45","shoulder":"16.5"},{"size":"XXL","chest":"44","waist":"38","hip":"48","kurta_length":"45","shoulder":"17"}]'::jsonb,
+    'Ice Blue Embroidered Kurta Set | TEYA COLLECTIONS', 'Ethereal ice blue Chanderi silk blend kurta set with white floral embroidery, matching trousers, and lace-trimmed dupatta. Launch offer flat 15% discount.'
   ),
   (
-    'Ivory Floral Embroidered Kurta Set',
-    'ivory-floral-embroidered-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'A luminous three-piece ivory kurta set adorned with vibrant pink, coral, and sage floral neckline embroidery and delicate scattered motifs. Completed with embroidered-hem straight trousers and a sheer organza dupatta featuring hand-painted lotus motifs and antique zari edging.',
-    2464.00, 2899.00,
-    '[{"url":"/products/ivory-floral-embroidered-kurta-set/front.jpg","alt":"Ivory Floral Embroidered Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/ivory-floral-embroidered-kurta-set/back.jpg","alt":"Ivory Floral Embroidered Kurta Set — Back View","type":"image"},{"url":"/products/ivory-floral-embroidered-kurta-set/left.jpg","alt":"Ivory Floral Embroidered Kurta Set — Left Side Profile","type":"image"},{"url":"/products/ivory-floral-embroidered-kurta-set/right.jpg","alt":"Ivory Floral Embroidered Kurta Set — Full Silhouette","type":"image"},{"url":"/products/ivory-floral-embroidered-kurta-set/detail.jpg","alt":"Ivory Floral Embroidered Kurta Set — Front Detail","type":"image"},{"url":"/products/ivory-floral-embroidered-kurta-set/video.mp4","poster":"/products/ivory-floral-embroidered-kurta-set/video-poster.jpg","alt":"Ivory Floral Embroidered Kurta Set — Video Shoot","type":"video"}]',
-    '["S","M","L","XL","XXL"]',
-    '[{"name":"Ivory White","hex":"#F4F1EA"}]',
-    70, true
+    'Ivory Floral Embroidered Kurta Set', 'ivory-floral-embroidered-kurta-set', (select id from public.categories where slug = 'kurta-sets' limit 1), 'col-4', 'A luminous three-piece ivory kurta set adorned with vibrant pink, coral, and sage floral neckline embroidery and delicate scattered motifs. Completed with embroidered-hem straight trousers and a sheer organza dupatta featuring hand-painted lotus motifs and antique zari edging.',
+    2464.00, 2899.00, 15,
+    '[{"url":"/products/ivory-floral-embroidered-kurta-set/front.jpg","alt":"Ivory Floral Embroidered Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/ivory-floral-embroidered-kurta-set/back.jpg","alt":"Ivory Floral Embroidered Kurta Set — Back View","type":"image"},{"url":"/products/ivory-floral-embroidered-kurta-set/left.jpg","alt":"Ivory Floral Embroidered Kurta Set — Left Side Profile","type":"image"},{"url":"/products/ivory-floral-embroidered-kurta-set/right.jpg","alt":"Ivory Floral Embroidered Kurta Set — Full Silhouette","type":"image"},{"url":"/products/ivory-floral-embroidered-kurta-set/detail.jpg","alt":"Ivory Floral Embroidered Kurta Set — Front Detail","type":"image"},{"url":"/products/ivory-floral-embroidered-kurta-set/video.mp4","poster":"/products/ivory-floral-embroidered-kurta-set/video-poster.jpg","alt":"Ivory Floral Embroidered Kurta Set — Video Shoot","type":"video"}]'::jsonb, '/products/ivory-floral-embroidered-kurta-set/video.mp4', '/products/ivory-floral-embroidered-kurta-set/video-poster.jpg',
+    '["S","M","L","XL","XXL"]'::jsonb, '[{"name":"Ivory White","hex":"#F4F1EA"}]'::jsonb, '[{"size":"S","color":"Ivory White","sku":"TC-IVR-S","stock":10},{"size":"M","color":"Ivory White","sku":"TC-IVR-M","stock":15},{"size":"L","color":"Ivory White","sku":"TC-IVR-L","stock":20},{"size":"XL","color":"Ivory White","sku":"TC-IVR-XL","stock":15},{"size":"XXL","color":"Ivory White","sku":"TC-IVR-XXL","stock":10}]'::jsonb,
+    70, true, true,
+    'Pure Silk Blend Kurta with Embroidered Trousers & Hand-Painted Organza Dupatta', 'Dry clean recommended. Steam iron gently on reverse; avoid direct heat on hand-painted dupatta motifs.', 'Pure Silk Blend & Organza Dupatta', 'Classic Straight Fit',
+    'Round Neckline with Multi-Hued Floral Threadwork', 'Three-Quarter Sleeves with Embroidered Cuffs', 'Calf-Length (44 inches)', 'Festive, Daytime Weddings, Puja, Celebrations', '[{"size":"S","chest":"36","waist":"30","hip":"40","kurta_length":"43","shoulder":"15"},{"size":"M","chest":"38","waist":"32","hip":"42","kurta_length":"44","shoulder":"15.5"},{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"44","shoulder":"16"},{"size":"XL","chest":"42","waist":"36","hip":"46","kurta_length":"45","shoulder":"16.5"},{"size":"XXL","chest":"44","waist":"38","hip":"48","kurta_length":"45","shoulder":"17"}]'::jsonb,
+    'Ivory Floral Embroidered Kurta Set | TEYA COLLECTIONS', 'Luminous ivory silk blend kurta set with floral neckline embroidery and hand-painted organza dupatta. Launch offer flat 15% discount.'
   ),
   (
-    'Champagne Gold Zari Kurta Set',
-    'champagne-gold-zari-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'An opulent three-piece champagne cream ensemble featuring a flared peplum kurta embellished with intricate gold zari and zardosi neckline embroidery, finished with delicate beaded tassel trim along the hem and sleeves. Paired with wide-leg palazzos and a gold-bordered sheer dupatta.',
-    2889.00, 3399.00,
-    '[{"url":"/products/champagne-gold-zari-kurta-set/front.jpg","alt":"Champagne Gold Zari Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/champagne-gold-zari-kurta-set/back.jpg","alt":"Champagne Gold Zari Kurta Set — Back View","type":"image"},{"url":"/products/champagne-gold-zari-kurta-set/left.jpg","alt":"Champagne Gold Zari Kurta Set — Left Side Profile","type":"image"},{"url":"/products/champagne-gold-zari-kurta-set/detail.jpg","alt":"Champagne Gold Zari Kurta Set — Front Detail","type":"image"},{"url":"/products/champagne-gold-zari-kurta-set/drape.jpg","alt":"Champagne Gold Zari Kurta Set — Dupatta Drape","type":"image"},{"url":"/products/champagne-gold-zari-kurta-set/video.mp4","poster":"/products/champagne-gold-zari-kurta-set/video-poster.jpg","alt":"Champagne Gold Zari Kurta Set — Video Shoot","type":"video"}]',
-    '["M","L","XL","XXL"]',
-    '[{"name":"Champagne Gold","hex":"#E5DEC9"}]',
-    60, true
+    'Champagne Gold Zari Kurta Set', 'champagne-gold-zari-kurta-set', (select id from public.categories where slug = 'festive-kurtas' limit 1), 'col-2', 'An opulent three-piece champagne cream ensemble featuring a flared peplum kurta embellished with intricate gold zari and zardosi neckline embroidery, finished with delicate beaded tassel trim along the hem and sleeves. Paired with wide-leg palazzos and a gold-bordered sheer dupatta.',
+    2804.00, 3299.00, 15,
+    '[{"url":"/products/champagne-gold-zari-kurta-set/front.jpg","alt":"Champagne Gold Zari Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/champagne-gold-zari-kurta-set/back.jpg","alt":"Champagne Gold Zari Kurta Set — Back View","type":"image"},{"url":"/products/champagne-gold-zari-kurta-set/left.jpg","alt":"Champagne Gold Zari Kurta Set — Left Side Profile","type":"image"},{"url":"/products/champagne-gold-zari-kurta-set/detail.jpg","alt":"Champagne Gold Zari Kurta Set — Front Detail","type":"image"},{"url":"/products/champagne-gold-zari-kurta-set/drape.jpg","alt":"Champagne Gold Zari Kurta Set — Dupatta Drape","type":"image"},{"url":"/products/champagne-gold-zari-kurta-set/video.mp4","poster":"/products/champagne-gold-zari-kurta-set/video-poster.jpg","alt":"Champagne Gold Zari Kurta Set — Video Shoot","type":"video"}]'::jsonb, '/products/champagne-gold-zari-kurta-set/video.mp4', '/products/champagne-gold-zari-kurta-set/video-poster.jpg',
+    '["L","XL","XXL"]'::jsonb, '[{"name":"Champagne Gold","hex":"#E5DEC9"}]'::jsonb, '[{"size":"L","color":"Champagne Gold","sku":"TC-CHG-L","stock":20},{"size":"XL","color":"Champagne Gold","sku":"TC-CHG-XL","stock":15},{"size":"XXL","color":"Champagne Gold","sku":"TC-CHG-XXL","stock":10}]'::jsonb,
+    45, true, true,
+    'Shimmer Silk Blend Peplum Kurta with Wide-Leg Palazzos & Gold-Bordered Dupatta', 'Dry clean only. Store folded in a breathable muslin bag to preserve zari work and beaded tassels.', 'Shimmer Silk Blend', 'Flared Peplum Fit with Wide-Leg Palazzo',
+    'Notched Neckline with Hand-Worked Gold Zari Embroidery', 'Three-Quarter Sleeves with Beaded Tassel Trim', 'Tunic Length (32 inches)', 'Weddings, Sangeet, Diwali, Festive Evenings', '[{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"32","shoulder":"16"},{"size":"XL","chest":"42","waist":"36","hip":"46","kurta_length":"33","shoulder":"16.5"},{"size":"XXL","chest":"44","waist":"38","hip":"48","kurta_length":"33","shoulder":"17"}]'::jsonb,
+    'Champagne Gold Zari Kurta Set | TEYA COLLECTIONS', 'Opulent champagne gold zari embroidered peplum kurta and palazzo set with beaded tassels and sheer dupatta. Launch offer flat 15% discount.'
   ),
   (
-    'Botanical Printed Pink Kurta Set',
-    'botanical-printed-pink-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'A cheerful three-piece cotton ensemble featuring a multicolor botanical-printed kurta highlighted with white chikankari floral embroidery along the notched V-neckline. Paired with rose pink bandhani-dot straight trousers and a breezy lace-edged dupatta.',
-    1444.00, 1699.00,
-    '[{"url":"/products/botanical-printed-pink-kurta-set/front.jpg","alt":"Botanical Printed Pink Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/botanical-printed-pink-kurta-set/back.jpg","alt":"Botanical Printed Pink Kurta Set — Back View","type":"image"},{"url":"/products/botanical-printed-pink-kurta-set/left.jpg","alt":"Botanical Printed Pink Kurta Set — Left Side Profile","type":"image"},{"url":"/products/botanical-printed-pink-kurta-set/back-detail.jpg","alt":"Botanical Printed Pink Kurta Set — Back Detail","type":"image"},{"url":"/products/botanical-printed-pink-kurta-set/video.mp4","poster":"/products/botanical-printed-pink-kurta-set/video-poster.jpg","alt":"Botanical Printed Pink Kurta Set — Video Shoot","type":"video"}]',
-    '["M","L","XL","XXL"]',
-    '[{"name":"Rose Pink","hex":"#D9729D"}]',
-    60, true
+    'Botanical Printed Pink Kurta Set', 'botanical-printed-pink-kurta-set', (select id from public.categories where slug = 'cotton-linen-kurtas' limit 1), 'col-1', 'A cheerful three-piece cotton ensemble featuring a multicolor botanical-printed kurta highlighted with white chikankari floral embroidery along the notched V-neckline. Paired with rose pink bandhani-dot straight trousers and a breezy lace-edged dupatta.',
+    1444.00, 1699.00, 15,
+    '[{"url":"/products/botanical-printed-pink-kurta-set/front.jpg","alt":"Botanical Printed Pink Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/botanical-printed-pink-kurta-set/back.jpg","alt":"Botanical Printed Pink Kurta Set — Back View","type":"image"},{"url":"/products/botanical-printed-pink-kurta-set/left.jpg","alt":"Botanical Printed Pink Kurta Set — Left Side Profile","type":"image"},{"url":"/products/botanical-printed-pink-kurta-set/back-detail.jpg","alt":"Botanical Printed Pink Kurta Set — Back Detail","type":"image"},{"url":"/products/botanical-printed-pink-kurta-set/video.mp4","poster":"/products/botanical-printed-pink-kurta-set/video-poster.jpg","alt":"Botanical Printed Pink Kurta Set — Video Shoot","type":"video"}]'::jsonb, '/products/botanical-printed-pink-kurta-set/video.mp4', '/products/botanical-printed-pink-kurta-set/video-poster.jpg',
+    '["M","L","XL","XXL"]'::jsonb, '[{"name":"Rose Pink","hex":"#D9729D"}]'::jsonb, '[{"size":"M","color":"Rose Pink","sku":"TC-BPK-M","stock":15},{"size":"L","color":"Rose Pink","sku":"TC-BPK-L","stock":20},{"size":"XL","color":"Rose Pink","sku":"TC-BPK-XL","stock":15},{"size":"XXL","color":"Rose Pink","sku":"TC-BPK-XXL","stock":10}]'::jsonb,
+    60, true, true,
+    'Pure Breathable Cotton Kurta with Printed Trousers & Lace-Edged Mulmul Dupatta', 'Gentle machine wash or hand wash separately in cold water. Dry in shade.', 'Pure Breathable Cotton', 'Straight Everyday Fit',
+    'Notched V-Neckline with White Chikankari Threadwork', 'Three-Quarter Sleeves', 'Calf-Length (44 inches)', 'Daily Wear, Casual Outings, Summer Brunch, Workwear', '[{"size":"M","chest":"38","waist":"32","hip":"42","kurta_length":"44","shoulder":"15.5"},{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"44","shoulder":"16"},{"size":"XL","chest":"42","waist":"36","hip":"46","kurta_length":"45","shoulder":"16.5"},{"size":"XXL","chest":"44","waist":"38","hip":"48","kurta_length":"45","shoulder":"17"}]'::jsonb,
+    'Botanical Printed Pink Kurta Set | TEYA COLLECTIONS', 'Breathable cotton botanical printed kurta set with white chikankari neckline and rose pink bandhani-dot dupatta. Launch offer flat 15% discount.'
   ),
   (
-    'Midnight Black Zari Kurta Set',
-    'midnight-black-zari-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'An elegant three-piece black kurta set featuring scattered gold zari and sequin floral motifs across the body, a V-neckline with white and gold embroidery trim, and three-quarter sleeves. Paired with straight-fit black trousers and a sheer black chiffon dupatta adorned with gold buti embroidery and a heavy gold zari pallu border.',
-    2124.00, 2499.00,
-    '[{"url":"/products/midnight-black-zari-kurta-set/front.jpg","alt":"Midnight Black Zari Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/midnight-black-zari-kurta-set/back.jpg","alt":"Midnight Black Zari Kurta Set — Back View","type":"image"},{"url":"/products/midnight-black-zari-kurta-set/left.jpg","alt":"Midnight Black Zari Kurta Set — Left Side Profile","type":"image"},{"url":"/products/midnight-black-zari-kurta-set/video.mp4","poster":"/products/midnight-black-zari-kurta-set/video-poster.jpg","alt":"Midnight Black Zari Kurta Set — Video Shoot","type":"video"}]',
-    '["M","L","XL"]',
-    '[{"name":"Midnight Black","hex":"#1A1A1A"}]',
-    50, true
+    'Midnight Black Zari Kurta Set', 'midnight-black-zari-kurta-set', (select id from public.categories where slug = 'kurta-sets' limit 1), 'col-4', 'An elegant three-piece black kurta set featuring scattered gold zari and sequin floral motifs across the body, a V-neckline with white and gold embroidery trim, and three-quarter sleeves. Paired with straight-fit black trousers and a sheer black chiffon dupatta adorned with gold buti embroidery and a heavy gold zari pallu border.',
+    2124.00, 2499.00, 15,
+    '[{"url":"/products/midnight-black-zari-kurta-set/front.jpg","alt":"Midnight Black Zari Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/midnight-black-zari-kurta-set/back.jpg","alt":"Midnight Black Zari Kurta Set — Back View","type":"image"},{"url":"/products/midnight-black-zari-kurta-set/left.jpg","alt":"Midnight Black Zari Kurta Set — Left Side Profile","type":"image"},{"url":"/products/midnight-black-zari-kurta-set/video.mp4","poster":"/products/midnight-black-zari-kurta-set/video-poster.jpg","alt":"Midnight Black Zari Kurta Set — Model Video Shoot","type":"video"}]'::jsonb, '/products/midnight-black-zari-kurta-set/video.mp4', '/products/midnight-black-zari-kurta-set/video-poster.jpg',
+    '["M","L","XL"]'::jsonb, '[{"name":"Midnight Black","hex":"#1A1A1A"}]'::jsonb, '[{"size":"M","color":"Midnight Black","sku":"TC-MBZ-M","stock":15},{"size":"L","color":"Midnight Black","sku":"TC-MBZ-L","stock":20},{"size":"XL","color":"Midnight Black","sku":"TC-MBZ-XL","stock":15}]'::jsonb,
+    50, true, true,
+    'Premium Viscose Rayon Kurta with Zari & Sequin Embroidery, Black Chiffon Dupatta', 'Dry clean recommended. If hand washing, use cold water and mild detergent. Do not wring.', 'Premium Viscose Rayon', 'Straight Fit',
+    'V-Neckline with White & Gold Embroidery', 'Three-Quarter Sleeves', 'Knee-Length (42 inches)', 'Evening Wear, Festive Occasions, Party, Wedding Guest', '[{"size":"M","chest":"38","waist":"32","hip":"42","kurta_length":"42","shoulder":"15.5"},{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"42","shoulder":"16"},{"size":"XL","chest":"42","waist":"36","hip":"46","kurta_length":"43","shoulder":"16.5"}]'::jsonb,
+    'Midnight Black Zari Kurta Set | TEYA COLLECTIONS', 'Elegant black kurta set with gold zari and sequin motifs, sheer black chiffon dupatta with heavy gold pallu. Launch offer flat 15% discount.'
   ),
   (
-    'Tropical Floral Kaftan Palazzo Set',
-    'tropical-floral-kaftan-palazzo-set',
-    '11111111-0000-0000-0000-000000000001',
-    'A bold and vibrant two-piece ensemble featuring a loose-fit kaftan-style top with batwing/dolman sleeves in a striking tropical floral print — a mix of black and white illustrated botanicals with oversized coral pink, orange, yellow and green blooms. Paired with flowing navy black wide-leg palazzo pants.',
-    2124.00, 2499.00,
-    '[{"url":"/products/tropical-floral-kaftan-palazzo-set/front.jpg","alt":"Tropical Floral Kaftan Palazzo Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/tropical-floral-kaftan-palazzo-set/back.jpg","alt":"Tropical Floral Kaftan Palazzo Set — Back View","type":"image"},{"url":"/products/tropical-floral-kaftan-palazzo-set/left.jpg","alt":"Tropical Floral Kaftan Palazzo Set — Left Side Profile","type":"image"},{"url":"/products/tropical-floral-kaftan-palazzo-set/right.jpg","alt":"Tropical Floral Kaftan Palazzo Set — Right Side Profile","type":"image"},{"url":"/products/tropical-floral-kaftan-palazzo-set/video.mp4","poster":"/products/tropical-floral-kaftan-palazzo-set/video-poster.jpg","alt":"Tropical Floral Kaftan Palazzo Set — Video Shoot","type":"video"}]',
-    '["L","XXL"]',
-    '[{"name":"Tropical Floral","hex":"#E8734A"}]',
-    35, true
+    'Tropical Floral Kaftan Palazzo Set', 'tropical-floral-kaftan-palazzo-set', (select id from public.categories where slug = 'everyday-kurtas' limit 1), 'col-1', 'A bold and vibrant two-piece ensemble featuring a loose-fit kaftan-style top with batwing/dolman sleeves in a striking tropical floral print — a mix of black and white illustrated botanicals with oversized coral pink, orange, yellow and green blooms. Paired with flowing navy black wide-leg palazzo pants for a relaxed yet fashion-forward silhouette.',
+    2124.00, 2499.00, 15,
+    '[{"url":"/products/tropical-floral-kaftan-palazzo-set/front.jpg","alt":"Tropical Floral Kaftan Palazzo Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/tropical-floral-kaftan-palazzo-set/back.jpg","alt":"Tropical Floral Kaftan Palazzo Set — Back View","type":"image"},{"url":"/products/tropical-floral-kaftan-palazzo-set/left.jpg","alt":"Tropical Floral Kaftan Palazzo Set — Left Side Profile","type":"image"},{"url":"/products/tropical-floral-kaftan-palazzo-set/right.jpg","alt":"Tropical Floral Kaftan Palazzo Set — Right Side Profile","type":"image"},{"url":"/products/tropical-floral-kaftan-palazzo-set/video.mp4","poster":"/products/tropical-floral-kaftan-palazzo-set/video-poster.jpg","alt":"Tropical Floral Kaftan Palazzo Set — Model Video Shoot","type":"video"}]'::jsonb, '/products/tropical-floral-kaftan-palazzo-set/video.mp4', '/products/tropical-floral-kaftan-palazzo-set/video-poster.jpg',
+    '["L","XXL"]'::jsonb, '[{"name":"Tropical Floral","hex":"#E8734A"}]'::jsonb, '[{"size":"L","color":"Tropical Floral","sku":"TC-TFK-L","stock":20},{"size":"XXL","color":"Tropical Floral","sku":"TC-TFK-XXL","stock":15}]'::jsonb,
+    35, true, true,
+    'Lightweight Printed Georgette Kaftan Top with Viscose Rayon Wide-Leg Palazzos', 'Gentle hand wash or delicate machine cycle in cold water. Dry in shade. Iron on low heat.', 'Printed Georgette & Viscose Rayon', 'Loose Kaftan Fit with Wide-Leg Palazzo',
+    'Round Neckline with Embroidered Trim', 'Batwing / Dolman Sleeves', 'Hip-Length Kaftan Top (36 inches)', 'Casual Outings, Summer Parties, Resort Wear, Brunch, Weekend Wear', '[{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"36","shoulder":"Free Size"},{"size":"XXL","chest":"44","waist":"38","hip":"48","kurta_length":"36","shoulder":"Free Size"}]'::jsonb,
+    'Tropical Floral Kaftan Palazzo Set | TEYA COLLECTIONS', 'Bold tropical floral kaftan top with batwing sleeves paired with navy palazzo pants. Vibrant summer statement piece. Launch offer flat 15% discount.'
   ),
   (
-    'Wine Tissue Silk Floral Kurta Set',
-    'wine-tissue-silk-floral-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'A stunning three-piece ensemble in rich wine-purple tissue silk featuring scattered multicolor floral embroidery — yellow, pink and green blooms — across the kurta body and neckline, with a dense embroidered hem border. Paired with straight-fit matching trousers and a sheer tissue silk dupatta with scalloped lace edging and scattered floral buti.',
-    1699.00, 1999.00,
-    '[{"url":"/products/wine-tissue-silk-floral-kurta-set/front.jpg","alt":"Wine Tissue Silk Floral Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/wine-tissue-silk-floral-kurta-set/front-2.jpg","alt":"Wine Tissue Silk Floral Kurta Set — Dupatta Drape View","type":"image"},{"url":"/products/wine-tissue-silk-floral-kurta-set/back.jpg","alt":"Wine Tissue Silk Floral Kurta Set — Back View","type":"image"},{"url":"/products/wine-tissue-silk-floral-kurta-set/side.jpg","alt":"Wine Tissue Silk Floral Kurta Set — Side Profile","type":"image"},{"url":"/products/wine-tissue-silk-floral-kurta-set/video.mp4","poster":"/products/wine-tissue-silk-floral-kurta-set/video-poster.jpg","alt":"Wine Tissue Silk Floral Kurta Set — Video Shoot","type":"video"}]',
-    '["M","L","XL","XXL"]',
-    '[{"name":"Wine Purple","hex":"#6B2D5E"}]',
-    60, true
+    'Wine Tissue Silk Floral Kurta Set', 'wine-tissue-silk-floral-kurta-set', (select id from public.categories where slug = 'kurta-sets' limit 1), 'col-4', 'A stunning three-piece ensemble in rich wine-purple tissue silk featuring scattered multicolor floral embroidery — yellow, pink and green blooms — across the kurta body and neckline, with a dense embroidered hem border. Paired with straight-fit matching trousers and a sheer tissue silk dupatta with scalloped lace edging and scattered floral buti.',
+    1699.00, 1999.00, 15,
+    '[{"url":"/products/wine-tissue-silk-floral-kurta-set/front.jpg","alt":"Wine Tissue Silk Floral Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/wine-tissue-silk-floral-kurta-set/front-2.jpg","alt":"Wine Tissue Silk Floral Kurta Set — Dupatta Drape View","type":"image"},{"url":"/products/wine-tissue-silk-floral-kurta-set/back.jpg","alt":"Wine Tissue Silk Floral Kurta Set — Back View","type":"image"},{"url":"/products/wine-tissue-silk-floral-kurta-set/side.jpg","alt":"Wine Tissue Silk Floral Kurta Set — Side Profile","type":"image"},{"url":"/products/wine-tissue-silk-floral-kurta-set/video.mp4","poster":"/products/wine-tissue-silk-floral-kurta-set/video-poster.jpg","alt":"Wine Tissue Silk Floral Kurta Set — Model Video Shoot","type":"video"}]'::jsonb, '/products/wine-tissue-silk-floral-kurta-set/video.mp4', '/products/wine-tissue-silk-floral-kurta-set/video-poster.jpg',
+    '["M","L","XL","XXL"]'::jsonb, '[{"name":"Wine Purple","hex":"#6B2D5E"}]'::jsonb, '[{"size":"M","color":"Wine Purple","sku":"TC-WTS-M","stock":15},{"size":"L","color":"Wine Purple","sku":"TC-WTS-L","stock":20},{"size":"XL","color":"Wine Purple","sku":"TC-WTS-XL","stock":15},{"size":"XXL","color":"Wine Purple","sku":"TC-WTS-XXL","stock":10}]'::jsonb,
+    60, true, true,
+    'Tissue Silk Kurta with Multicolor Floral Embroidery & Sheer Tissue Silk Dupatta', 'Dry clean recommended. If hand washing, use cold water and mild detergent. Do not wring or twist.', 'Tissue Silk (Crinkle Texture)', 'Straight Fit',
+    'Round Neckline with Dense Floral Embroidery', 'Three-Quarter Sleeves with Embroidered Cuffs', 'Knee-Length (42 inches)', 'Festive Occasions, Weddings, Parties, Family Functions', '[{"size":"M","chest":"38","waist":"32","hip":"42","kurta_length":"42","shoulder":"15.5"},{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"42","shoulder":"16"},{"size":"XL","chest":"42","waist":"36","hip":"46","kurta_length":"43","shoulder":"16.5"},{"size":"XXL","chest":"44","waist":"38","hip":"48","kurta_length":"43","shoulder":"17"}]'::jsonb,
+    'Wine Tissue Silk Floral Kurta Set | TEYA COLLECTIONS', 'Rich wine-purple tissue silk three-piece kurta set with multicolor floral embroidery and sheer dupatta. Festive elegance. Launch offer flat 15% discount.'
   ),
   (
-    'Fuchsia Floral Block Print Kurta Set',
-    'fuchsia-floral-block-print-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'A vibrant two-piece kurta set in bold fuchsia pink featuring an all-over dense white floral block print in a classic Indian botanical motif. Notched V-neckline with button placket and silver gota trim, three-quarter sleeves, A-line silhouette with side slits, matched with printed straight-cut trousers.',
-    1699.00, 1999.00,
-    '[{"url":"/products/fuchsia-floral-block-print-kurta-set/front.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/fuchsia-floral-block-print-kurta-set/right.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Right Side Profile","type":"image"},{"url":"/products/fuchsia-floral-block-print-kurta-set/front-2.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Front Pose","type":"image"},{"url":"/products/fuchsia-floral-block-print-kurta-set/back.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Back View","type":"image"},{"url":"/products/fuchsia-floral-block-print-kurta-set/back-2.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Back Detail","type":"image"},{"url":"/products/fuchsia-floral-block-print-kurta-set/video.mp4","poster":"/products/fuchsia-floral-block-print-kurta-set/video-poster.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Video Shoot","type":"video"}]',
-    '["M","L","XL","XXL"]',
-    '[{"name":"Fuchsia Pink","hex":"#D63B6B"}]',
-    60, true
+    'Fuchsia Floral Block Print Kurta Set', 'fuchsia-floral-block-print-kurta-set', (select id from public.categories where slug = 'printed-kurtas' limit 1), 'col-1', 'A vibrant two-piece kurta set in bold fuchsia pink featuring an all-over dense white floral block print in a classic Indian botanical motif. The kurta has a notched V-neckline with button placket and delicate silver gota trim, three-quarter sleeves, and a flared A-line silhouette with side slits. Paired with matching printed straight-cut trousers.',
+    1699.00, 1999.00, 15,
+    '[{"url":"/products/fuchsia-floral-block-print-kurta-set/front.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/fuchsia-floral-block-print-kurta-set/right.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Right Side Profile","type":"image"},{"url":"/products/fuchsia-floral-block-print-kurta-set/front-2.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Front Pose","type":"image"},{"url":"/products/fuchsia-floral-block-print-kurta-set/back.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Back View","type":"image"},{"url":"/products/fuchsia-floral-block-print-kurta-set/back-2.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Back Detail","type":"image"},{"url":"/products/fuchsia-floral-block-print-kurta-set/video.mp4","poster":"/products/fuchsia-floral-block-print-kurta-set/video-poster.jpg","alt":"Fuchsia Floral Block Print Kurta Set — Model Video Shoot","type":"video"}]'::jsonb, '/products/fuchsia-floral-block-print-kurta-set/video.mp4', '/products/fuchsia-floral-block-print-kurta-set/video-poster.jpg',
+    '["M","L","XL","XXL"]'::jsonb, '[{"name":"Fuchsia Pink","hex":"#D63B6B"}]'::jsonb, '[{"size":"M","color":"Fuchsia Pink","sku":"TC-FFB-M","stock":15},{"size":"L","color":"Fuchsia Pink","sku":"TC-FFB-L","stock":20},{"size":"XL","color":"Fuchsia Pink","sku":"TC-FFB-XL","stock":15},{"size":"XXL","color":"Fuchsia Pink","sku":"TC-FFB-XXL","stock":10}]'::jsonb,
+    60, true, true,
+    'Soft Cotton Kurta & Trousers with White Floral Block Print', 'Machine wash cold on gentle cycle or hand wash separately. Dry in shade to preserve colour.', 'Soft Breathable Cotton', 'A-Line Flared Fit',
+    'Notched V-Neckline with Button Placket & Silver Gota Trim', 'Three-Quarter Sleeves', 'Calf-Length (44 inches)', 'Casual Daily Wear, Workwear, Summer Outings, Festive Gatherings', '[{"size":"M","chest":"38","waist":"32","hip":"42","kurta_length":"44","shoulder":"15.5"},{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"44","shoulder":"16"},{"size":"XL","chest":"42","waist":"36","hip":"46","kurta_length":"45","shoulder":"16.5"},{"size":"XXL","chest":"44","waist":"38","hip":"48","kurta_length":"45","shoulder":"17"}]'::jsonb,
+    'Fuchsia Floral Block Print Kurta Set | TEYA COLLECTIONS', 'Vibrant fuchsia pink cotton kurta set with all-over white floral block print, V-neckline button placket and matching printed trousers. Launch offer flat 15% discount.'
   ),
   (
-    'Navy Rose Embroidered Kurta Set',
-    'navy-rose-embroidered-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'An elegant three-piece navy blue kurta set featuring large bold pink rose embroidery with green leaf motifs scattered across the straight-fit kurta body. V-neckline with silver gota trim, three-quarter sleeves, matching navy trousers and sheer printed chiffon dupatta.',
-    1614.00, 1899.00,
-    '[{"url":"/products/navy-rose-embroidered-kurta-set/front.jpg","alt":"Navy Rose Embroidered Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/navy-rose-embroidered-kurta-set/back.jpg","alt":"Navy Rose Embroidered Kurta Set — Back View","type":"image"},{"url":"/products/navy-rose-embroidered-kurta-set/left.jpg","alt":"Navy Rose Embroidered Kurta Set — Left Side Profile","type":"image"},{"url":"/products/navy-rose-embroidered-kurta-set/front-detail.jpg","alt":"Navy Rose Embroidered Kurta Set — Embroidery Detail","type":"image"},{"url":"/products/navy-rose-embroidered-kurta-set/front-2.jpg","alt":"Navy Rose Embroidered Kurta Set — Front Pose","type":"image"},{"url":"/products/navy-rose-embroidered-kurta-set/video.mp4","poster":"/products/navy-rose-embroidered-kurta-set/video-poster.jpg","alt":"Navy Rose Embroidered Kurta Set — Video Shoot","type":"video"}]',
-    '["M","L","XL","XXL"]',
-    '[{"name":"Navy Blue","hex":"#1B3D6F"}]',
-    60, true
+    'Navy Rose Embroidered Kurta Set', 'navy-rose-embroidered-kurta-set', (select id from public.categories where slug = 'everyday-kurtas' limit 1), 'col-1', 'An elegant three-piece navy blue kurta set featuring large bold pink rose embroidery with green leaf motifs scattered across the straight-fit kurta body. V-neckline with silver gota trim, three-quarter sleeves, matching navy trousers and sheer printed chiffon dupatta.',
+    1614.00, 1899.00, 15,
+    '[{"url":"/products/navy-rose-embroidered-kurta-set/front.jpg","alt":"Navy Rose Embroidered Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/navy-rose-embroidered-kurta-set/back.jpg","alt":"Navy Rose Embroidered Kurta Set — Back View","type":"image"},{"url":"/products/navy-rose-embroidered-kurta-set/left.jpg","alt":"Navy Rose Embroidered Kurta Set — Left Side Profile","type":"image"},{"url":"/products/navy-rose-embroidered-kurta-set/front-detail.jpg","alt":"Navy Rose Embroidered Kurta Set — Embroidery Detail","type":"image"},{"url":"/products/navy-rose-embroidered-kurta-set/front-2.jpg","alt":"Navy Rose Embroidered Kurta Set — Front Pose","type":"image"},{"url":"/products/navy-rose-embroidered-kurta-set/video.mp4","poster":"/products/navy-rose-embroidered-kurta-set/video-poster.jpg","alt":"Navy Rose Embroidered Kurta Set — Model Video Shoot","type":"video"}]'::jsonb, '/products/navy-rose-embroidered-kurta-set/video.mp4', '/products/navy-rose-embroidered-kurta-set/video-poster.jpg',
+    '["M","L","XL","XXL"]'::jsonb, '[{"name":"Navy Blue","hex":"#1B3D6F"}]'::jsonb, '[{"size":"M","color":"Navy Blue","sku":"TC-NRE-M","stock":15},{"size":"L","color":"Navy Blue","sku":"TC-NRE-L","stock":20},{"size":"XL","color":"Navy Blue","sku":"TC-NRE-XL","stock":15},{"size":"XXL","color":"Navy Blue","sku":"TC-NRE-XXL","stock":10}]'::jsonb,
+    60, true, true,
+    'Soft Cotton Blend Kurta with Thread Embroidery & Printed Chiffon Dupatta', 'Gentle hand wash or machine wash cold on delicate cycle. Dry in shade to preserve colour.', 'Soft Cotton Blend', 'Straight Fit',
+    'V-Neckline with Silver Gota Trim', 'Three-Quarter Sleeves', 'Knee-Length (42 inches)', 'Casual Wear, Festive Gatherings, Family Functions, Daily Elegance', '[{"size":"M","chest":"38","waist":"32","hip":"42","kurta_length":"42","shoulder":"15.5"},{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"42","shoulder":"16"},{"size":"XL","chest":"42","waist":"36","hip":"46","kurta_length":"43","shoulder":"16.5"},{"size":"XXL","chest":"44","waist":"38","hip":"48","kurta_length":"43","shoulder":"17"}]'::jsonb,
+    'Navy Rose Embroidered Kurta Set | TEYA COLLECTIONS', 'Elegant navy blue kurta set with large pink rose embroidery, sheer printed chiffon dupatta and matching trousers. Launch offer flat 15% discount.'
   ),
   (
-    'Terracotta Phulkari Anarkali Kurta Set',
-    'terracotta-phulkari-anarkali-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'A graceful three-piece terracotta rust ensemble featuring a gathered flared anarkali kurta embellished with geometric ivory floral embroidery along the yoke, delicate tassel accents, and scattered star motifs across the body. Styled with matching straight-fit trousers and a sheer slub-textured terracotta dupatta finished with corner tassels.',
-    2124.00, 2499.00,
-    '[{"url":"/products/terracotta-phulkari-anarkali-kurta-set/front.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/terracotta-phulkari-anarkali-kurta-set/back.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Back View","type":"image"},{"url":"/products/terracotta-phulkari-anarkali-kurta-set/back-2.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Back Full Flared View","type":"image"},{"url":"/products/terracotta-phulkari-anarkali-kurta-set/right.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Right Side Profile","type":"image"},{"url":"/products/terracotta-phulkari-anarkali-kurta-set/front-2.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Yoke Embroidery Detail","type":"image"},{"url":"/products/terracotta-phulkari-anarkali-kurta-set/video.mp4","poster":"/products/terracotta-phulkari-anarkali-kurta-set/video-poster.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Model Video Shoot","type":"video"}]',
-    '["38","42","44","46"]',
-    '[{"name":"Terracotta Rust","hex":"#B44B32"}]',
-    60, true
+    'Terracotta Phulkari Anarkali Kurta Set', 'terracotta-phulkari-anarkali-kurta-set', (select id from public.categories where slug = 'kurta-sets' limit 1), 'col-4', 'A graceful three-piece terracotta rust ensemble featuring a gathered flared anarkali kurta embellished with geometric ivory floral embroidery along the yoke, delicate tassel accents, and scattered star motifs across the body. Styled with a notched V-neckline, embroidered sleeve cuffs, matching straight-fit trousers, and a sheer slub-textured terracotta dupatta finished with corner tassels.',
+    2124.00, 2499.00, 15,
+    '[{"url":"/products/terracotta-phulkari-anarkali-kurta-set/front.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/terracotta-phulkari-anarkali-kurta-set/back.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Back View","type":"image"},{"url":"/products/terracotta-phulkari-anarkali-kurta-set/back-2.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Back Full Flared View","type":"image"},{"url":"/products/terracotta-phulkari-anarkali-kurta-set/right.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Right Side Profile","type":"image"},{"url":"/products/terracotta-phulkari-anarkali-kurta-set/front-2.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Yoke Embroidery Detail","type":"image"},{"url":"/products/terracotta-phulkari-anarkali-kurta-set/video.mp4","poster":"/products/terracotta-phulkari-anarkali-kurta-set/video-poster.jpg","alt":"Terracotta Phulkari Anarkali Kurta Set — Model Video Shoot","type":"video"}]'::jsonb, '/products/terracotta-phulkari-anarkali-kurta-set/video.mp4', '/products/terracotta-phulkari-anarkali-kurta-set/video-poster.jpg',
+    '["38","42","44","46"]'::jsonb, '[{"name":"Terracotta Rust","hex":"#B44B32"}]'::jsonb, '[{"size":"38","color":"Terracotta Rust","sku":"TC-TPA-38","stock":15},{"size":"42","color":"Terracotta Rust","sku":"TC-TPA-42","stock":20},{"size":"44","color":"Terracotta Rust","sku":"TC-TPA-44","stock":15},{"size":"46","color":"Terracotta Rust","sku":"TC-TPA-46","stock":10}]'::jsonb,
+    60, true, true,
+    'Textured Cotton Blend Anarkali Kurta with Embroidered Yoke & Slub Dupatta', 'Dry clean or gentle cold hand wash separately. Dry in shade.', 'Textured Cotton Blend', 'Flared Gathered Anarkali Fit',
+    'Notched V-Neckline with Embroidered Yoke & Tassels', 'Three-Quarter Sleeves with Embroidered Cuffs', 'Ankle-Length Flare (46 inches)', 'Festive Occasions, Puja, Family Gatherings, Daytime Weddings', '[{"size":"38","chest":"38","waist":"32","hip":"42","kurta_length":"46","shoulder":"15.5"},{"size":"42","chest":"42","waist":"36","hip":"46","kurta_length":"47","shoulder":"16.5"},{"size":"44","chest":"44","waist":"38","hip":"48","kurta_length":"47","shoulder":"17"},{"size":"46","chest":"46","waist":"40","hip":"50","kurta_length":"48","shoulder":"17.5"}]'::jsonb,
+    'Terracotta Phulkari Anarkali Kurta Set | TEYA COLLECTIONS', 'Flared terracotta rust anarkali kurta set with ivory yoke embroidery, tassel accents, straight trousers and textured dupatta. Launch offer flat 15% discount.'
   ),
   (
-    'Sage Olive Mirrorwork Printed Kurta Set',
-    'sage-olive-mirrorwork-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'An understated luxury three-piece ensemble in metallic-sheen sage olive linen silk featuring authentic mirrorwork embroidery along the V-neckline, artisanal rust, ochre, and olive geometric leaf prints along the lower kurta panel and cuffs, and delicate beaded tassel trims. Paired with matching sage straight-fit trousers and a statement woven silk-linen printed dupatta.',
-    2549.00, 2999.00,
-    '[{"url":"/products/sage-olive-mirrorwork-kurta-set/front.jpg","alt":"Sage Olive Mirrorwork Printed Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/sage-olive-mirrorwork-kurta-set/left.jpg","alt":"Sage Olive Mirrorwork Printed Kurta Set — Left Side Profile","type":"image"},{"url":"/products/sage-olive-mirrorwork-kurta-set/back.jpg","alt":"Sage Olive Mirrorwork Printed Kurta Set — Back View","type":"image"},{"url":"/products/sage-olive-mirrorwork-kurta-set/drape.jpg","alt":"Sage Olive Mirrorwork Printed Kurta Set — Dupatta Drape","type":"image"},{"url":"/products/sage-olive-mirrorwork-kurta-set/video.mp4","poster":"/products/sage-olive-mirrorwork-kurta-set/video-poster.jpg","alt":"Sage Olive Mirrorwork Printed Kurta Set — Model Video Shoot","type":"video"}]',
-    '["M","L","XL","XXL","3XL"]',
-    '[{"name":"Sage Olive","hex":"#8E977D"}]',
-    70, true
+    'Sage Olive Mirrorwork Printed Kurta Set', 'sage-olive-mirrorwork-kurta-set', (select id from public.categories where slug = 'cotton-linen-kurtas' limit 1), 'col-1', 'An understated luxury three-piece ensemble in metallic-sheen sage olive linen silk featuring authentic mirrorwork embroidery along the V-neckline, artisanal rust, ochre, and olive geometric leaf prints along the lower kurta panel and cuffs, and delicate beaded tassel trims. Paired with matching sage straight-fit trousers and a statement woven silk-linen printed dupatta.',
+    2549.00, 2999.00, 15,
+    '[{"url":"/products/sage-olive-mirrorwork-kurta-set/front.jpg","alt":"Sage Olive Mirrorwork Printed Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/sage-olive-mirrorwork-kurta-set/left.jpg","alt":"Sage Olive Mirrorwork Printed Kurta Set — Left Side Profile","type":"image"},{"url":"/products/sage-olive-mirrorwork-kurta-set/back.jpg","alt":"Sage Olive Mirrorwork Printed Kurta Set — Back View","type":"image"},{"url":"/products/sage-olive-mirrorwork-kurta-set/drape.jpg","alt":"Sage Olive Mirrorwork Printed Kurta Set — Dupatta Drape","type":"image"},{"url":"/products/sage-olive-mirrorwork-kurta-set/video.mp4","poster":"/products/sage-olive-mirrorwork-kurta-set/video-poster.jpg","alt":"Sage Olive Mirrorwork Printed Kurta Set — Model Video Shoot","type":"video"}]'::jsonb, '/products/sage-olive-mirrorwork-kurta-set/video.mp4', '/products/sage-olive-mirrorwork-kurta-set/video-poster.jpg',
+    '["M","L","XL","XXL","3XL"]'::jsonb, '[{"name":"Sage Olive","hex":"#8E977D"}]'::jsonb, '[{"size":"M","color":"Sage Olive","sku":"TC-SOM-M","stock":15},{"size":"L","color":"Sage Olive","sku":"TC-SOM-L","stock":20},{"size":"XL","color":"Sage Olive","sku":"TC-SOM-XL","stock":15},{"size":"XXL","color":"Sage Olive","sku":"TC-SOM-XXL","stock":10},{"size":"3XL","color":"Sage Olive","sku":"TC-SOM-3XL","stock":10}]'::jsonb,
+    70, true, true,
+    'Linen Silk Kurta with Real Mirrorwork Embroidery & Printed Silk-Linen Dupatta', 'Dry clean only to preserve metallic sheen and mirrorwork detailing.', 'Linen Silk Blend', 'Straight Classic Fit',
+    'V-Neckline with Mirrorwork Embroidery', 'Three-Quarter Sleeves with Printed Border & Tassel Trim', 'Calf-Length (44 inches)', 'Festive Gatherings, Daytime Weddings, Formal Soirees, Cultural Events', '[{"size":"M","chest":"38","waist":"32","hip":"42","kurta_length":"44","shoulder":"15.5"},{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"44","shoulder":"16"},{"size":"XL","chest":"42","waist":"36","hip":"46","kurta_length":"45","shoulder":"16.5"},{"size":"XXL","chest":"44","waist":"38","hip":"48","kurta_length":"45","shoulder":"17"},{"size":"3XL","chest":"46","waist":"40","hip":"50","kurta_length":"46","shoulder":"17.5"}]'::jsonb,
+    'Sage Olive Mirrorwork Printed Kurta Set | TEYA COLLECTIONS', 'Metallic-sheen sage olive linen silk kurta set with mirrorwork V-neck, beaded tassels and geometric printed dupatta. Launch offer flat 15% discount.'
   ),
   (
-    'Midnight Navy Bandhani Foil Print Kurta Set',
-    'midnight-navy-bandhani-foil-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'A regal three-piece midnight navy kurta set showcasing antique gold and olive bandhani, paisley, and chevron geometric foil motifs across the straight-fit kurta silhouette. Finished with delicate pearl-and-beaded tassel edging along the three-quarter sleeve cuffs and straight hemline, paired with solid navy trousers and a flowing printed sheer dupatta.',
-    2634.00, 3099.00,
-    '[{"url":"/products/midnight-navy-bandhani-foil-kurta-set/front.jpg","alt":"Midnight Navy Bandhani Foil Print Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/midnight-navy-bandhani-foil-kurta-set/left.jpg","alt":"Midnight Navy Bandhani Foil Print Kurta Set — Left Side Profile","type":"image"},{"url":"/products/midnight-navy-bandhani-foil-kurta-set/back.jpg","alt":"Midnight Navy Bandhani Foil Print Kurta Set — Back View","type":"image"},{"url":"/products/midnight-navy-bandhani-foil-kurta-set/video.mp4","poster":"/products/midnight-navy-bandhani-foil-kurta-set/video-poster.jpg","alt":"Midnight Navy Bandhani Foil Print Kurta Set — Model Video Shoot","type":"video"}]',
-    '["L","XL","XXL"]',
-    '[{"name":"Midnight Navy","hex":"#182449"}]',
-    45, true
+    'Midnight Navy Bandhani Foil Print Kurta Set', 'midnight-navy-bandhani-foil-kurta-set', (select id from public.categories where slug = 'printed-kurtas' limit 1), 'col-4', 'A regal three-piece midnight navy kurta set showcasing antique gold and olive bandhani, paisley, and chevron geometric foil motifs across the straight-fit kurta silhouette. Finished with delicate pearl-and-beaded tassel edging along the three-quarter sleeve cuffs and straight hemline, paired with solid navy trousers and a flowing printed sheer dupatta.',
+    2634.00, 3099.00, 15,
+    '[{"url":"/products/midnight-navy-bandhani-foil-kurta-set/front.jpg","alt":"Midnight Navy Bandhani Foil Print Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/midnight-navy-bandhani-foil-kurta-set/left.jpg","alt":"Midnight Navy Bandhani Foil Print Kurta Set — Left Side Profile","type":"image"},{"url":"/products/midnight-navy-bandhani-foil-kurta-set/back.jpg","alt":"Midnight Navy Bandhani Foil Print Kurta Set — Back View","type":"image"},{"url":"/products/midnight-navy-bandhani-foil-kurta-set/video.mp4","poster":"/products/midnight-navy-bandhani-foil-kurta-set/video-poster.jpg","alt":"Midnight Navy Bandhani Foil Print Kurta Set — Model Video Shoot","type":"video"}]'::jsonb, '/products/midnight-navy-bandhani-foil-kurta-set/video.mp4', '/products/midnight-navy-bandhani-foil-kurta-set/video-poster.jpg',
+    '["L","XL","XXL"]'::jsonb, '[{"name":"Midnight Navy","hex":"#182449"}]'::jsonb, '[{"size":"L","color":"Midnight Navy","sku":"TC-MNB-L","stock":20},{"size":"XL","color":"Midnight Navy","sku":"TC-MNB-XL","stock":15},{"size":"XXL","color":"Midnight Navy","sku":"TC-MNB-XXL","stock":10}]'::jsonb,
+    45, true, true,
+    'Silky Viscose Blend Kurta with Gold Foil & Bandhani Print, Sheer Printed Dupatta', 'Dry clean recommended or gentle cold hand wash separately. Do not iron directly over foil print.', 'Silky Viscose Blend', 'Straight Classic Fit',
+    'Round Neckline', 'Three-Quarter Sleeves with Pearl Tassel Cuffs', 'Calf-Length (44 inches)', 'Evening Celebrations, Festive Occasions, Sangeet, Wedding Guest', '[{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"44","shoulder":"16"},{"size":"XL","chest":"42","waist":"36","hip":"46","kurta_length":"45","shoulder":"16.5"},{"size":"XXL","chest":"44","waist":"38","hip":"48","kurta_length":"45","shoulder":"17"}]'::jsonb,
+    'Midnight Navy Bandhani Foil Print Kurta Set | TEYA COLLECTIONS', 'Deep midnight navy kurta set with antique gold bandhani foil print, pearl tassel hem & cuffs, and printed sheer dupatta. Launch offer flat 15% discount.'
   ),
   (
-    'Champagne Beige Kalamkari Kurta Set',
-    'beige-teal-kalamkari-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'An exquisite three-piece champagne beige jacquard kurta set accented with a teal floral embroidered yoke framed by real mirrorwork, intricate beaded three-quarter sleeve cuffs, and Kalamkari-inspired teal print along the tassel-trimmed hem. Completed with tailored beige trousers and a luminous Kalamkari floral printed silk-blend dupatta with antique zari woven borders.',
-    2294.00, 2699.00,
-    '[{"url":"/products/beige-teal-kalamkari-kurta-set/front.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/beige-teal-kalamkari-kurta-set/back.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Back View","type":"image"},{"url":"/products/beige-teal-kalamkari-kurta-set/left.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Left Side Profile","type":"image"},{"url":"/products/beige-teal-kalamkari-kurta-set/drape.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Dupatta Drape","type":"image"},{"url":"/products/beige-teal-kalamkari-kurta-set/detail.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Yoke Mirrorwork Detail","type":"image"},{"url":"/products/beige-teal-kalamkari-kurta-set/video.mp4","poster":"/products/beige-teal-kalamkari-kurta-set/video-poster.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Model Video Shoot","type":"video"}]',
-    '["L","XL","3XL"]',
-    '[{"name":"Beige & Teal","hex":"#CBB99B"}]',
-    45, true
+    'Champagne Beige Kalamkari Kurta Set', 'beige-teal-kalamkari-kurta-set', (select id from public.categories where slug = 'printed-kurtas' limit 1), 'col-1', 'An exquisite three-piece champagne beige jacquard kurta set accented with a teal floral embroidered yoke framed by real mirrorwork, intricate beaded three-quarter sleeve cuffs, and Kalamkari-inspired teal print along the tassel-trimmed hem. Completed with tailored beige trousers and a luminous Kalamkari floral printed silk-blend dupatta with antique zari woven borders.',
+    2294.00, 2699.00, 15,
+    '[{"url":"/products/beige-teal-kalamkari-kurta-set/front.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/beige-teal-kalamkari-kurta-set/back.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Back View","type":"image"},{"url":"/products/beige-teal-kalamkari-kurta-set/left.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Left Side Profile","type":"image"},{"url":"/products/beige-teal-kalamkari-kurta-set/drape.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Dupatta Drape","type":"image"},{"url":"/products/beige-teal-kalamkari-kurta-set/detail.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Yoke Mirrorwork Detail","type":"image"},{"url":"/products/beige-teal-kalamkari-kurta-set/video.mp4","poster":"/products/beige-teal-kalamkari-kurta-set/video-poster.jpg","alt":"Champagne Beige Kalamkari Kurta Set — Model Video Shoot","type":"video"}]'::jsonb, '/products/beige-teal-kalamkari-kurta-set/video.mp4', '/products/beige-teal-kalamkari-kurta-set/video-poster.jpg',
+    '["L","XL","3XL"]'::jsonb, '[{"name":"Beige & Teal","hex":"#CBB99B"}]'::jsonb, '[{"size":"L","color":"Beige & Teal","sku":"TC-BTK-L","stock":20},{"size":"XL","color":"Beige & Teal","sku":"TC-BTK-XL","stock":15},{"size":"3XL","color":"Beige & Teal","sku":"TC-BTK-3XL","stock":10}]'::jsonb,
+    45, true, true,
+    'Jacquard Silk-Blend Kurta with Mirrorwork Yoke & Kalamkari Printed Silk Dupatta', 'Dry clean only to protect mirrorwork, jacquard sheen, and tassel trims.', 'Jacquard Silk Blend', 'Straight Tailored Fit',
+    'Sweetheart V-Yoke with Real Mirrorwork & Floral Embroidery', 'Three-Quarter Sleeves with Printed & Embroidered Cuffs', 'Calf-Length (44 inches)', 'Festive Gatherings, Daytime Weddings, Reception, Cultural Celebrations', '[{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"44","shoulder":"16"},{"size":"XL","chest":"42","waist":"36","hip":"46","kurta_length":"45","shoulder":"16.5"},{"size":"3XL","chest":"46","waist":"40","hip":"50","kurta_length":"46","shoulder":"17.5"}]'::jsonb,
+    'Champagne Beige Kalamkari Kurta Set | TEYA COLLECTIONS', 'Champagne beige jacquard kurta set with teal mirrorwork embroidered yoke, tassel hem and Kalamkari floral silk dupatta. Launch offer flat 15% discount.'
   ),
   (
-    'Buttercream Silk Cutwork Floral Kurta Set',
-    'buttercream-silk-cutwork-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'A luminous three-piece buttercream gold tissue-silk kurta set embellished with marigold-yellow and blush-peach floral embroidery, delicate gold zari neckline work, and a scalloped cutwork embroidered hemline. Styled with matching straight-fit buttercream trousers and a sheer tissue-silk dupatta with scalloped zari borders and scattered embroidered floral motifs.',
-    2294.00, 2699.00,
-    '[{"url":"/products/buttercream-silk-cutwork-kurta-set/front.jpg","alt":"Buttercream Silk Cutwork Floral Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/buttercream-silk-cutwork-kurta-set/back.jpg","alt":"Buttercream Silk Cutwork Floral Kurta Set — Back View","type":"image"},{"url":"/products/buttercream-silk-cutwork-kurta-set/left.jpg","alt":"Buttercream Silk Cutwork Floral Kurta Set — Left Side Profile","type":"image"},{"url":"/products/buttercream-silk-cutwork-kurta-set/video.mp4","poster":"/products/buttercream-silk-cutwork-kurta-set/video-poster.jpg","alt":"Buttercream Silk Cutwork Floral Kurta Set — Model Video Shoot","type":"video"}]',
-    '["L","XL","3XL"]',
-    '[{"name":"Buttercream Gold","hex":"#E6DFBA"}]',
-    45, true
+    'Buttercream Silk Cutwork Floral Kurta Set', 'buttercream-silk-cutwork-kurta-set', (select id from public.categories where slug = 'festive-kurtas' limit 1), 'col-2', 'A luminous three-piece buttercream gold tissue-silk kurta set embellished with marigold-yellow and blush-peach floral embroidery, delicate gold zari neckline work, and a scalloped cutwork embroidered hemline. Styled with matching straight-fit buttercream trousers and a sheer tissue-silk dupatta with scalloped zari borders and scattered embroidered floral motifs.',
+    2889.00, 3399.00, 15,
+    '[{"url":"/products/buttercream-silk-cutwork-kurta-set/front.jpg","alt":"Buttercream Silk Cutwork Floral Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/buttercream-silk-cutwork-kurta-set/back.jpg","alt":"Buttercream Silk Cutwork Floral Kurta Set — Back View","type":"image"},{"url":"/products/buttercream-silk-cutwork-kurta-set/left.jpg","alt":"Buttercream Silk Cutwork Floral Kurta Set — Left Side Profile","type":"image"},{"url":"/products/buttercream-silk-cutwork-kurta-set/video.mp4","poster":"/products/buttercream-silk-cutwork-kurta-set/video-poster.jpg","alt":"Buttercream Silk Cutwork Floral Kurta Set — Model Video Shoot","type":"video"}]'::jsonb, '/products/buttercream-silk-cutwork-kurta-set/video.mp4', '/products/buttercream-silk-cutwork-kurta-set/video-poster.jpg',
+    '["M","L","XL","XXL"]'::jsonb, '[{"name":"Buttercream Gold","hex":"#E6DFBA"}]'::jsonb, '[{"size":"M","color":"Buttercream Gold","sku":"TC-BSC-M","stock":15},{"size":"L","color":"Buttercream Gold","sku":"TC-BSC-L","stock":20},{"size":"XL","color":"Buttercream Gold","sku":"TC-BSC-XL","stock":15},{"size":"XXL","color":"Buttercream Gold","sku":"TC-BSC-XXL","stock":10}]'::jsonb,
+    60, true, true,
+    'Tissue Silk Blend Kurta with Floral Cutwork Embroidery & Scalloped Silk Dupatta', 'Dry clean only to preserve lustrous tissue-silk sheen and cutwork embroidery.', 'Tissue Silk Blend', 'Straight Classic Fit',
+    'Round Neckline with Zari Embroidered Placket', 'Three-Quarter Sleeves with Scalloped Cutwork Cuffs', 'Knee-Length (42 inches)', 'Festive Celebrations, Puja, Daytime Weddings, Reception, Parties', '[{"size":"M","chest":"38","waist":"32","hip":"42","kurta_length":"42","shoulder":"15.5"},{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"42","shoulder":"16"},{"size":"XL","chest":"42","waist":"36","hip":"46","kurta_length":"43","shoulder":"16.5"},{"size":"XXL","chest":"44","waist":"38","hip":"48","kurta_length":"43","shoulder":"17"}]'::jsonb,
+    'Buttercream Silk Cutwork Floral Kurta Set | TEYA COLLECTIONS', 'Lustrous buttercream gold tissue-silk kurta set with yellow and peach floral cutwork embroidery and scalloped dupatta. Launch offer flat 15% discount.'
   ),
   (
-    'Sage Green Organza Zardosi Co-Ord Set',
-    'sage-green-organza-zardosi-coord-set',
-    '11111111-0000-0000-0000-000000000001',
-    'A contemporary two-piece sage green tissue-organza co-ord set featuring a collared tunic with a layered waistcoat-style overlay, side tie accents, and intricate gold-and-silver zardosi, gota, and coin-sequin chest embroidery over sheer three-quarter shimmer sleeves. Paired with matching wide-leg crinkled tissue-organza trousers for effortless fusion elegance.',
-    3144.00, 3699.00,
-    '[{"url":"/products/sage-green-organza-zardosi-coord-set/front.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/sage-green-organza-zardosi-coord-set/front-2.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Front Standing Pose","type":"image"},{"url":"/products/sage-green-organza-zardosi-coord-set/back.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Back View","type":"image"},{"url":"/products/sage-green-organza-zardosi-coord-set/right.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Side Profile","type":"image"},{"url":"/products/sage-green-organza-zardosi-coord-set/detail.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Zardosi Yoke Detail","type":"image"},{"url":"/products/sage-green-organza-zardosi-coord-set/video.mp4","poster":"/products/sage-green-organza-zardosi-coord-set/video-poster.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Model Video Shoot","type":"video"}]',
-    '["M","L","XL","XXL"]',
-    '[{"name":"Sage Green","hex":"#94AC8A"}]',
-    60, true
+    'Sage Green Organza Zardosi Co-Ord Set', 'sage-green-organza-zardosi-coord-set', (select id from public.categories where slug = 'festive-kurtas' limit 1), 'col-4', 'A contemporary two-piece sage green tissue-organza co-ord set featuring a collared tunic with a layered waistcoat-style overlay, side tie accents, and intricate gold-and-silver zardosi, gota, and coin-sequin chest embroidery over sheer three-quarter shimmer sleeves. Paired with matching wide-leg crinkled tissue-organza trousers for effortless fusion elegance.',
+    3144.00, 3699.00, 15,
+    '[{"url":"/products/sage-green-organza-zardosi-coord-set/front.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/sage-green-organza-zardosi-coord-set/front-2.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Front Standing Pose","type":"image"},{"url":"/products/sage-green-organza-zardosi-coord-set/back.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Back View","type":"image"},{"url":"/products/sage-green-organza-zardosi-coord-set/right.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Side Profile","type":"image"},{"url":"/products/sage-green-organza-zardosi-coord-set/detail.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Zardosi Yoke Detail","type":"image"},{"url":"/products/sage-green-organza-zardosi-coord-set/video.mp4","poster":"/products/sage-green-organza-zardosi-coord-set/video-poster.jpg","alt":"Sage Green Organza Zardosi Co-Ord Set — Model Video Shoot","type":"video"}]'::jsonb, '/products/sage-green-organza-zardosi-coord-set/video.mp4', '/products/sage-green-organza-zardosi-coord-set/video-poster.jpg',
+    '["M","L","XL","XXL"]'::jsonb, '[{"name":"Sage Green","hex":"#94AC8A"}]'::jsonb, '[{"size":"M","color":"Sage Green","sku":"TC-SGO-M","stock":15},{"size":"L","color":"Sage Green","sku":"TC-SGO-L","stock":20},{"size":"XL","color":"Sage Green","sku":"TC-SGO-XL","stock":15},{"size":"XXL","color":"Sage Green","sku":"TC-SGO-XXL","stock":10}]'::jsonb,
+    60, true, true,
+    'Tissue Organza Blend Tunic with Zardosi & Coin Embroidery and Matching Trousers', 'Dry clean only to preserve delicate tissue-organza weave and zardosi handwork.', 'Metallic Tissue Organza Blend', 'Relaxed Layered Co-Ord Fit',
+    'Shirt Collar V-Neck with Layered Waistcoat Overlay', 'Sheer Three-Quarter Organza Sleeves', 'Hip-Length Tunic (29 inches)', 'Cocktail Parties, Festive Brunches, Evening Gatherings, Indo-Western Events', '[{"size":"M","chest":"38","waist":"32","hip":"42","kurta_length":"29","shoulder":"15.5"},{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"29.5","shoulder":"16"},{"size":"XL","chest":"42","waist":"36","hip":"46","kurta_length":"30","shoulder":"16.5"},{"size":"XXL","chest":"44","waist":"38","hip":"48","kurta_length":"30.5","shoulder":"17"}]'::jsonb,
+    'Sage Green Organza Zardosi Co-Ord Set | TEYA COLLECTIONS', 'Sage green tissue-organza co-ord set with layered waistcoat overlay, zardosi and coin embroidery, sheer sleeves and wide trousers. Launch offer flat 15% discount.'
   ),
   (
-    'Mustard Gold Zardosi Embroidered Kurta Set',
-    'mustard-gold-zardosi-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'A regal three-piece mustard gold kurta set crafted in a lustrous tissue-silk blend, featuring an intricate gold zardosi and aari embroidered neckline with delicate scrollwork motifs. The kurta is styled with matching straight-fit palazzo trousers and a matching tissue-silk dupatta with golden tassels — a celebration outfit that radiates warmth and elegance.',
-    2549.00, 2999.00,
-    '[{"url":"/products/mustard-gold-zardosi-kurta-set/front.jpg","alt":"Mustard Gold Zardosi Embroidered Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/mustard-gold-zardosi-kurta-set/back.jpg","alt":"Mustard Gold Zardosi Embroidered Kurta Set — Back View","type":"image"},{"url":"/products/mustard-gold-zardosi-kurta-set/right.jpg","alt":"Mustard Gold Zardosi Embroidered Kurta Set — Side Profile","type":"image"},{"url":"/products/mustard-gold-zardosi-kurta-set/detail.jpg","alt":"Mustard Gold Zardosi Embroidered Kurta Set — Neckline Embroidery Detail","type":"image"},{"url":"/products/mustard-gold-zardosi-kurta-set/video.mp4","poster":"/products/mustard-gold-zardosi-kurta-set/video-poster.jpg","alt":"Mustard Gold Zardosi Embroidered Kurta Set — Model Video Shoot","type":"video"}]',
-    '["M","L","XL","XXL"]',
-    '[{"name":"Mustard Gold","hex":"#D4A017"}]',
-    60, true
+    'Mustard Gold Zardosi Embroidered Kurta Set', 'mustard-gold-zardosi-kurta-set', (select id from public.categories where slug = 'festive-kurtas' limit 1), 'col-2', 'A regal three-piece mustard gold kurta set crafted in a lustrous tissue-silk blend, featuring an intricate gold zardosi and aari embroidered neckline with delicate scrollwork motifs. The kurta is styled with matching straight-fit palazzo trousers and a matching tissue-silk dupatta with golden tassels — a celebration outfit that radiates warmth and elegance.',
+    2549.00, 2999.00, 15,
+    '[{"url":"/products/mustard-gold-zardosi-kurta-set/front.jpg","alt":"Mustard Gold Zardosi Embroidered Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/mustard-gold-zardosi-kurta-set/back.jpg","alt":"Mustard Gold Zardosi Embroidered Kurta Set — Back View","type":"image"},{"url":"/products/mustard-gold-zardosi-kurta-set/right.jpg","alt":"Mustard Gold Zardosi Embroidered Kurta Set — Side Profile","type":"image"},{"url":"/products/mustard-gold-zardosi-kurta-set/detail.jpg","alt":"Mustard Gold Zardosi Embroidered Kurta Set — Neckline Embroidery Detail","type":"image"},{"url":"/products/mustard-gold-zardosi-kurta-set/video.mp4","poster":"/products/mustard-gold-zardosi-kurta-set/video-poster.jpg","alt":"Mustard Gold Zardosi Embroidered Kurta Set — Model Video Shoot","type":"video"}]'::jsonb, '/products/mustard-gold-zardosi-kurta-set/video.mp4', '/products/mustard-gold-zardosi-kurta-set/video-poster.jpg',
+    '["M","L","XL","XXL"]'::jsonb, '[{"name":"Mustard Gold","hex":"#D4A017"}]'::jsonb, '[{"size":"M","color":"Mustard Gold","sku":"TC-MGZ-M","stock":15},{"size":"L","color":"Mustard Gold","sku":"TC-MGZ-L","stock":20},{"size":"XL","color":"Mustard Gold","sku":"TC-MGZ-XL","stock":15},{"size":"XXL","color":"Mustard Gold","sku":"TC-MGZ-XXL","stock":10}]'::jsonb,
+    60, true, true,
+    'Tissue Silk Blend Kurta with Gold Zardosi & Aari Embroidery and Matching Dupatta', 'Dry clean only to preserve lustrous tissue-silk sheen and delicate zardosi embroidery.', 'Tissue Silk Blend', 'Straight Classic Fit',
+    'V-Neckline with Gold Zardosi Aari Embroidery', 'Three-Quarter Sleeves with Zari Cuffs', 'Ankle-Length Kurta (46 inches)', 'Festive Celebrations, Puja, Weddings, Reception, Family Functions', '[{"size":"M","chest":"38","waist":"32","hip":"42","kurta_length":"46","shoulder":"15.5"},{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"46","shoulder":"16"},{"size":"XL","chest":"42","waist":"36","hip":"46","kurta_length":"47","shoulder":"16.5"},{"size":"XXL","chest":"44","waist":"38","hip":"48","kurta_length":"47","shoulder":"17"}]'::jsonb,
+    'Mustard Gold Zardosi Embroidered Kurta Set | TEYA COLLECTIONS', 'Regal mustard gold tissue-silk kurta set with intricate gold zardosi aari neckline embroidery, matching dupatta and trousers. Launch offer flat 15% discount.'
   ),
   (
-    'Orange Floral Block Print Kurta Set',
-    'orange-floral-block-print-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'A vibrant three-piece orange kurta set in soft cotton-blend fabric, splashed with large bold floral block prints in purple, pink and green. Features a notched V-neck placket with mirror-embroidered trim, three-quarter sleeves with decorative kantha cuffs, and a matching floral dupatta with embroidered borders. Paired with straight-fit matching orange palazzo trousers — fresh, festive and effortlessly stylish.',
-    1699.00, 1999.00,
-    '[{"url":"/products/orange-floral-block-print-kurta-set/front.jpg","alt":"Orange Floral Block Print Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/orange-floral-block-print-kurta-set/back.jpg","alt":"Orange Floral Block Print Kurta Set — Back View","type":"image"},{"url":"/products/orange-floral-block-print-kurta-set/right.jpg","alt":"Orange Floral Block Print Kurta Set — Side Profile with Dupatta","type":"image"},{"url":"/products/orange-floral-block-print-kurta-set/detail.jpg","alt":"Orange Floral Block Print Kurta Set — Neckline & Embroidery Detail","type":"image"},{"url":"/products/orange-floral-block-print-kurta-set/video.mp4","poster":"/products/orange-floral-block-print-kurta-set/video-poster.jpg","alt":"Orange Floral Block Print Kurta Set — Model Video Shoot","type":"video"}]',
-    '["M","L","XL","XXL"]',
-    '[{"name":"Tangerine Orange","hex":"#D94F00"}]',
-    60, true
+    'Orange Floral Block Print Kurta Set', 'orange-floral-block-print-kurta-set', (select id from public.categories where slug = 'everyday-kurtas' limit 1), 'col-1', 'A vibrant three-piece orange kurta set in soft cotton-blend fabric, splashed with large bold floral block prints in purple, pink and green. Features a notched V-neck placket with mirror-embroidered trim, three-quarter sleeves with decorative kantha cuffs, and a matching floral dupatta with embroidered borders. Paired with straight-fit matching orange palazzo trousers — fresh, festive and effortlessly stylish.',
+    1699.00, 1999.00, 15,
+    '[{"url":"/products/orange-floral-block-print-kurta-set/front.jpg","alt":"Orange Floral Block Print Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/orange-floral-block-print-kurta-set/back.jpg","alt":"Orange Floral Block Print Kurta Set — Back View","type":"image"},{"url":"/products/orange-floral-block-print-kurta-set/right.jpg","alt":"Orange Floral Block Print Kurta Set — Side Profile with Dupatta","type":"image"},{"url":"/products/orange-floral-block-print-kurta-set/detail.jpg","alt":"Orange Floral Block Print Kurta Set — Neckline & Embroidery Detail","type":"image"},{"url":"/products/orange-floral-block-print-kurta-set/video.mp4","poster":"/products/orange-floral-block-print-kurta-set/video-poster.jpg","alt":"Orange Floral Block Print Kurta Set — Model Video Shoot","type":"video"}]'::jsonb, '/products/orange-floral-block-print-kurta-set/video.mp4', '/products/orange-floral-block-print-kurta-set/video-poster.jpg',
+    '["M","L","XL","XXL"]'::jsonb, '[{"name":"Tangerine Orange","hex":"#D94F00"}]'::jsonb, '[{"size":"M","color":"Tangerine Orange","sku":"TC-OFB-M","stock":15},{"size":"L","color":"Tangerine Orange","sku":"TC-OFB-L","stock":20},{"size":"XL","color":"Tangerine Orange","sku":"TC-OFB-XL","stock":15},{"size":"XXL","color":"Tangerine Orange","sku":"TC-OFB-XXL","stock":10}]'::jsonb,
+    60, true, true,
+    'Soft Cotton Blend Kurta with Floral Block Print & Kantha Embroidery and Matching Dupatta', 'Machine wash cold gentle cycle or hand wash. Do not bleach. Tumble dry low.', 'Soft Cotton Blend', 'Straight Classic Fit',
+    'Notched V-Neckline with Mirror Embroidered Placket', 'Three-Quarter Sleeves with Kantha Embroidered Cuffs', 'Knee-Length Kurta (43 inches)', 'Casual Outings, Family Functions, Festive Occasions, Day Events', '[{"size":"M","chest":"38","waist":"32","hip":"42","kurta_length":"43","shoulder":"15.5"},{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"43","shoulder":"16"},{"size":"XL","chest":"42","waist":"36","hip":"46","kurta_length":"44","shoulder":"16.5"},{"size":"XXL","chest":"44","waist":"38","hip":"48","kurta_length":"44","shoulder":"17"}]'::jsonb,
+    'Orange Floral Block Print Kurta Set | TEYA COLLECTIONS', 'Vibrant orange cotton-blend kurta set with bold floral block print, mirror-embroidered neckline, kantha cuffs and matching dupatta. Launch offer flat 15% discount.'
   ),
   (
-    'Scarlet Red Kashmiri Embroidered Silk Kurta Set',
-    'scarlet-red-kashmiri-embroidered-kurta-set',
-    '11111111-0000-0000-0000-000000000001',
-    'A breathtaking three-piece scarlet red silk kurta set radiating festive opulence. The kurta features an exquisite multicolour Kashmiri-style embroidered yoke with mirror and zari detailing, paired with a full-length heavily printed floral hem panel. Complemented by a matching silk dupatta adorned with intricate geometric lattice borders, golden buti motifs, and a vivid floral printed pallu with tassel ends.',
-    2549.00, 2999.00,
-    '[{"url":"/products/scarlet-red-kashmiri-embroidered-kurta-set/front.jpg","alt":"Scarlet Red Kashmiri Embroidered Silk Kurta Set — Side Pose with Dupatta","isPrimary":true,"type":"image"},{"url":"/products/scarlet-red-kashmiri-embroidered-kurta-set/front-2.jpg","alt":"Scarlet Red Kashmiri Embroidered Silk Kurta Set — Front View","type":"image"},{"url":"/products/scarlet-red-kashmiri-embroidered-kurta-set/back.jpg","alt":"Scarlet Red Kashmiri Embroidered Silk Kurta Set — Back View","type":"image"},{"url":"/products/scarlet-red-kashmiri-embroidered-kurta-set/video.mp4","poster":"/products/scarlet-red-kashmiri-embroidered-kurta-set/video-poster.jpg","alt":"Scarlet Red Kashmiri Embroidered Silk Kurta Set — Model Video Shoot","type":"video"}]',
-    '["M","L"]',
-    '[{"name":"Scarlet Red","hex":"#CC2200"}]',
-    35, true
-  );
+    'Scarlet Red Kashmiri Embroidered Silk Kurta Set', 'scarlet-red-kashmiri-embroidered-kurta-set', (select id from public.categories where slug = 'festive-kurtas' limit 1), 'col-2', 'A breathtaking three-piece scarlet red silk kurta set radiating festive opulence. The kurta features an exquisite multicolour Kashmiri-style embroidered yoke with mirror and zari detailing, paired with a full-length heavily printed floral hem panel. Complemented by a matching silk dupatta adorned with intricate geometric lattice borders, golden buti motifs, and a vivid floral printed pallu with tassel ends. Styled with straight-fit matching trousers — a heirloom-worthy ensemble for the grandest occasions.',
+    2549.00, 2999.00, 15,
+    '[{"url":"/products/scarlet-red-kashmiri-embroidered-kurta-set/front-2.jpg","alt":"Scarlet Red Kashmiri Embroidered Silk Kurta Set — Front View","isPrimary":true,"type":"image"},{"url":"/products/scarlet-kashmiri-embroidered-kurta-set/front.jpg","alt":"Scarlet Red Kashmiri Embroidered Silk Kurta Set — Side Pose with Dupatta","type":"image"},{"url":"/products/scarlet-red-kashmiri-embroidered-kurta-set/back.jpg","alt":"Scarlet Red Kashmiri Embroidered Silk Kurta Set — Back View","type":"image"},{"url":"/products/scarlet-red-kashmiri-embroidered-kurta-set/video.mp4","poster":"/products/scarlet-red-kashmiri-embroidered-kurta-set/video-poster.jpg","alt":"Scarlet Red Kashmiri Embroidered Silk Kurta Set — Model Video Shoot","type":"video"}]'::jsonb, '/products/scarlet-red-kashmiri-embroidered-kurta-set/video.mp4', '/products/scarlet-red-kashmiri-embroidered-kurta-set/video-poster.jpg',
+    '["M","L"]'::jsonb, '[{"name":"Scarlet Red","hex":"#CC2200"}]'::jsonb, '[{"size":"M","color":"Scarlet Red","sku":"TC-SRK-M","stock":15},{"size":"L","color":"Scarlet Red","sku":"TC-SRK-L","stock":20}]'::jsonb,
+    35, true, true,
+    'Pure Silk Kurta with Kashmiri Multicolour Embroidery & Printed Silk Dupatta', 'Dry clean only to preserve delicate silk weave and intricate Kashmiri embroidery.', 'Pure Silk', 'Straight Classic Fit',
+    'Round Neckline with Kashmiri Zari & Mirror Embroidered Yoke', 'Full-Length Sleeves with Embroidered Cuffs', 'Full-Length Kurta (46 inches)', 'Weddings, Festivals, Receptions, Special Celebrations, Pujas', '[{"size":"M","chest":"38","waist":"32","hip":"42","kurta_length":"46","shoulder":"15.5"},{"size":"L","chest":"40","waist":"34","hip":"44","kurta_length":"46","shoulder":"16"}]'::jsonb,
+    'Scarlet Red Kashmiri Embroidered Silk Kurta Set | TEYA COLLECTIONS', 'Opulent scarlet red pure silk kurta set with Kashmiri multicolour embroidered yoke, mirror zari detailing and geometric lattice dupatta. Launch offer flat 15% discount.'
+  )
+on conflict (slug) do update set
+  name = excluded.name,
+  category_id = excluded.category_id,
+  collection_id = excluded.collection_id,
+  description = excluded.description,
+  price = excluded.price,
+  compare_price = excluded.compare_price,
+  discount_percent = excluded.discount_percent,
+  images = excluded.images,
+  video = excluded.video,
+  video_poster = excluded.video_poster,
+  sizes = excluded.sizes,
+  colors = excluded.colors,
+  variants = excluded.variants,
+  stock = excluded.stock,
+  is_featured = excluded.is_featured,
+  material = excluded.material,
+  care_instructions = excluded.care_instructions,
+  fabric = excluded.fabric,
+  fit = excluded.fit,
+  neckline = excluded.neckline,
+  sleeves = excluded.sleeves,
+  kurta_length = excluded.kurta_length,
+  occasion = excluded.occasion,
+  size_chart = excluded.size_chart,
+  meta_title = excluded.meta_title,
+  meta_description = excluded.meta_description;
+
+-- ============================================================
+-- 3. PROMOTIONAL COUPONS
+-- ============================================================
+insert into public.coupons (code, description, discount_type, discount_value, min_order_amount, max_discount_amount, is_active, usage_limit, times_used, expires_at) values
+  ('WELCOME10', 'Welcome discount for your first kurta', 'percentage', 10, 1999, 1500, true, 1000, 18, '2028-12-31T23:59:59Z'),
+  ('TEYA20', '₹200 off on orders above ₹2500', 'fixed', 200, 2500, 200, true, 500, 43, '2028-06-30T23:59:59Z')
+on conflict (code) do nothing;

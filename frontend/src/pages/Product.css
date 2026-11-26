@@ -812,7 +812,37 @@
 @media (max-width: 990px) {
   .pdp-grid {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
+    gap: 2rem;
+  }
+  /* Amazon-style gallery: stack thumbnails horizontal on tablet/mobile */
+  .amazon-gallery {
+    flex-direction: column-reverse;
+    position: static;
+    gap: 1rem;
+  }
+  .amazon-thumbnails {
+    flex-direction: row;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.5rem;
+    height: auto;
+  }
+  .amazon-thumbnails::-webkit-scrollbar {
+    display: none;
+  }
+  .amazon-thumb {
+    flex-shrink: 0;
+  }
+  .amazon-thumb__img-wrap {
+    width: 64px;
+    aspect-ratio: 3 / 4;
+  }
+  .amazon-main-viewer {
+    aspect-ratio: 4 / 5;
+    width: 100%;
   }
   .pdp-gallery {
     position: static;
@@ -829,9 +859,26 @@
     height: 85px;
     flex-shrink: 0;
   }
+  /* Amazon lightbox responsive */
+  .amazon-lightbox__content {
+    height: 95vh;
+  }
+  .amazon-lightbox__main {
+    padding: 1rem 3rem;
+  }
+  .amazon-lightbox__nav-btn--prev {
+    left: 8px;
+  }
+  .amazon-lightbox__nav-btn--next {
+    right: 8px;
+  }
 }
 
 @media (max-width: 600px) {
+  .product-page {
+    padding-top: calc(var(--nav-height, 66px) + 1.25rem);
+    padding-bottom: 3.5rem;
+  }
   .product-detail-page {
     padding-top: calc(var(--nav-height, 66px) + 1.25rem);
     padding-bottom: 3.5rem;
@@ -846,6 +893,12 @@
   .pdp-grid {
     gap: 1.5rem;
   }
+  .amazon-thumb__img-wrap {
+    width: 56px;
+  }
+  .amazon-main-viewer {
+    aspect-ratio: 3 / 4;
+  }
   .pdp-thumb {
     width: 56px;
     height: 70px;
@@ -859,6 +912,7 @@
   }
   .pdp-actions {
     gap: 0.5rem;
+    flex-wrap: wrap;
   }
   .pdp-actions .biba-btn {
     flex: 1;
@@ -880,8 +934,38 @@
     font-size: 0.8rem;
     padding: 0 8px;
   }
-  .pdp-accordion-header {
+  .pdp-accordion-header,
+  .pdp-accordion-trigger {
     padding: 0.9rem 0;
     font-size: 0.8rem;
+  }
+  /* Nav arrows always visible on touch */
+  .amazon-nav-arrow {
+    opacity: 1;
+    width: 36px;
+    height: 36px;
+  }
+  .amazon-lightbox__content {
+    height: 100dvh;
+    border-radius: 0;
+  }
+  .amazon-lightbox__main {
+    padding: 0.5rem 2.5rem;
+  }
+  .amazon-lightbox__nav-btn--prev {
+    left: 4px;
+  }
+  .amazon-lightbox__nav-btn--next {
+    right: 4px;
+  }
+  .amazon-lightbox__thumbs {
+    gap: 6px;
+    padding: 0.75rem;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
+  .amazon-zoom-pill {
+    display: none;
   }
 }

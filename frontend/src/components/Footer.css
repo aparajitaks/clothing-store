@@ -261,3 +261,34 @@
     text-align: center;
   }
 }
+
+@media (max-width: 480px) {
+  .footer {
+    padding-top: 2.5rem;
+    padding-bottom: 1.5rem;
+    margin-top: 3rem;
+  }
+  .footer__features {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .footer__brand-logo {
+    height: 44px;
+  }
+  .footer__desc {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  .footer__title {
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .footer__links a {
+    font-size: 0.82rem;
+  }
+  .footer__bottom {
+    font-size: 0.7rem;
+  }
+}

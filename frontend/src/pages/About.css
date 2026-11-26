@@ -133,3 +133,29 @@
   .about-values { padding: var(--space-2xl) var(--space-md); }
   .about-cta { padding: var(--space-2xl) var(--space-md); }
 }
+
+@media (max-width: 480px) {
+  .about-hero {
+    padding: calc(var(--nav-height, 66px) + 2rem) 1rem 2rem;
+  }
+  .about-title {
+    font-size: clamp(1.8rem, 8vw, 2.4rem);
+  }
+  .about-section-title {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+  }
+  .about-story {
+    padding: 2rem 1rem;
+    gap: 1.5rem;
+  }
+  .about-values {
+    padding: 2rem 1rem;
+  }
+  .about-cta {
+    padding: 2rem 1rem;
+  }
+  .about-cta__btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

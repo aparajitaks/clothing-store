@@ -463,3 +463,31 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(0);
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
+
+/* ─── Flex Between Utility ───────────────────────────────── */
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 600px) {
+  .flex-between {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+}
+
+/* ─── Touch Device: show overlays ────────────────────────── */
+@media (hover: none) {
+  .product-card__overlay {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .product-card__pose-strip {
+    opacity: 1;
+  }
+  .amazon-nav-arrow {
+    opacity: 1;
+  }
+}
