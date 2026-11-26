@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, ShoppingBag, Play, ChevronLeft, ChevronRight } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -7,16 +7,16 @@ import useUIStore from '../store/uiStore';
 import './ProductCard.css';
 
 export default function ProductCard({ product }) {
-  const [hovered, setHovered] = useState(false);
   const [activePoseIndex, setActivePoseIndex] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const touchStartRef = useRef({ x: 0, y: 0 });
+  const didSwipeRef = useRef(false);
   const addItem = useCartStore((s) => s.addItem);
   const openCart = useUIStore((s) => s.openCart);
 
-  if (!product) return null;
-
   // Extract all media poses (front, back, left, right, video)
   const mediaList = useMemo(() => {
+    if (!product) return [];
     if (Array.isArray(product.images) && product.images.length > 0) {
       return product.images.map((img) => {
         if (typeof img === 'string') {
@@ -35,9 +35,11 @@ export default function ProductCard({ product }) {
         };
       });
     }
-    const defaultUrl = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600';
+    const defaultUrl = '/products/rust-embroidered-kurta-set/front.jpg';
     return [{ url: defaultUrl, type: 'image' }];
   }, [product]);
+
+  if (!product) return null;
 
   const currentPose = mediaList[activePoseIndex] || mediaList[0];
 
@@ -75,6 +77,33 @@ export default function ProductCard({ product }) {
     toast.success(!isWishlisted ? 'Saved to wishlist' : 'Removed from wishlist');
   };
 
+  const handleTouchStart = (e) => {
+    if (mediaList.length <= 1 || !e.touches?.[0]) return;
+    touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    didSwipeRef.current = false;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (mediaList.length <= 1 || !e.changedTouches?.[0]) return;
+    const dx = e.changedTouches[0].clientX - touchStartRef.current.x;
+    const dy = e.changedTouches[0].clientY - touchStartRef.current.y;
+    if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+      didSwipeRef.current = true;
+      if (dx < 0) {
+        setActivePoseIndex((prev) => (prev === mediaList.length - 1 ? 0 : prev + 1));
+      } else {
+        setActivePoseIndex((prev) => (prev === 0 ? mediaList.length - 1 : prev - 1));
+      }
+    }
+  };
+
+  const handleImageLinkClick = (e) => {
+    if (didSwipeRef.current) {
+      e.preventDefault();
+      didSwipeRef.current = false;
+    }
+  };
+
   const hasDiscount = product.compare_price && Number(product.compare_price) > Number(product.price);
   const discountPercent = hasDiscount
     ? Math.round(((Number(product.compare_price) - Number(product.price)) / Number(product.compare_price)) * 100)
@@ -83,13 +112,17 @@ export default function ProductCard({ product }) {
   return (
     <div
       className="product-card"
-      onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => {
-        setHovered(false);
         setActivePoseIndex(0);
       }}
     >
-      <Link to={`/product/${product.slug}`} className="product-card__image-container">
+      <Link
+        to={`/product/${product.slug}`}
+        className="product-card__image-container"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onClick={handleImageLinkClick}
+      >
         {currentPose?.type === 'video' ? (
           <video
             src={currentPose.url}
@@ -109,16 +142,13 @@ export default function ProductCard({ product }) {
           />
         )}
 
-        {/* Badges */}
+        {/* Badges (priority: Low Stock > Discount > Featured) */}
         <div className="product-card__badges">
-          {hasDiscount && <span className="badge badge--discount">{discountPercent}% OFF</span>}
-          {product.is_featured && <span className="badge badge--gold">Featured</span>}
-          {mediaList.length > 1 && (
-            <span className="badge badge--poses">{mediaList.length} Poses</span>
-          )}
           {product.stock <= 3 && product.stock > 0 && (
             <span className="badge badge--low">Low Stock</span>
           )}
+          {hasDiscount && <span className="badge badge--discount">{discountPercent}% OFF</span>}
+          {product.is_featured && <span className="badge badge--gold">Featured</span>}
         </div>
 
         {/* Wishlist Button */}
@@ -128,21 +158,21 @@ export default function ProductCard({ product }) {
           className={`product-card__wishlist-btn ${isWishlisted ? 'active' : ''}`}
           aria-label="Add to wishlist"
         >
-          <Heart size={18} fill={isWishlisted ? '#C9A96E' : 'none'} color={isWishlisted ? '#C9A96E' : '#1A1A1A'} />
+          <Heart size={16} fill={isWishlisted ? '#C9A96E' : 'none'} color={isWishlisted ? '#C9A96E' : '#1A1A1A'} />
         </button>
 
-        {/* Quick Add Overlay */}
+        {/* Quick Add Overlay (desktop hover only) */}
         <div className="product-card__overlay">
           <button
             type="button"
             onClick={handleQuickAdd}
             className="product-card__quick-add-btn"
           >
-            <ShoppingBag size={16} /> Quick Add
+            <ShoppingBag size={15} /> Quick Add
           </button>
         </div>
 
-        {/* Pose Navigation Arrows (visible on hover) */}
+        {/* Pose Navigation Arrows (desktop hover only) */}
         {mediaList.length > 1 && (
           <>
             <button
@@ -175,6 +205,7 @@ export default function ProductCard({ product }) {
                     e.stopPropagation();
                     setActivePoseIndex(idx);
                   }}
+                  aria-label={item.type === 'video' ? 'Model Video shoot' : `Pose ${idx + 1}`}
                   title={item.type === 'video' ? 'Model Video shoot' : `Pose ${idx + 1}`}
                 >
                   {item.type === 'video' ? (
@@ -217,6 +248,15 @@ export default function ProductCard({ product }) {
             ))}
           </div>
         )}
+
+        {/* Touch / Mobile Quick Add (below info, never obscures product image) */}
+        <button
+          type="button"
+          onClick={handleQuickAdd}
+          className="product-card__mobile-add"
+        >
+          <ShoppingBag size={13} /> Quick Add
+        </button>
       </div>
     </div>
   );

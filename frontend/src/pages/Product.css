@@ -537,7 +537,8 @@
 .pdp-price-row {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.9rem;
   margin-bottom: 0.25rem;
 }
 
@@ -942,8 +943,20 @@
   /* Nav arrows always visible on touch */
   .amazon-nav-arrow {
     opacity: 1;
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
+  }
+  .amazon-pose-indicator {
+    top: 10px;
+    left: 10px;
+    font-size: 0.62rem;
+    padding: 3px 8px;
+  }
+  .amazon-expand-btn {
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
   }
   .amazon-lightbox__content {
     height: 100dvh;

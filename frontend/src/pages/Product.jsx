@@ -142,9 +142,10 @@ export default function ProductPage() {
 
   const currentMedia = mediaList[selectedImage] || mediaList[0];
 
-  // Amazon-style mouse move zoom calculation
+  // Amazon-style mouse move zoom calculation (pointer/hover devices only)
+  const canHover = typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
   const handleMouseMove = (e) => {
-    if (!imageWrapRef.current || currentMedia?.type === 'video') return;
+    if (!canHover || !imageWrapRef.current || currentMedia?.type === 'video') return;
     const { left, top, width, height } = imageWrapRef.current.getBoundingClientRect();
     const x = Math.max(0, Math.min(100, ((e.clientX - left) / width) * 100));
     const y = Math.max(0, Math.min(100, ((e.clientY - top) / height) * 100));
@@ -288,7 +289,7 @@ export default function ProductPage() {
             <div
               className={`pdp-main-image-wrap amazon-main-viewer ${isZooming ? 'is-zoomed' : ''}`}
               ref={imageWrapRef}
-              onMouseEnter={() => currentMedia?.type !== 'video' && setIsZooming(true)}
+              onMouseEnter={() => canHover && currentMedia?.type !== 'video' && setIsZooming(true)}
               onMouseLeave={() => setIsZooming(false)}
               onMouseMove={handleMouseMove}
               onClick={() => currentMedia?.type !== 'video' && setLightboxOpen(true)}

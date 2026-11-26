@@ -6,6 +6,8 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  min-width: 0;
+  height: 100%;
   transition: transform 0.25s ease;
 }
 
@@ -23,31 +25,38 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top center;
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
 }
 
-.product-card:hover .product-card__image {
-  transform: scale(1.04);
+@media (hover: hover) {
+  .product-card:hover .product-card__image {
+    transform: scale(1.04);
+  }
 }
 
 .product-card__badges {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 8px;
+  left: 8px;
+  max-width: calc(100% - 48px);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  align-items: flex-start;
+  gap: 4px;
   z-index: 2;
+  pointer-events: none;
 }
 
-.badge {
+.product-card__badges .badge {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 4px 8px;
+  padding: 3px 7px;
   border-radius: 2px;
+  line-height: 1.2;
 }
 
 .badge--gold {
@@ -58,13 +67,6 @@
 .badge--discount {
   background: #C2542D;
   color: #FFF;
-}
-
-.badge--poses {
-  background: rgba(18, 18, 18, 0.75);
-  backdrop-filter: blur(4px);
-  color: #FFF;
-  font-weight: 500;
 }
 
 .badge--sale {
@@ -79,12 +81,12 @@
 
 .product-card__wishlist-btn {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 34px;
-  height: 34px;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(4px);
   border: none;
   display: flex;
@@ -92,32 +94,38 @@
   justify-content: center;
   cursor: pointer;
   z-index: 3;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-.product-card__wishlist-btn:hover {
-  transform: scale(1.1);
-  background: #FFF;
+@media (hover: hover) {
+  .product-card__wishlist-btn:hover {
+    transform: scale(1.1);
+    background: #FFF;
+  }
 }
 
+/* Desktop Hover Quick Add Overlay */
 .product-card__overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 12px;
+  padding: 10px;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, transparent 100%);
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(8px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
   z-index: 2;
   display: flex;
   justify-content: center;
 }
 
-.product-card:hover .product-card__overlay {
-  opacity: 1;
-  transform: translateY(0);
+@media (hover: hover) and (min-width: 769px) {
+  .product-card:hover .product-card__overlay {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .product-card__quick-add-btn {
@@ -125,16 +133,16 @@
   background: #1A1A1A;
   color: #FFF;
   border: none;
-  padding: 0.6rem 1rem;
+  padding: 0.55rem 0.9rem;
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.09em;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
   cursor: pointer;
   border-radius: 2px;
   transition: background-color 0.2s ease;
@@ -144,10 +152,10 @@
   background: var(--color-gold, #A88B58);
 }
 
-/* Pose Navigation Arrows on Card */
+/* Pose Navigation Arrows (desktop hover only) */
 .product-card__pose-arrow {
   position: absolute;
-  top: 50%;
+  top: 46%;
   transform: translateY(-50%);
   width: 28px;
   height: 28px;
@@ -166,8 +174,10 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
-.product-card:hover .product-card__pose-arrow {
-  opacity: 1;
+@media (hover: hover) and (min-width: 769px) {
+  .product-card:hover .product-card__pose-arrow {
+    opacity: 1;
+  }
 }
 
 .product-card__pose-arrow:hover {
@@ -184,7 +194,7 @@
   right: 8px;
 }
 
-/* Interactive Pose Strip at bottom of image */
+/* Interactive Pose Strip — positioned cleanly above Quick Add on desktop hover */
 .product-card__pose-strip {
   position: absolute;
   bottom: 8px;
@@ -193,17 +203,20 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.38);
   backdrop-filter: blur(4px);
   padding: 4px 8px;
   border-radius: 20px;
   z-index: 3;
   opacity: 0;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.2s ease, bottom 0.25s ease;
 }
 
-.product-card:hover .product-card__pose-strip {
-  opacity: 1;
+@media (hover: hover) and (min-width: 769px) {
+  .product-card:hover .product-card__pose-strip {
+    opacity: 1;
+    bottom: 54px;
+  }
 }
 
 .pose-strip-btn {
@@ -217,17 +230,17 @@
 }
 
 .pose-strip-dot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.55);
   transition: all 0.2s ease;
   display: block;
 }
 
 .pose-strip-btn.active .pose-strip-dot {
   background: #FFF;
-  width: 14px;
+  width: 13px;
   border-radius: 4px;
 }
 
@@ -246,27 +259,38 @@
   background: #000;
 }
 
+/* Info Section */
 .product-card__info {
-  padding-top: 0.85rem;
+  padding-top: 0.75rem;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+  gap: 0.22rem;
 }
 
 .product-card__category {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: #8C887B;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .product-card__title {
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 1.15rem;
+  font-size: 1.12rem;
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.28;
   margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .product-card__title a {
@@ -282,21 +306,21 @@
 .product-card__pricing {
   display: flex;
   align-items: baseline;
-  gap: 0.5rem;
-  margin-top: 0.25rem;
+  gap: 0.45rem;
+  margin-top: 0.2rem;
   flex-wrap: wrap;
 }
 
 .product-card__price {
   font-family: 'Montserrat', sans-serif;
-  font-size: 1.02rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #1A1A1A;
 }
 
 .product-card__compare-price {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: #9C968B;
   text-decoration: line-through;
 }
@@ -310,8 +334,9 @@
 
 .product-card__sizes {
   display: flex;
+  flex-wrap: wrap;
   gap: 4px;
-  margin-top: 0.4rem;
+  margin-top: 0.35rem;
 }
 
 .size-pill {
@@ -321,64 +346,178 @@
   padding: 2px 6px;
   border-radius: 2px;
   border: 1px solid #E5E7EB;
+  line-height: 1.3;
 }
 
+/* Mobile / Touch Quick Add Button (sits cleanly below info, never blocks image) */
+.product-card__mobile-add {
+  display: none;
+  width: 100%;
+  margin-top: auto;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #D9D4C7;
+  background: #FFFFFF;
+  color: #1A1A1A;
+  border-radius: 2px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
 
-/* ── RESPONSIVE MOBILE ───────────────────────────────────── */
-@media (max-width: 480px) {
-  .product-card__title {
-    font-size: 1rem;
-    line-height: 1.25;
+.product-card__mobile-add:active {
+  background: #1A1A1A;
+  color: #FFF;
+  border-color: #1A1A1A;
+}
+
+/* ── TOUCH & MOBILE / TABLET RESPONSIVE ──────────────────── */
+@media (hover: none), (max-width: 768px) {
+  /* Never obscure the garment image with Quick Add or pose arrows */
+  .product-card__overlay,
+  .product-card__pose-arrow {
+    display: none;
   }
-  .product-card__price {
-    font-size: 0.92rem;
+
+  /* Show slim Quick Add button below info instead */
+  .product-card__mobile-add {
+    display: flex;
+    margin-top: 0.5rem;
   }
-  .product-card__compare-price {
-    font-size: 0.78rem;
+
+  /* Push mobile-add to bottom when sibling cards wrap */
+  .product-card__info > .product-card__mobile-add {
+    margin-top: auto;
   }
+
+  .product-card__pricing {
+    margin-bottom: 0.35rem;
+  }
+
+  .product-card__sizes {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Show minimalist carousel dots at bottom of image */
+  .product-card__pose-strip {
+    opacity: 1;
+    bottom: 6px;
+    padding: 3px 6px;
+    gap: 4px;
+    background: rgba(0, 0, 0, 0.3);
+  }
+}
+
+@media (max-width: 768px) {
+  /* Keep image 95%+ clear: at most 1 compact corner badge */
+  .product-card__badges {
+    top: 6px;
+    left: 6px;
+    max-width: calc(100% - 40px);
+    gap: 3px;
+  }
+
+  .product-card__badges .badge {
+    font-size: 0.56rem;
+    padding: 2px 5px;
+    letter-spacing: 0.04em;
+  }
+
+  .product-card__badges .badge--gold {
+    display: none;
+  }
+
+  /* Never stack multiple badges on mobile image */
+  .product-card__badges .badge:nth-child(n + 2) {
+    display: none;
+  }
+
+  .product-card__wishlist-btn {
+    width: 28px;
+    height: 28px;
+    top: 6px;
+    right: 6px;
+  }
+
+  .product-card__wishlist-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
   .product-card__info {
-    padding-top: 0.6rem;
-    gap: 0.15rem;
+    padding-top: 0.5rem;
+    gap: 0.14rem;
   }
-  .product-card__quick-add-btn {
-    font-size: 0.65rem;
-    padding: 0.5rem 0.6rem;
+
+  .product-card__category {
+    font-size: 0.6rem;
     letter-spacing: 0.06em;
   }
-  .product-card__wishlist-btn {
-    width: 30px;
-    height: 30px;
-    top: 8px;
-    right: 8px;
+
+  .product-card__title {
+    font-size: 0.96rem;
+    line-height: 1.25;
   }
-  .product-card__badges {
-    top: 8px;
-    left: 8px;
-    gap: 4px;
+
+  .product-card__pricing {
+    gap: 0.35rem;
+    margin-top: 0.12rem;
   }
-  .badge {
-    font-size: 0.58rem;
-    padding: 3px 6px;
+
+  .product-card__price {
+    font-size: 0.9rem;
   }
+
+  .product-card__compare-price {
+    font-size: 0.74rem;
+  }
+
+  .product-card__discount-pill {
+    font-size: 0.64rem;
+  }
+
   .size-pill {
-    font-size: 0.6rem;
-    padding: 1px 5px;
+    font-size: 0.58rem;
+    padding: 1px 4px;
   }
-  /* Always visible quick-add on touch */
-  .product-card__overlay {
-    opacity: 1;
-    transform: translateY(0);
+
+  .pose-strip-dot {
+    width: 4px;
+    height: 4px;
+  }
+
+  .pose-strip-btn.active .pose-strip-dot {
+    width: 11px;
   }
 }
 
 @media (max-width: 360px) {
   .product-card__title {
-    font-size: 0.92rem;
+    font-size: 0.88rem;
   }
+
   .product-card__price {
-    font-size: 0.85rem;
+    font-size: 0.84rem;
   }
+
   .product-card__sizes {
     display: none;
+  }
+
+  .product-card__badges .badge {
+    font-size: 0.5rem;
+    padding: 2px 4px;
+  }
+
+  .product-card__mobile-add {
+    font-size: 0.6rem;
+    padding: 0.4rem 0.4rem;
   }
 }

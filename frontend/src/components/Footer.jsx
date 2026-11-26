@@ -80,11 +80,11 @@ export default function Footer() {
           <h4 className="footer__title">Shop</h4>
           <ul className="footer__links">
             <li><Link to="/shop">All Kurtas</Link></li>
-            <li><Link to="/category/everyday-kurtas">Everyday Kurtas</Link></li>
-            <li><Link to="/category/embroidered-kurtas">Embroidered Kurtas</Link></li>
-            <li><Link to="/category/festive-kurtas">Festive Kurtas</Link></li>
-            <li><Link to="/category/cotton-linen-kurtas">Cotton & Linen</Link></li>
             <li><Link to="/category/kurta-sets">Kurta Sets</Link></li>
+            <li><Link to="/category/festive-kurtas">Festive Wear</Link></li>
+            <li><Link to="/category/everyday-kurtas">Kurtas & Tops</Link></li>
+            <li><Link to="/category/cotton-linen-kurtas">Cotton & Linen</Link></li>
+            <li><Link to="/category/printed-kurtas">Artisan Prints</Link></li>
             <li><Link to="/collections">Collections</Link></li>
           </ul>
         </div>
@@ -125,13 +125,11 @@ export default function Footer() {
         <p className="footer__copyright">
           © {new Date().getFullYear()} TEYA COLLECTIONS. PREMIUM INDIAN ETHNIC WEAR & KURTAS.
         </p>
-        <div className="footer__payments">
-          <img
-            src="https://www.biba.in/on/demandware.static/-/Library-Sites-BibaSharedLibrary/default/dw3e8c0d89/payment-partners.svg"
-            alt="Payment Partners"
-            height="22"
-            loading="lazy"
-          />
+        <div className="footer__payments" aria-label="Accepted payment methods">
+          <span className="footer__payment-pill">UPI</span>
+          <span className="footer__payment-pill">Cards</span>
+          <span className="footer__payment-pill">NetBanking</span>
+          <span className="footer__payment-pill">Razorpay Secure</span>
         </div>
         <div className="footer__legal">
           <Link to="/faq">Privacy Policy</Link>

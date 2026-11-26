@@ -29,9 +29,8 @@ export default function ShopPage() {
     async function loadProducts() {
       setLoading(true);
       try {
-        // Try Express API first
-        // API shape: { data: { products: [...], pagination: {} } }
-        const res = await api.get('/products');
+        // Request full catalog (backend default limit is 12)
+        const res = await api.get('/products?limit=50');
         const apiProducts = res.data?.data?.products ?? res.data?.data;
         if (Array.isArray(apiProducts) && apiProducts.length > 0) {
           setProducts(apiProducts);

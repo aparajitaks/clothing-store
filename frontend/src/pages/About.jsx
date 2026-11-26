@@ -32,7 +32,7 @@ export default function AboutPage() {
           transition={{ duration: 0.6 }}
         >
           <img
-            src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900"
+            src="/products/ivory-floral-embroidered-kurta-set/front.jpg"
             alt="TEYA COLLECTIONS master artisan embroidery"
             className="about-story__image"
           />

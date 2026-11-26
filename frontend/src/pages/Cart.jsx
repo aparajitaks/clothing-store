@@ -110,7 +110,7 @@ export default function CartPage() {
                   <div key={key} className="cart-row">
                     <div className="cart-row__product">
                       <img
-                        src={item.image_url || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300'}
+                        src={item.image_url || '/products/rust-embroidered-kurta-set/front.jpg'}
                         alt={item.name}
                         className="cart-row__img"
                       />

@@ -1,5 +1,6 @@
+import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingBag, Warehouse, Tag, RotateCcw, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingBag, Warehouse, Tag, RotateCcw, ChevronRight, Menu, X } from 'lucide-react';
 import './AdminLayout.css';
 
 const navLinks = [
@@ -13,10 +14,31 @@ const navLinks = [
 
 export default function AdminLayout() {
   const { pathname } = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname]);
 
   return (
     <div className="admin-layout">
-      <aside className="admin-sidebar">
+      {/* Mobile Topbar */}
+      <header className="admin-mobile-header">
+        <button
+          type="button"
+          className="admin-mobile-toggle"
+          onClick={() => setSidebarOpen((o) => !o)}
+          aria-label="Toggle admin menu"
+        >
+          {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+        <span className="admin-mobile-title">Teya Atelier Admin</span>
+        <Link to="/" className="admin-mobile-store-link">Store →</Link>
+      </header>
+
+      {sidebarOpen && <div className="admin-sidebar-backdrop" onClick={() => setSidebarOpen(false)} />}
+
+      <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="admin-brand">
           <Link to="/" className="admin-brand-logo" aria-label="Visit storefront">
             <img src="/logo-mark-white.png" alt="TC" className="admin-brand-logo-img" />

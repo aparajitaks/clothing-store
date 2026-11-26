@@ -9,36 +9,36 @@ import './Shop.css';
 
 const CATEGORY_META = {
   'everyday-kurtas': {
-    title: 'Everyday Kurtas',
+    title: 'Kurtas & Tops',
     desc: 'Effortlessly wearable kurtas in breathable cotton and linen — designed for daily elegance from morning to evening.',
-    banner: '/hero_luxury.jpg',
+    banner: '/products/navy-rose-embroidered-kurta-set/front.jpg',
   },
   'embroidered-kurtas': {
     title: 'Embroidered Kurtas',
     desc: 'Handcrafted threadwork — resham, zari, and dabka embroidery — placed with patience on each piece.',
-    banner: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=1600',
+    banner: '/products/rust-embroidered-kurta-set/front.jpg',
   },
   'festive-kurtas': {
-    title: 'Festive Kurtas',
+    title: 'Festive Wear',
     desc: 'Celebratory kurtas in pure silk and rich fabrics. Crafted for weddings, festivals, and occasions that matter.',
-    banner: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=1600',
+    banner: '/products/champagne-gold-zari-kurta-set/front.jpg',
   },
   'printed-kurtas': {
-    title: 'Printed Kurtas',
+    title: 'Artisan Prints',
     desc: 'Hand block-printed and screen-printed kurtas rooted in India\'s rich textile traditions.',
-    banner: 'https://images.unsplash.com/photo-1551163943-3f6a855d1153?w=1600',
+    banner: '/products/fuchsia-floral-block-print-kurta-set/front.jpg',
   },
   'cotton-linen-kurtas': {
-    title: 'Cotton & Linen Kurtas',
-    desc: 'Pure handspun cotton and Belgian linen kurtas — breathable, considered, and beautiful in their simplicity.',
-    banner: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1600',
+    title: 'Cotton & Linen',
+    desc: 'Pure handspun cotton and linen kurtas — breathable, considered, and beautiful in their simplicity.',
+    banner: '/products/botanical-printed-pink-kurta-set/front.jpg',
   },
   'kurta-sets': {
     title: 'Kurta Sets',
     desc: 'Complete kurta sets with coordinated trousers, palazzos, and dupattas — effortlessly curated for you.',
-    banner: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1600',
+    banner: '/products/ivory-floral-embroidered-kurta-set/front.jpg',
   },
-  // Legacy slugs — redirect to shop
+  // Legacy slugs
   'kurtas-suits': {
     title: 'Kurtas & Suits',
     desc: 'Explore our full kurta collection — from everyday cotton to festive embroidered pieces.',
@@ -54,7 +54,7 @@ export default function CategoryPage() {
   const meta = CATEGORY_META[slug] || {
     title: slug ? slug.replace('-', ' ').toUpperCase() : 'Category',
     desc: 'Discover artisanal garments curated for modern wardrobes.',
-    banner: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600',
+    banner: '/hero_luxury.jpg',
   };
 
   useEffect(() => {
@@ -62,7 +62,7 @@ export default function CategoryPage() {
       setLoading(true);
       try {
         // API shape: { data: { products: [...], pagination: {} } }
-        const res = await api.get(`/products?category=${slug}`);
+        const res = await api.get(`/products?category=${slug}&limit=50`);
         const apiProducts = res.data?.data?.products ?? res.data?.data;
         if (Array.isArray(apiProducts) && apiProducts.length > 0) {
           setProducts(apiProducts);

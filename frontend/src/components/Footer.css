@@ -206,16 +206,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
-.footer__payments img {
-  opacity: 0.85;
-  filter: brightness(0.95);
-  transition: opacity 0.2s;
-}
-
-.footer__payments img:hover {
-  opacity: 1;
+.footer__payment-pill {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #D6D1C6;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 0.22rem 0.55rem;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .footer__legal {
@@ -287,6 +292,13 @@
   }
   .footer__links a {
     font-size: 0.82rem;
+  }
+  .footer__input {
+    font-size: 16px;
+  }
+  .footer__legal {
+    flex-wrap: wrap;
+    justify-content: center;
   }
   .footer__bottom {
     font-size: 0.7rem;

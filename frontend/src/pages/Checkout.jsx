@@ -346,7 +346,7 @@ export default function CheckoutPage() {
               {items.map((item) => (
                 <div key={`${item.id}-${item.size}-${item.color}`} className="checkout-item-mini">
                   <img
-                    src={item.image_url || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=200'}
+                    src={item.image_url || '/products/rust-embroidered-kurta-set/front.jpg'}
                     alt={item.name}
                   />
                   <div className="checkout-item-meta">

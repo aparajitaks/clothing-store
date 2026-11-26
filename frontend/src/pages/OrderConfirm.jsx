@@ -100,7 +100,7 @@ export default function OrderConfirmPage() {
               {order.order_items.map((item, idx) => (
                 <div key={idx} className="confirm-item-row">
                   <img
-                    src={item.product_image || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=200'}
+                    src={item.product_image || '/products/rust-embroidered-kurta-set/front.jpg'}
                     alt={item.product_name}
                   />
                   <div className="confirm-item-info">
