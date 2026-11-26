@@ -78,17 +78,6 @@ const useAuthStore = create((set, get) => ({
     return data;
   },
 
-  // Phone OTP verification flow
-  verifyPhoneOtp: async (phone, token) => {
-    const { data, error } = await supabase.auth.verifyOtp({
-      phone,
-      token,
-      type: 'sms',
-    });
-    if (error) throw error;
-    return data;
-  },
-
   signIn: async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;

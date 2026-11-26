@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Mail, Lock, User, Phone, ArrowRight, Loader2 } from 'lucide-react';
+import { X, Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useUIStore from '../store/uiStore';
 import useAuthStore from '../store/authStore';
@@ -12,12 +12,9 @@ export default function AuthModal() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [otp, setOtp] = useState('');
-  const [showMobileTab, setShowMobileTab] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isOtpVerification, setIsOtpVerification] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,37 +25,16 @@ export default function AuthModal() {
         await signIn(email, password);
         toast.success('Welcome back to Teya Collections!');
         closeAuth();
-      } else if (isOtpVerification) {
-        // OTP verification for phone sign-up
-        await useAuthStore.getState().verifyPhoneOtp(phone, otp);
-        toast.success('Phone verified! Account created.');
-        setAuthMode('login');
-        setIsOtpVerification(false);
-        setPhone('');
-        setOtp('');
-      } else if (showMobileTab) {
-        // Mobile sign-up with OTP
-        if (!phone) {
-          throw new Error('Please enter your mobile number');
-        }
-        if (!/^\+91\d{10}$/.test(phone)) {
-          throw new Error('Please enter a valid mobile number with country code +91');
-        }
-        // Send OTP via supabase
-        const { error } = await supabase.auth.signInWithOtp({
-          phone,
-          options: { data: { full_name: fullName } },
-        });
-        if (error) throw error;
-        setIsOtpVerification(true);
-        toast.success('OTP sent to your mobile number. Please verify.');
       } else {
         // Email sign-up with validation
         if (!email || !password || !fullName) {
           throw new Error('Please fill in all required fields');
         }
+        if (password !== confirmPassword) {
+          throw new Error('Passwords do not match');
+        }
         await signUpWithPassword(email, password, fullName);
-        toast.success('Account created! Please check your email to confirm.');
+        toast.success('We\'ve sent a verification link to your email. Please verify to continue.');
         setAuthMode('login');
       }
     } catch (err) {
@@ -78,7 +54,7 @@ export default function AuthModal() {
       } else if (msg.includes('already registered') || msg.includes('User already registered')) {
         friendlyMsg = 'An account with this email already exists. Try signing in.';
       } else if (msg.includes('Password should be') || msg.includes('password is too weak')) {
-        friendlyMsg = 'Password must be at least 6 characters long.';
+        friendlyMsg = 'Password must be at least 8 characters long, containing at least one uppercase letter, one lowercase letter, and one number';
       } else if (msg.includes('rate limit') || msg.includes('too many')) {
         friendlyMsg = 'Too many attempts. Please wait a minute and try again.';
       } else if (msg) {
@@ -137,231 +113,77 @@ export default function AuthModal() {
             {/* Form */}
             <form onSubmit={handleSubmit} className="auth-modal__form" noValidate={false}>
 
-              {/* Tab Buttons */}
-              <div className="auth-tabs">
-                <button
-                  type="button"
-                  className={`auth-tab-btn ${!showMobileTab ? 'active' : ''}`}
-                  onClick={() => setShowMobileTab(false)}
-                >
-                  Email <Mail size={16} />
-                </button>
-                <button
-                  type="button"
-                  className={`auth-tab-btn ${showMobileTab ? 'active' : ''}`}
-                  onClick={() => setShowMobileTab(true)}
-                >
-                  Mobile <Mobile size={16} />
-                </button>
+              {/* Full Name */}
+              <div className="auth-field">
+                <label className="auth-field__label" htmlFor="auth-fullname">Full Name</label>
+                <div className="auth-input-wrapper">
+                  <User size={16} className="auth-input-icon" aria-hidden="true" />
+                  <input
+                    id="auth-fullname"
+                    className="auth-input"
+                    type="text"
+                    placeholder="Sabina Sharma"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                    autoComplete="name"
+                  />
+                </div>
               </div>
 
-              {/* Email Sign-up Tab */}
-              {showMobileTab !== true && (
-                <div>
-                  {authMode === 'register' && !isOtpVerification && (
-                    <div className="auth-field">
-                      <label className="auth-field__label" htmlFor="auth-fullname">Full Name</label>
-                      <div className="auth-input-wrapper">
-                        <User size={16} className="auth-input-icon" aria-hidden="true" />
-                        <input
-                          id="auth-fullname"
-                          className="auth-input"
-                          type="text"
-                          placeholder="Sabina Sharma"
-                          value={fullName}
-                          onChange={(e) => setFullName(e.target.value)}
-                          required
-                          autoComplete="name"
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {isOtpVerification && (
-                    <div className="auth-field">
-                      <label className="auth-field__label" htmlFor="auth-otp">OTP Code</label>
-                      <div className="auth-input-wrapper">
-                        <Loader2 size={16} className="auth-input-icon" aria-hidden="true" />
-                        <input
-                          id="auth-otp"
-                          className="auth-input"
-                          type="number"
-                          placeholder="123456"
-                          value={otp}
-                          onChange={(e) => setOtp(e.target.value)}
-                          required
-                          autoComplete="one-time-code"
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="auth-field">
-                    <label className="auth-field__label" htmlFor="auth-email">Email Address</label>
-                    <div className="auth-input-wrapper">
-                      <Mail size={16} className="auth-input-icon" aria-hidden="true" />
-                      <input
-                        id="auth-email"
-                        className="auth-input"
-                        type="email"
-                        placeholder="name@example.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        autoComplete="email"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="auth-field">
-                    <label className="auth-field__label" htmlFor="auth-password">Password</label>
-                    <div className="auth-input-wrapper">
-                      <Lock size={16} className="auth-input-icon" aria-hidden="true" />
-                      <input
-                        id="auth-password"
-                        className="auth-input"
-                        type="password"
-                        placeholder="••••••••••••••••"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        minLength={8}
-                        autoComplete="new-password"
-                      />
-                    </div>
-                  </div>
+              {/* Email */}
+              <div className="auth-field">
+                <label className="auth-field__label" htmlFor="auth-email">Email Address</label>
+                <div className="auth-input-wrapper">
+                  <Mail size={16} className="auth-input-icon" aria-hidden="true" />
+                  <input
+                    id="auth-email"
+                    className="auth-input"
+                    type="email"
+                    placeholder="name@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    autoComplete="email"
+                  />
                 </div>
-              )}
+              </div>
 
-              {/* Mobile Sign-up Tab */}
-              {showMobileTab && (
-                <div>
-                  {authMode === 'register' && !isOtpVerification && (
-                    <div className="auth-field">
-                      <label className="auth-field__label" htmlFor="auth-fullname">Full Name</label>
-                      <div className="auth-input-wrapper">
-                        <User size={16} className="auth-input-icon" aria-hidden="true" />
-                        <input
-                          id="auth-fullname"
-                          className="auth-input"
-                          type="text"
-                          placeholder="Sabina Sharma"
-                          value={fullName}
-                          onChange={(e) => setFullName(e.target.value)}
-                          required
-                          autoComplete="name"
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="auth-field">
-                    <label className="auth-field__label" htmlFor="auth-phone">Mobile Number</label>
-                    <div className="auth-input-wrapper">
-                      <Mobile size={16} className="auth-input-icon" aria-hidden="true" />
-                      <input
-                        id="auth-phone"
-                        className="auth-input"
-                        type="tel"
-                        placeholder="+91 98765 12345"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        required
-                        autoComplete="tel"
-                        maxLength={15}
-                        placeholder="+91 followed by 10 digits"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Send OTP button */}
-                  <div className="auth-field">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (!phone) {
-                          throw new Error('Please enter your mobile number');
-                        }
-                        if (!/^\+91\d{10}$/.test(phone)) {
-                          throw new Error('Please enter a valid mobile number with country code +91');
-                        }
-                        supabase.auth.signInWithOtp({
-                          phone,
-                          options: { data: { full_name: fullName } },
-                        }).then(() => {
-                          setIsOtpVerification(true);
-                          toast.success('OTP sent to your mobile number. Please verify.');
-                        }).catch((err) => {
-                          toast.error(err.message || 'Failed to send OTP');
-                        });
-                      }}
-                      className="btn-secondary"
-                      disabled={loading}
-                    >
-                      Send OTP
-                    </button>
-                  </div>
-
-                  {/* OTP Verification Section */}
-                  {isOtpVerification && (
-                    <div className="auth-field">
-                      <label className="auth-field__label" htmlFor="auth-otp">OTP Code</label>
-                      <div className="auth-input-wrapper">
-                        <Loader2 size={16} className="auth-input-icon" aria-hidden="true" />
-                        <input
-                          id="auth-otp"
-                          className="auth-input"
-                          type="number"
-                          placeholder="123456"
-                          value={otp}
-                          onChange={(e) => setOtp(e.target.value)}
-                          required
-                          autoComplete="one-time-code"
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Resend OTP */}
-                  {isOtpVerification && (
-                    <div className="auth-field">
-                      <p>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (!phone) return;
-                            supabase.auth.signInWithOtp({
-                              phone,
-                              options: { data: { full_name: fullName } },
-                            }).then(() => {
-                              toast.success('OTP resent successfully');
-                            }).catch((err) => {
-                              toast.error(err.message || 'Failed to resend OTP');
-                            });
-                          }}
-                          className="auth-resend-btn"
-                        >
-                          Resend OTP
-                        </button>
-                        {isOtpVerification && !otp && (
-                          <span>00:30</span>
-                        )}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Submit OTP Verification */}
-                  {isOtpVerification && (
-                    <button
-                      type="submit"
-                      className="btn-primary btn-block"
-                      disabled={loading}
-                    >
-                      Verify OTP
-                    </button>
-                  )}
+              {/* Password */}
+              <div className="auth-field">
+                <label className="auth-field__label" htmlFor="auth-password">Password</label>
+                <div className="auth-input-wrapper">
+                  <Lock size={16} className="auth-input-icon" aria-hidden="true" />
+                  <input
+                    id="auth-password"
+                    className="auth-input"
+                    type="password"
+                    placeholder="••••••••••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={8}
+                    autoComplete="new-password"
+                  />
                 </div>
-              )}
+              </div>
+
+              {/* Confirm Password */}
+              <div className="auth-field">
+                <label className="auth-field__label" htmlFor="auth-confirm-password">Confirm Password</label>
+                <div className="auth-input-wrapper">
+                  <Lock size={16} className="auth-input-icon" aria-hidden="true" />
+                  <input
+                    id="auth-confirm-password"
+                    className="auth-input"
+                    type="password"
+                    placeholder="••••••••••••••••"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
 
               {/* Submit */}
               <button
