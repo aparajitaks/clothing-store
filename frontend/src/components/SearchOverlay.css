@@ -203,3 +203,25 @@
   font-size: 13px;
   color: var(--color-text-light);
 }
+
+@media (max-width: 600px) {
+  .search-overlay {
+    max-height: 90dvh;
+    padding: 1.15rem 0 1.5rem;
+  }
+  .search-overlay__inner {
+    padding: 0 0.85rem;
+  }
+  .search-form {
+    gap: 0.5rem;
+    padding-bottom: 0.65rem;
+  }
+  .search-form__input {
+    min-width: 0;
+    font-size: 16px;
+  }
+  .search-tag {
+    font-size: 12px;
+    padding: 5px 12px;
+  }
+}

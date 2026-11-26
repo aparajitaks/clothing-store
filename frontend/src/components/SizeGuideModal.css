@@ -172,3 +172,16 @@
   color: var(--color-gold);
   text-decoration: underline;
 }
+
+@media (max-width: 480px) {
+  .sgm-panel {
+    width: 100vw;
+    height: 100dvh;
+  }
+  .sgm-header {
+    padding: 1rem 1.25rem;
+  }
+  .sgm-body {
+    padding: 1.25rem;
+  }
+}

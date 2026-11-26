@@ -397,6 +397,7 @@
   }
   .cart-row__subtotal {
     justify-content: flex-start;
+    padding-right: 0;
   }
   .cart-row__delete {
     display: none;
@@ -423,6 +424,7 @@
   }
   .cart-header {
     margin-bottom: 1.5rem;
+    flex-wrap: wrap;
   }
   .cart-row__img {
     width: 72px;
@@ -434,14 +436,22 @@
   .cart-row__name {
     font-size: 1.05rem;
   }
-  .order-summary-box {
+  .cart-footer-actions {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .cart-summary {
     padding: 1.25rem 1rem;
   }
-  .coupon-form {
+  .promo-form {
     flex-direction: column;
     gap: 0.5rem;
   }
-  .coupon-btn {
+  .promo-input-wrap input {
+    font-size: 16px;
+  }
+  .promo-btn {
     width: 100%;
+    padding: 0.75rem 1rem;
   }
 }

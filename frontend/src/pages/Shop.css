@@ -7,6 +7,33 @@
   padding-bottom: 5rem;
 }
 
+.shop-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #8C887B;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.shop-breadcrumb::-webkit-scrollbar {
+  display: none;
+}
+
+.shop-breadcrumb a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.shop-breadcrumb .current {
+  color: #1A1A1A;
+  font-weight: 600;
+}
+
 .shop-header {
   text-align: center;
   max-width: 600px;

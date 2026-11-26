@@ -117,3 +117,20 @@
 .pincode-result__icon--err {
   color: var(--color-error);
 }
+
+@media (max-width: 600px) {
+  .pincode-checker__input {
+    font-size: 16px;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .pincode-checker__form {
+    flex-direction: column;
+  }
+  .pincode-checker__btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

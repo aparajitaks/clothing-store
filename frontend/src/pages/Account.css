@@ -238,6 +238,9 @@
     grid-template-columns: 1fr;
     gap: 2rem;
   }
+  .account-grid > * {
+    min-width: 0;
+  }
 }
 
 @media (max-width: 600px) {
@@ -245,14 +248,18 @@
     padding-top: calc(var(--nav-height, 66px) + 1.25rem);
     padding-bottom: 3.5rem;
   }
+  .account-title,
   .account-header h1 {
     font-size: 2rem;
   }
   .account-user-card {
     padding: 1.25rem 1rem;
   }
-  .account-content {
+  .account-card {
     padding: 1.25rem 1rem;
+  }
+  .input-wrap input {
+    font-size: 16px;
   }
   .account-save-btn {
     width: 100%;

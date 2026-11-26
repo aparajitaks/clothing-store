@@ -77,7 +77,7 @@ export default function AdminInventory() {
         </div>
 
         {/* Stats */}
-        <div className="admin-stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+        <div className="admin-stats-grid admin-stats-grid--3">
           <div className="admin-stat-card">
             <div className="admin-stat-icon-wrap" style={{ background: '#EAF4FB' }}>
               <Package size={22} color="#1565C0" />
@@ -159,7 +159,7 @@ export default function AdminInventory() {
                         <td>
                           <div className="admin-product-cell">
                             <img
-                              src={p.images?.[0] || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=100'}
+                              src={typeof p.images?.[0] === 'string' ? p.images[0] : (p.images?.[0]?.url || '/products/rust-embroidered-kurta-set/front.jpg')}
                               alt={p.name}
                             />
                             <div>

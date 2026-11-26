@@ -4,7 +4,7 @@
 
 .biba-home {
   position: relative;
-  overflow-x: hidden;
+  overflow-x: clip;
   background-color: #FFFFFF;
   color: #121212;
 }
@@ -200,7 +200,7 @@
 
 .biba-cat-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 1.25rem;
 }
 
@@ -701,11 +701,12 @@
     margin-bottom: 1.75rem;
   }
   .biba-hero__image {
-    min-height: 420px;
-    max-height: 520px;
+    min-height: 460px;
+    max-height: 540px;
     object-position: 70% center;
   }
   .biba-hero__overlay {
+    padding-top: calc(var(--nav-height, 78px) + 2.5rem);
     background: linear-gradient(
       to top,
       rgba(255, 255, 255, 0.97) 0%,
@@ -777,9 +778,12 @@
     margin-bottom: 1.25rem;
   }
   .biba-hero__image {
-    min-height: 380px;
-    max-height: 480px;
+    min-height: 450px;
+    max-height: 520px;
     object-position: 65% center;
+  }
+  .biba-hero__overlay {
+    padding-top: calc(var(--nav-height, 66px) + 2.5rem);
   }
   .biba-hero__card {
     padding: 1rem 0 1.25rem;

@@ -109,7 +109,7 @@ export default function AdminCoupons() {
         </div>
 
         {/* Stats */}
-        <div className="admin-stats-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+        <div className="admin-stats-grid admin-stats-grid--3">
           <div className="admin-stat-card">
             <div className="admin-stat-icon-wrap" style={{ background: '#FFF8E1' }}>
               <Tag size={22} color="#C9A96E" />

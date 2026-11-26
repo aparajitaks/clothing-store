@@ -52,6 +52,10 @@
   align-items: flex-start;
 }
 
+.pdp-grid > * {
+  min-width: 0;
+}
+
 /* Gallery — Amazon Style */
 .amazon-gallery {
   display: flex;
@@ -890,6 +894,11 @@
     overflow-x: auto;
     white-space: nowrap;
     padding-bottom: 4px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .pdp-breadcrumb::-webkit-scrollbar {
+    display: none;
   }
   .pdp-grid {
     gap: 1.5rem;
@@ -915,9 +924,18 @@
     gap: 0.5rem;
     flex-wrap: wrap;
   }
+  .pdp-qty-stepper {
+    height: 44px;
+  }
+  .pdp-qty-stepper button {
+    width: 34px;
+  }
+  .pdp-actions .pdp-add-btn,
   .pdp-actions .biba-btn {
     flex: 1;
-    padding: 0.85rem 0.75rem;
+    min-width: 150px;
+    height: 44px;
+    padding: 0.75rem 0.75rem;
     font-size: 0.72rem;
     letter-spacing: 0.08em;
   }
@@ -926,7 +944,8 @@
     height: 44px;
   }
   .pdp-buy-btn {
-    padding: 0.85rem 1rem;
+    height: 44px;
+    padding: 0.75rem 1rem;
     font-size: 0.75rem;
   }
   .pdp-size-btn {

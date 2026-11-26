@@ -1027,7 +1027,7 @@ export const DEFAULT_PRODUCTS = [
     discount_percent: 15,
     images: [
       { url: '/products/scarlet-red-kashmiri-embroidered-kurta-set/front-2.jpg', alt: 'Scarlet Red Kashmiri Embroidered Silk Kurta Set — Front View', isPrimary: true, type: 'image' },
-      { url: '/products/scarlet-kashmiri-embroidered-kurta-set/front.jpg', alt: 'Scarlet Red Kashmiri Embroidered Silk Kurta Set — Side Pose with Dupatta', type: 'image' },
+      { url: '/products/scarlet-red-kashmiri-embroidered-kurta-set/front.jpg', alt: 'Scarlet Red Kashmiri Embroidered Silk Kurta Set — Side Pose with Dupatta', type: 'image' },
       { url: '/products/scarlet-red-kashmiri-embroidered-kurta-set/back.jpg', alt: 'Scarlet Red Kashmiri Embroidered Silk Kurta Set — Back View', type: 'image' },
       { url: '/products/scarlet-red-kashmiri-embroidered-kurta-set/video.mp4', poster: '/products/scarlet-red-kashmiri-embroidered-kurta-set/video-poster.jpg', alt: 'Scarlet Red Kashmiri Embroidered Silk Kurta Set — Model Video Shoot', type: 'video' },
     ],

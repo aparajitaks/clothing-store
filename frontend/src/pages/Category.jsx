@@ -100,12 +100,12 @@ export default function CategoryPage() {
   return (
     <div className="shop-page container">
       {/* Breadcrumb */}
-      <nav className="breadcrumb" style={{ marginBottom: '2rem', display: 'flex', gap: '0.5rem', fontSize: '0.8rem', color: '#8C887B' }}>
-        <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>Home</Link>
+      <nav className="shop-breadcrumb">
+        <Link to="/">Home</Link>
         <span>/</span>
-        <Link to="/shop" style={{ color: 'inherit', textDecoration: 'none' }}>Shop</Link>
+        <Link to="/shop">Shop</Link>
         <span>/</span>
-        <span style={{ color: '#1A1A1A', fontWeight: 600 }}>{meta.title}</span>
+        <span className="current">{meta.title}</span>
       </nav>
 
       {/* Hero Banner for Category */}

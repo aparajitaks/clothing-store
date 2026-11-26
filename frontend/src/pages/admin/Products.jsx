@@ -70,7 +70,7 @@ export default function AdminProducts() {
       compare_price: '',
       stock: 10,
       description: '',
-      image_url: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800',
+      image_url: '/products/rust-embroidered-kurta-set/front.jpg',
       sizes: 'XS, S, M, L, XL',
       colors: 'Ivory Cream, Noir Black',
       is_featured: false,
@@ -190,7 +190,7 @@ export default function AdminProducts() {
               {filtered.map((prod) => {
                 const img = Array.isArray(prod.images) && prod.images[0]
                   ? (typeof prod.images[0] === 'string' ? prod.images[0] : prod.images[0].url)
-                  : 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=200';
+                  : '/products/rust-embroidered-kurta-set/front.jpg';
                 return (
                   <tr key={prod.id}>
                     <td>
@@ -313,8 +313,8 @@ export default function AdminProducts() {
               <div className="form-group">
                 <label>Primary Image URL</label>
                 <input
-                  type="url"
-                  placeholder="https://images.unsplash.com/..."
+                  type="text"
+                  placeholder="/products/rust-embroidered-kurta-set/front.jpg"
                   value={formData.image_url}
                   onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                 />

@@ -12,6 +12,7 @@
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
+  overflow-y: auto;
 }
 
 .auth-backdrop {
@@ -29,6 +30,9 @@
   border-radius: 4px;
   width: 100%;
   max-width: 440px;
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  margin: auto;
   padding: 2.5rem;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
   z-index: 1;
@@ -221,12 +225,12 @@
   .auth-modal {
     padding: 1.75rem 1.25rem;
     max-width: 100%;
+    max-height: calc(100dvh - 1.5rem);
   }
   .auth-modal__title {
     font-size: 1.45rem;
   }
-  .auth-modal__input-wrap input {
+  .auth-modal .auth-input {
     font-size: 16px;
-    padding: 0.75rem 0.85rem;
   }
 }

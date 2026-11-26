@@ -17,6 +17,7 @@
   width: 440px;
   max-width: 90vw;
   height: 100vh;
+  height: 100dvh;
   background: #FFFFFF;
   box-shadow: -15px 0 40px rgba(0, 0, 0, 0.15);
   z-index: 1001;

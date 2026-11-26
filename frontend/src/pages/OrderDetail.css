@@ -331,6 +331,44 @@
 }
 
 @media (max-width: 768px) {
+  .order-detail-hero { padding: calc(var(--nav-height, 78px) + 1.25rem) var(--space-md) var(--space-lg); }
   .order-detail-body { padding: var(--space-xl) var(--space-md); }
   .timeline-step { min-width: 70px; }
+}
+
+@media (max-width: 600px) {
+  .order-detail-hero {
+    padding: calc(var(--nav-height, 66px) + 1rem) 0.85rem 1.25rem;
+  }
+  .order-detail-breadcrumb {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .order-detail-body {
+    padding: 1.25rem 0.85rem;
+  }
+  .order-timeline,
+  .order-tracking-card,
+  .order-summary-card,
+  .order-address-card {
+    padding: 1.15rem 1rem;
+  }
+  .return-modal-overlay {
+    padding: 0.85rem;
+  }
+  .return-modal {
+    padding: 1.25rem;
+    max-height: 92dvh;
+    overflow-y: auto;
+  }
+  .return-modal__field select,
+  .return-modal__field textarea {
+    font-size: 16px;
+  }
+  .return-modal__actions {
+    flex-direction: column-reverse;
+  }
+  .return-modal__actions button {
+    width: 100%;
+  }
 }

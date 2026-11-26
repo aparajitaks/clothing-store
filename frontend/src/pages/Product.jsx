@@ -396,7 +396,7 @@ export default function ProductPage() {
               )}
             </div>
             <p className="pdp-tax-note">
-              Final Selling Price (All taxes included). You save ₹{(Number(product.compare_price) - Number(product.price)).toLocaleString('en-IN')} (15% off). Free express delivery across India.
+              Final Selling Price (All taxes included).{hasDiscount ? ` You save ₹${(Number(product.compare_price) - Number(product.price)).toLocaleString('en-IN')} (${discountPercent}% off).` : ''} Free express delivery across India.
             </p>
 
             {/* Color Selector */}

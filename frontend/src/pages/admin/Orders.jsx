@@ -200,7 +200,7 @@ export default function AdminOrders() {
                 {selectedOrder.order_items?.map((it, idx) => (
                   <div key={idx} className="inspect-item-row">
                     <img
-                      src={it.product_image || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=100'}
+                      src={it.product_image || '/products/rust-embroidered-kurta-set/front.jpg'}
                       alt={it.product_name}
                     />
                     <div>
