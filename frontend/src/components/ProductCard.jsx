@@ -36,8 +36,9 @@ export default function ProductCard({ product }) {
         };
       });
     }
-    const defaultUrl = '/products/rust-embroidered-kurta-set/front.jpg';
-    return [{ url: defaultUrl, type: 'image' }];
+    // Fallback to first product's video if available, else default image
+    const fallbackUrl = '/products/rust-embroidered-kurta-set/front.jpg';
+    return [{ url: fallbackUrl, type: 'image' }];
   }, [product]);
 
   if (!product) return null;
@@ -133,8 +134,8 @@ export default function ProductCard({ product }) {
             preload="metadata"
             autoPlay
             muted
-            loop
             playsInline
+            loop
             onError={() => setVideoFailed(true)}
             className="product-card__image product-card__video"
           >

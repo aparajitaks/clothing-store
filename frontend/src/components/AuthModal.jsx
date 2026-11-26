@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
+import { X, Mail, Lock, User, Phone, ArrowRight, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useUIStore from '../store/uiStore';
 import useAuthStore from '../store/authStore';
@@ -13,7 +13,10 @@ export default function AuthModal() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isOtpVerification, setIsOtpVerification] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +27,21 @@ export default function AuthModal() {
         await signIn(email, password);
         toast.success('Welcome back to Teya Collections!');
         closeAuth();
+      } else if (isOtpVerification) {
+        // OTP verification for phone sign-up
+        await signUpWithPhone(phone, otp);
+        toast.success('Phone verified! Account created.');
+        setAuthMode('login');
+        setIsOtpVerification(false);
+        setPhone('');
+        setOtp('');
+      } else if (phone && !email) {
+        // Phone sign-up initiation - send OTP
+        await signUpWithPhone(phone, '');
+        setIsOtpVerification(true);
+        toast.success('OTP sent to your mobile number. Please verify.');
       } else {
+        // Regular email sign-up
         await signUp(email, password, fullName);
         toast.success('Account created! Please check your email to confirm.');
         setAuthMode('login');
@@ -106,7 +123,7 @@ export default function AuthModal() {
             <form onSubmit={handleSubmit} className="auth-modal__form" noValidate={false}>
 
               {/* Full Name — register only */}
-              {authMode === 'register' && (
+              {authMode === 'register' && !isOtpVerification && (
                 <div className="auth-field">
                   <label className="auth-field__label" htmlFor="auth-fullname">Full Name</label>
                   <div className="auth-input-wrapper">
@@ -122,6 +139,25 @@ export default function AuthModal() {
                       onChange={(e) => setFullName(e.target.value)}
                       required
                       autoComplete="name"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {isOtpVerification && (
+                <div className="auth-field">
+                  <label className="auth-field__label" htmlFor="auth-otp">OTP Code</label>
+                  <div className="auth-input-wrapper">
+                    <Loader2 size={16} className="auth-input-icon" aria-hidden="true" />
+                    <input
+                      id="auth-otp"
+                      className="auth-input"
+                      type="number"
+                      placeholder="123456"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      required
+                      autoComplete="one-time-code"
                     />
                   </div>
                 </div>
@@ -145,24 +181,46 @@ export default function AuthModal() {
                 </div>
               </div>
 
-              {/* Password */}
-              <div className="auth-field">
-                <label className="auth-field__label" htmlFor="auth-password">Password</label>
-                <div className="auth-input-wrapper">
-                  <Lock size={16} className="auth-input-icon" aria-hidden="true" />
-                  <input
-                    id="auth-password"
-                    className="auth-input"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    minLength={6}
-                    autoComplete={authMode === 'login' ? 'current-password' : 'new-password'}
-                  />
+              {/* Phone Number — register only (OTP verification) */}
+              {authMode === 'register' && (
+                <div className="auth-field">
+                  <label className="auth-field__label" htmlFor="auth-phone">Mobile Number</label>
+                  <div className="auth-input-wrapper">
+                    <Phone size={16} className="auth-input-icon" aria-hidden="true" />
+                    <input
+                      id="auth-phone"
+                      className="auth-input"
+                      type="tel"
+                      placeholder="+91 98765 12345"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      required
+                      autoComplete="tel"
+                      maxLength={15}
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* OTP Verification — shown after phone sign-up initiation */}
+              {isOtpVerification && (
+                <div className="auth-field">
+                  <label className="auth-field__label" htmlFor="auth-otp">OTP Code</label>
+                  <div className="auth-input-wrapper">
+                    <Loader2 size={16} className="auth-input-icon" aria-hidden="true" />
+                    <input
+                      id="auth-otp"
+                      className="auth-input"
+                      type="number"
+                      placeholder="123456"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      required
+                      autoComplete="one-time-code"
+                    />
+                  </div>
+                </div>
+              )}
 
               {/* Submit */}
               <button

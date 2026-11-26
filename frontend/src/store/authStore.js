@@ -63,6 +63,18 @@ const useAuthStore = create((set, get) => ({
     return data;
   },
 
+  signUpWithPhone: async (phone, otp) => {
+    // For phone authentication with OTP, we use Supabase's phone sign-up
+    // This is a simplified flow - full implementation would use phone OTP verification
+    const { data, error } = await supabase.auth.signUp({
+      phone,
+      password: otp || 'temp123', // Use OTP as temporary password
+      options: { data: { full_name: phone } },
+    });
+    if (error) throw error;
+    return data;
+  },
+
   signIn: async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;

@@ -365,9 +365,7 @@ export default function ProductPage() {
                     className="pdp-main-video"
                     poster={currentMedia.poster || undefined}
                     preload="metadata"
-                    controls={videoPlaying}
                     playsInline
-                    muted={videoMuted}
                     loop
                     onEnded={() => setVideoPlaying(false)}
                     onPlay={() => setVideoPlaying(true)}
