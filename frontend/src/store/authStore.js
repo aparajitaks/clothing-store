@@ -78,29 +78,12 @@ const useAuthStore = create((set, get) => ({
     return data;
   },
 
-  // Enhanced sign-up with password validation
-  signUpWithPassword: async (email, password, fullName) => {
-    // Validate password meets requirements: min 8 chars, at least 1 upper, 1 lower, 1 number
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-    if (!passwordRegex.test(password)) {
-      throw new Error('Password must be at least 8 characters long, containing at least one uppercase letter, one lowercase letter, and one number');
-    }
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { full_name: fullName } },
-    });
-    if (error) throw error;
-    return data;
-  },
-
-  signUpWithPhone: async (phone, otp) => {
-    // For phone authentication with OTP, we use Supabase's phone sign-up
-    // This is a simplified flow - full implementation would use phone OTP verification
-    const { data, error } = await supabase.auth.signUp({
+  // Phone OTP verification flow
+  verifyPhoneOtp: async (phone, token) => {
+    const { data, error } = await supabase.auth.verifyOtp({
       phone,
-      password: otp || 'temp123', // Use OTP as temporary password
-      options: { data: { full_name: phone } },
+      token,
+      type: 'sms',
     });
     if (error) throw error;
     return data;

@@ -30,7 +30,7 @@ export default function AuthModal() {
         closeAuth();
       } else if (isOtpVerification) {
         // OTP verification for phone sign-up
-        await signUpWithPhone(phone, otp);
+        await useAuthStore.getState().verifyPhoneOtp(phone, otp);
         toast.success('Phone verified! Account created.');
         setAuthMode('login');
         setIsOtpVerification(false);
