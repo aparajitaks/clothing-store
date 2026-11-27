@@ -5,6 +5,7 @@ import ProductCard from '../components/ProductCard';
 import { supabase } from '../lib/supabase';
 import api from '../lib/axios';
 import { DEFAULT_PRODUCTS } from '../data/products';
+import SEO from '../components/SEO';
 import './Shop.css';
 
 const CATEGORY_META = {
@@ -117,6 +118,14 @@ export default function CategoryPage() {
         <h1 className="shop-header__title">{meta.title}</h1>
         <p className="shop-header__desc">{meta.desc}</p>
       </div>
+
+      <SEO
+        title={meta?.title || 'Category'}
+        description={meta?.desc || 'Discover artisanal garments curated for modern wardrobes.'}
+        canonical={meta?.slug ? `/category/${meta.slug}` : '/category'}
+        image={`${process.env.PUBLIC_URL}/og-image.png`}
+        type="website"
+      />
 
       {/* Grid */}
       {loading ? (

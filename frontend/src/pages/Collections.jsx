@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import api from '../lib/axios';
 import { DEFAULT_COLLECTIONS } from '../data/products';
+import SEO from '../components/SEO';
 import './Collections.css';
 
 const FALLBACK_COLLECTIONS = DEFAULT_COLLECTIONS;
@@ -44,6 +45,15 @@ export default function CollectionsPage() {
           </p>
         </motion.div>
       </div>
+
+      {/* SEO */}
+      <SEO
+        title={meta ? meta.title : 'Collections'}
+        description={meta ? meta.desc : 'TEYA COLLECTIONS — Handcrafted premium kurtas, embroidered kurta sets, and breathable everyday cotton & linen silhouettes. Shop Indian ethnic wear online.'}
+        canonical={meta ? `/collections/${meta.slug}` : '/collections'}
+        image={`${process.env.PUBLIC_URL}/og-image.png`}
+        type="collection"
+      />
 
       {/* Featured Collections — full-bleed editorial */}
       <section className="collections-featured container">
