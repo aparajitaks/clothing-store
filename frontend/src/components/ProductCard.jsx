@@ -147,6 +147,18 @@ export default function ProductCard({ product }) {
             alt={`${product.name} — view ${activePoseIndex + 1}`}
             className="product-card__image"
             loading="lazy"
+            // Generate srcset with 3 resolutions for responsive/retina images
+            // Using generated thumbnail files: front@480w.jpg, front@960w.jpg, front@1600w.jpg
+            srcset={currentPose?.url
+              ? [
+                  currentPose?.url.replace(/\.jpg$/, '') + '@480w 480w',
+                  currentPose?.url.replace(/\.jpg$/, '') + '@960w 960w',
+                  currentPose?.url.replace(/\.jpg$/, '') + '@1600w 1600w',
+                ].join(', ')
+              : ''
+            }
+            // Tell browser the image will be sized by the product card aspect ratio
+            sizes="(max-width: 768px) 90vw, (max-width: 1024px) 70vw, 50vw"
           />
         )}
 

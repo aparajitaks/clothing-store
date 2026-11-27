@@ -437,6 +437,17 @@ export default function ProductPage() {
                           }
                         : undefined
                     }
+                    // Add srcset for responsive/retina images
+                    srcset={currentMedia?.url
+                      ? [
+                          currentMedia?.url.replace(/\.jpg$/, '') + '@480w 480w',
+                          currentMedia?.url.replace(/\.jpg$/, '') + '@960w 960w',
+                          currentMedia?.url.replace(/\.jpg$/, '') + '@1600w 1600w',
+                        ].join(', ')
+                      : ''
+                    }
+                    // Tell browser the image will fill the main viewer area
+                    sizes="(max-width: 768px) 100%, (max-width: 1024px) 85%, 70%"
                     draggable={false}
                   />
 

@@ -57,7 +57,22 @@ export default function CollectionsPage() {
             transition={{ duration: 0.6, delay: 0.1 }}
           >
             <div className="col-editorial__image-wrap">
-              <img src={col.image_url} alt={col.name} className="col-editorial__image" />
+              <img
+                src={col.image_url}
+                alt={col.name}
+                className="col-editorial__image"
+                // Generate srcset for responsive/retina images
+                srcset={col.image_url
+                  ? [
+                      col.image_url.replace(/\.jpg$/, '') + '@480w 480w',
+                      col.image_url.replace(/\.jpg$/, '') + '@960w 960w',
+                      col.image_url.replace(/\.jpg$/, '') + '@1600w 1600w',
+                    ].join(', ')
+                  : ''
+                }
+                // Collection grid images are smaller
+                sizes="(max-width: 768px) 90vw, (max-width: 1024px) 70vw, 50vw"
+              />
             </div>
             <div className="col-editorial__content">
               <p className="col-editorial__eyebrow">Collection</p>
