@@ -26,8 +26,23 @@ const PORT = process.env.PORT || 3001;
 // ─── Security ────────────────────────────────────────────────
 app.use(helmet());
 
+// CORS allowlist — CLIENT_URL can be a comma-separated list of origins.
+const ALLOWED_ORIGINS = (process.env.CLIENT_URL || 'https://teyacollections.com')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+const DEV_ORIGINS = ['http://localhost:5173', 'http://localhost:4173'];
+const IS_PROD = process.env.NODE_ENV === 'production';
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'https://teyacollections.com',
+  // CLIENT_URL may hold a comma-separated allowlist of production origins.
+  // Local dev origins (Vite dev 5173 / preview 4173) are also allowed outside production.
+  origin(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
+    if (!IS_PROD && DEV_ORIGINS.includes(origin)) return callback(null, true);
+    return callback(new Error(`Not allowed by CORS: ${origin}`));
+  },
   credentials: true,
 }));
 
