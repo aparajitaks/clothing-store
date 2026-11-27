@@ -143,28 +143,16 @@ export default function ProductPage() {
       return product.images.map((item, index) => {
         if (typeof item === 'string') {
           const isVid = item.endsWith('.mp4') || item.includes('video');
-          // Build retina srcset for JPEG/PNG images — assumes doubled-resolution source exists
-          const url = item;
-          const base = url.replace(/\.\w+$/, '');
-          const ext = url.match(/\.\w+$/)[0];
-          const retinaUrl = `${base}@2x${ext}`;
           return {
-            url,
-            retinaUrl,
+            url: item,
             type: isVid ? 'video' : 'image',
             label: isVid ? 'Video Shoot' : (defaultLabels[index] || `Pose ${index + 1}`),
             poster: product.video_poster || null,
           };
         }
         const isVid = item.type === 'video' || item.url?.endsWith('.mp4');
-        // Build retina srcset for object images
-        const url = item.url;
-        const base = url.replace(/\.\w+$/, '');
-        const ext = url.match(/\.\w+$/)[0];
-        const retinaUrl = `${base}@2x${ext}`;
         return {
-          url,
-          retinaUrl: item.retinaUrl || retinaUrl,
+          url: item.url,
           type: isVid ? 'video' : 'image',
           label: isVid ? 'Video Shoot' : (item.label || (item.alt?.includes(' — ') ? item.alt.split(' — ')[1] : defaultLabels[index]) || `Pose ${index + 1}`),
           alt: item.alt || product.name,
@@ -345,9 +333,6 @@ export default function ProductPage() {
                       <img
                         src={item.type === 'video' ? (item.poster || item.url) : item.url}
                         alt={`${product.name} — ${item.label}`}
-                        srcset={item.retinaUrl
-                          ? `${item.url} 1x, ${item.retinaUrl} 2x`
-                          : undefined}
                       />
                       {item.type === 'video' && (
                         <span className="amazon-thumb__video-badge">
@@ -443,9 +428,6 @@ export default function ProductPage() {
                     src={currentMedia?.url || mediaList[0]?.url}
                     alt={`${product.name} — ${currentMedia?.label}`}
                     className={`pdp-main-image ${isZooming ? 'zooming' : ''}`}
-                    srcset={currentMedia?.retinaUrl
-                      ? `${currentMedia?.url} 1x, ${currentMedia?.retinaUrl} 2x`
-                      : undefined}
                     style={
                       isZooming
                         ? {
@@ -719,9 +701,6 @@ export default function ProductPage() {
                       src={currentMedia?.url}
                       alt={`${product.name} — ${currentMedia?.label}`}
                       className={`amazon-lightbox__img ${lightboxZoomed ? 'zoomed' : ''}`}
-                      srcset={currentMedia?.retinaUrl
-                        ? `${currentMedia?.url} 1x, ${currentMedia?.retinaUrl} 2x`
-                        : undefined}
                       onClick={() => setLightboxZoomed((z) => !z)}
                       style={
                         lightboxZoomed

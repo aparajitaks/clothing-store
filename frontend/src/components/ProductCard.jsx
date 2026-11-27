@@ -22,26 +22,14 @@ export default function ProductCard({ product }) {
       return product.images.map((img, idx) => {
         if (typeof img === 'string') {
           const isVid = img.endsWith('.mp4') || img.includes('video');
-          // Build retina srcset for JPEG/PNG images — assumes doubled-resolution source exists
-          const url = img;
-          const base = url.replace(/\.\w+$/, '');
-          const ext = url.match(/\.\w+$/)[0];
-          const retinaUrl = `${base}@2x${ext}`;
           return {
-            url,
-            retinaUrl,
+            url: img,
             type: isVid ? 'video' : 'image',
             poster: product.video_poster || null,
           };
         }
-        // Object image — support retina srcset
-        const url = img.url;
-        const base = url.replace(/\.\w+$/, '');
-        const ext = url.match(/\.\w+$/)[0];
-        const retinaUrl = `${base}@2x${ext}`;
         return {
-          url,
-          retinaUrl: img.retinaUrl || retinaUrl,
+          url: img.url,
           type: img.type || (img.url?.endsWith('.mp4') ? 'video' : 'image'),
           poster: img.poster || product.video_poster || null,
           alt: img.alt || product.name,
@@ -159,9 +147,6 @@ export default function ProductCard({ product }) {
             alt={`${product.name} — view ${activePoseIndex + 1}`}
             className="product-card__image"
             loading="lazy"
-            srcset={currentPose?.retinaUrl
-              ? `${currentPose?.url} 1x, ${currentPose?.retinaUrl} 2x`
-              : undefined}
           />
         )}
 
