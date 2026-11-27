@@ -6,6 +6,7 @@ import useCartStore from '../store/cartStore';
 import useAuthStore from '../store/authStore';
 import api from '../lib/axios';
 import SEO from '../components/SEO';
+import { buildSrcSet, handleImageError, CART_THUMB_SIZES } from '../utils/images';
 import './Checkout.css';
 
 export default function CheckoutPage() {
@@ -348,6 +349,9 @@ export default function CheckoutPage() {
                   <img
                     src={item.image_url || '/products/rust-embroidered-kurta-set/front.jpg'}
                     alt={item.name}
+                    srcSet={buildSrcSet(item.image_url || '/products/rust-embroidered-kurta-set/front.jpg')}
+                    sizes={CART_THUMB_SIZES}
+                    onError={(e) => handleImageError(e, item.image_url || '/products/rust-embroidered-kurta-set/front.jpg')}
                   />
                   <div className="checkout-item-meta">
                     <span className="checkout-item-name">{item.name}</span>

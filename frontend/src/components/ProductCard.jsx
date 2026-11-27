@@ -4,9 +4,10 @@ import { Heart, ShoppingBag, Play, ChevronLeft, ChevronRight } from 'lucide-reac
 import toast from 'react-hot-toast';
 import useCartStore from '../store/cartStore';
 import useUIStore from '../store/uiStore';
+import { buildSrcSet, handleImageError, PRODUCT_CARD_SIZES } from '../utils/images';
 import './ProductCard.css';
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, priority = false }) {
   const [activePoseIndex, setActivePoseIndex] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
@@ -44,6 +45,10 @@ export default function ProductCard({ product }) {
   if (!product) return null;
 
   const currentPose = mediaList[activePoseIndex] || mediaList[0];
+  const imageSrc =
+    currentPose?.type === 'video'
+      ? (currentPose.poster || mediaList.find((m) => m.type === 'image')?.url || currentPose?.url)
+      : currentPose?.url;
 
   const handlePrevPose = (e) => {
     e.preventDefault();
@@ -143,22 +148,15 @@ export default function ProductCard({ product }) {
           </video>
         ) : (
           <img
-            src={currentPose?.type === 'video' ? (currentPose.poster || mediaList[0]?.url) : currentPose?.url}
-            alt={`${product.name} — view ${activePoseIndex + 1}`}
+            src={imageSrc}
+            alt={product.name}
             className="product-card__image"
-            loading="lazy"
-            // Generate srcset with 3 resolutions for responsive/retina images
-            // Using generated thumbnail files: front@480w.jpg, front@960w.jpg, front@1600w.jpg
-            srcset={currentPose?.url
-              ? [
-                  currentPose?.url.replace(/\.jpg$/, '') + '@480w 480w',
-                  currentPose?.url.replace(/\.jpg$/, '') + '@960w 960w',
-                  currentPose?.url.replace(/\.jpg$/, '') + '@1600w 1600w',
-                ].join(', ')
-              : ''
-            }
-            // Tell browser the image will be sized by the product card aspect ratio
-            sizes="(max-width: 768px) 90vw, (max-width: 1024px) 70vw, 50vw"
+            loading={priority ? 'eager' : 'lazy'}
+            decoding="async"
+            fetchPriority={priority ? 'high' : 'auto'}
+            srcSet={buildSrcSet(imageSrc)}
+            sizes={PRODUCT_CARD_SIZES}
+            onError={(e) => handleImageError(e, imageSrc)}
           />
         )}
 

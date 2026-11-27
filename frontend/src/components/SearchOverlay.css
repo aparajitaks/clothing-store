@@ -165,8 +165,10 @@
   width: 52px;
   height: 64px;
   object-fit: cover;
+  object-position: center 18%;
   border-radius: var(--radius-sm);
   flex-shrink: 0;
+  background: #F7F5F0;
 }
 
 .search-result-item__info {

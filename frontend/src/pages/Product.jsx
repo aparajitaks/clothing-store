@@ -29,6 +29,7 @@ import api from '../lib/axios';
 import analytics from '../utils/analytics';
 import SEO, { buildProductSchema, buildBreadcrumbSchema } from '../components/SEO';
 import { DEFAULT_PRODUCTS } from '../data/products';
+import { buildSrcSet, handleImageError, PDP_MAIN_SIZES } from '../utils/images';
 import './Product.css';
 
 const DEFAULT_IMAGES = [
@@ -38,6 +39,22 @@ const DEFAULT_IMAGES = [
   { url: '/products/rust-embroidered-kurta-set/left.jpg', label: 'Left Side', type: 'image' },
   { url: '/products/rust-embroidered-kurta-set/video.mp4', label: 'Model Shoot', type: 'video', poster: '/products/rust-embroidered-kurta-set/video-poster.jpg' },
 ];
+
+/**
+ * Largest zoom factor that still maps image pixels 1:1 (or better) onto device
+ * pixels. Magnifying beyond `naturalWidth / (cssWidth * devicePixelRatio)`
+ * upscales the source — the soft/blurry look customers see when inspecting
+ * fabric details on a retina screen. `offsetWidth` is used because it ignores
+ * an active CSS transform, so the value is stable while zoomed.
+ */
+function getMaxSharpZoom(img) {
+  if (!img) return 1;
+  const natural = img.naturalWidth;
+  const cssWidth = img.offsetWidth || img.getBoundingClientRect().width;
+  if (!natural || !cssWidth) return 1;
+  const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
+  return Math.max(1, natural / (cssWidth * dpr));
+}
 
 export default function ProductPage() {
   const { slug } = useParams();
@@ -68,12 +85,16 @@ export default function ProductPage() {
   // Amazon-style Zoom state
   const [isZooming, setIsZooming] = useState(false);
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
+  // Zoom factor is re-measured per image so we never magnify past native pixels.
+  const [zoomScale, setZoomScale] = useState(2.5);
   const imageWrapRef = useRef(null);
+  const mainImgRef = useRef(null);
 
   // Amazon-style Lightbox Modal state
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxZoomed, setLightboxZoomed] = useState(false);
   const [lightboxZoomPos, setLightboxZoomPos] = useState({ x: 50, y: 50 });
+  const lightboxImgRef = useRef(null);
 
   // Video player state
   const videoRef = useRef(null);
@@ -333,6 +354,9 @@ export default function ProductPage() {
                       <img
                         src={item.type === 'video' ? (item.poster || item.url) : item.url}
                         alt={`${product.name} — ${item.label}`}
+                        srcSet={buildSrcSet(item.type === 'video' ? (item.poster || item.url) : item.url)}
+                        sizes="72px"
+                        onError={(e) => handleImageError(e, item.type === 'video' ? (item.poster || item.url) : item.url)}
                       />
                       {item.type === 'video' && (
                         <span className="amazon-thumb__video-badge">
@@ -351,7 +375,12 @@ export default function ProductPage() {
             <div
               className={`pdp-main-image-wrap amazon-main-viewer ${isZooming ? 'is-zoomed' : ''}`}
               ref={imageWrapRef}
-              onMouseEnter={() => canHover && currentMedia?.type !== 'video' && setIsZooming(true)}
+              onMouseEnter={() => {
+                if (canHover && currentMedia?.type !== 'video') {
+                  setZoomScale(getMaxSharpZoom(mainImgRef.current));
+                  setIsZooming(true);
+                }
+              }}
               onMouseLeave={() => setIsZooming(false)}
               onMouseMove={handleMouseMove}
               onClick={() => currentMedia?.type !== 'video' && setLightboxOpen(true)}
@@ -425,6 +454,7 @@ export default function ProductPage() {
               ) : (
                 <>
                   <img
+                    ref={mainImgRef}
                     src={currentMedia?.url || mediaList[0]?.url}
                     alt={`${product.name} — ${currentMedia?.label}`}
                     className={`pdp-main-image ${isZooming ? 'zooming' : ''}`}
@@ -432,22 +462,16 @@ export default function ProductPage() {
                       isZooming
                         ? {
                             transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
-                            transform: 'scale(2.5)',
+                            transform: `scale(${zoomScale})`,
                             willChange: 'transform',
                           }
                         : undefined
                     }
-                    // Add srcset for responsive/retina images
-                    srcset={currentMedia?.url
-                      ? [
-                          currentMedia?.url.replace(/\.jpg$/, '') + '@480w 480w',
-                          currentMedia?.url.replace(/\.jpg$/, '') + '@960w 960w',
-                          currentMedia?.url.replace(/\.jpg$/, '') + '@1600w 1600w',
-                        ].join(', ')
-                      : ''
-                    }
-                    // Tell browser the image will fill the main viewer area
-                    sizes="(max-width: 768px) 100%, (max-width: 1024px) 85%, 70%"
+                    srcSet={buildSrcSet(currentMedia?.url || mediaList[0]?.url)}
+                    sizes={PDP_MAIN_SIZES}
+                    onError={(e) => handleImageError(e, currentMedia?.url || mediaList[0]?.url)}
+                    decoding="async"
+                    fetchPriority="high"
                     draggable={false}
                   />
 
@@ -709,15 +733,22 @@ export default function ProductPage() {
                     </video>
                   ) : (
                     <img
+                      ref={lightboxImgRef}
                       src={currentMedia?.url}
                       alt={`${product.name} — ${currentMedia?.label}`}
                       className={`amazon-lightbox__img ${lightboxZoomed ? 'zoomed' : ''}`}
-                      onClick={() => setLightboxZoomed((z) => !z)}
+                      srcSet={buildSrcSet(currentMedia?.url)}
+                      sizes="90vw"
+                      onError={(e) => handleImageError(e, currentMedia?.url)}
+                      onClick={() => {
+                        if (!lightboxZoomed) setZoomScale(getMaxSharpZoom(lightboxImgRef.current));
+                        setLightboxZoomed((z) => !z);
+                      }}
                       style={
                         lightboxZoomed
                           ? {
                               transformOrigin: `${lightboxZoomPos.x}% ${lightboxZoomPos.y}%`,
-                              transform: 'scale(2.2)',
+                              transform: `scale(${zoomScale})`,
                             }
                           : undefined
                       }
@@ -747,6 +778,9 @@ export default function ProductPage() {
                     <img
                       src={item.type === 'video' ? (item.poster || item.url) : item.url}
                       alt={item.label}
+                      srcSet={buildSrcSet(item.type === 'video' ? (item.poster || item.url) : item.url)}
+                      sizes="64px"
+                      onError={(e) => handleImageError(e, item.type === 'video' ? (item.poster || item.url) : item.url)}
                     />
                     {item.type === 'video' && (
                       <span className="amazon-lightbox__video-icon">
@@ -776,8 +810,8 @@ export default function ProductPage() {
               <h2 className="section-header__title">You May Also Admire</h2>
             </div>
             <div className="products-grid">
-              {related.map((p) => (
-                <ProductCard key={p.id} product={p} />
+              {related.map((p, i) => (
+                <ProductCard key={p.id} product={p} priority={i < 4} />
               ))}
             </div>
           </div>

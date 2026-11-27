@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://teyacollections.com/sitemap.xml
+
+# Disallow administration and internal areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /orders/
+Disallow: /pincode/
+
+# Allow product and collection pages
+Allow: /product/
+Allow: /collections/
+Allow: /shop/
+
+# Rate limiting for bots
+Crawl-delay: 2

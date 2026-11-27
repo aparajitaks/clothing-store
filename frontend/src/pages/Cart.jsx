@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import useCartStore from '../store/cartStore';
 import api from '../lib/axios';
 import SEO from '../components/SEO';
+import { buildSrcSet, handleImageError, CART_THUMB_SIZES } from '../utils/images';
 import './Cart.css';
 
 // GST rate for apparel (5% for items ≤ ₹1000, 12% above in India)
@@ -113,6 +114,9 @@ export default function CartPage() {
                         src={item.image_url || '/products/rust-embroidered-kurta-set/front.jpg'}
                         alt={item.name}
                         className="cart-row__img"
+                        srcSet={buildSrcSet(item.image_url || '/products/rust-embroidered-kurta-set/front.jpg')}
+                        sizes={CART_THUMB_SIZES}
+                        onError={(e) => handleImageError(e, item.image_url || '/products/rust-embroidered-kurta-set/front.jpg')}
                       />
                       <div className="cart-row__meta">
                         <Link to={`/product/${item.slug}`} className="cart-row__name">

@@ -142,8 +142,8 @@ export default function CategoryPage() {
         </div>
       ) : (
         <div className="products-grid">
-          {products.map((p) => (
-            <ProductCard key={p.id} product={p} />
+          {products.map((p, i) => (
+            <ProductCard key={p.id} product={p} priority={i < 4} />
           ))}
         </div>
       )}

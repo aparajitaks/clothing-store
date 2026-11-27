@@ -99,6 +99,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 18%;
   display: block;
 }
 
@@ -168,9 +169,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 16%;
   display: block;
-  /* Use default image rendering — crisp at native resolution */
+  background: #F7F5F0;
   image-rendering: auto;
+  color: transparent;
   transition: transform 0.25s ease-out;
 }
 
@@ -179,7 +182,6 @@
   object-fit: cover;
   will-change: transform;
   image-rendering: auto;
-  /* Smooth the zoom transform without blurring below native resolution */
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
@@ -596,6 +598,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 18%;
   display: block;
 }
 

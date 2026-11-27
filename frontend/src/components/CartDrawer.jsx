@@ -3,6 +3,7 @@ import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import useCartStore from '../store/cartStore';
 import useUIStore from '../store/uiStore';
+import { buildSrcSet, handleImageError, CART_THUMB_SIZES } from '../utils/images';
 import './CartDrawer.css';
 
 export default function CartDrawer() {
@@ -82,6 +83,9 @@ export default function CartDrawer() {
                         src={item.image_url || '/products/rust-embroidered-kurta-set/front.jpg'}
                         alt={item.name}
                         className="cart-item__image"
+                        srcSet={buildSrcSet(item.image_url || '/products/rust-embroidered-kurta-set/front.jpg')}
+                        sizes={CART_THUMB_SIZES}
+                        onError={(e) => handleImageError(e, item.image_url || '/products/rust-embroidered-kurta-set/front.jpg')}
                       />
                       <div className="cart-item__info">
                         <div className="cart-item__top">

@@ -98,7 +98,7 @@ export default function CollectionDetailPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05, duration: 0.5 }}
               >
-                <ProductCard product={p} />
+                <ProductCard product={p} priority={i < 4} />
               </motion.div>
             ))}
           </div>

@@ -87,7 +87,7 @@ export default function SearchPage() {
           <div className="search-page__grid">
             {results.map((p, i) => (
               <motion.div key={p.id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
-                <ProductCard product={p} />
+                <ProductCard product={p} priority={i < 4} />
               </motion.div>
             ))}
           </div>

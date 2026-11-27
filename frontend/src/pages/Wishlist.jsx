@@ -5,6 +5,7 @@ import useWishlistStore from '../store/wishlistStore';
 import useCartStore from '../store/cartStore';
 import useUIStore from '../store/uiStore';
 import toast from 'react-hot-toast';
+import { buildSrcSet, handleImageError, PRODUCT_CARD_SIZES } from '../utils/images';
 import './Wishlist.css';
 
 export default function WishlistPage() {
@@ -64,7 +65,14 @@ export default function WishlistPage() {
                 transition={{ delay: i * 0.06 }}
               >
                 <Link to={`/product/${product.slug}`} className="wishlist-item__image-wrap">
-                  <img src={img} alt={product.name} className="wishlist-item__image" />
+                  <img
+                    src={img}
+                    alt={product.name}
+                    className="wishlist-item__image"
+                    srcSet={buildSrcSet(img)}
+                    sizes={PRODUCT_CARD_SIZES}
+                    onError={(e) => handleImageError(e, img)}
+                  />
                   {hasDiscount && (
                     <span className="wishlist-item__badge">-{discount}%</span>
                   )}

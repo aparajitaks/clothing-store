@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import api from '../lib/axios';
 import { DEFAULT_COLLECTIONS } from '../data/products';
 import SEO from '../components/SEO';
+import { buildSrcSet, handleImageError, COLLECTION_SIZES } from '../utils/images';
 import './Collections.css';
 
 const FALLBACK_COLLECTIONS = DEFAULT_COLLECTIONS;
@@ -48,10 +49,10 @@ export default function CollectionsPage() {
 
       {/* SEO */}
       <SEO
-        title={meta ? meta.title : 'Collections'}
-        description={meta ? meta.desc : 'TEYA COLLECTIONS — Handcrafted premium kurtas, embroidered kurta sets, and breathable everyday cotton & linen silhouettes. Shop Indian ethnic wear online.'}
-        canonical={meta ? `/collections/${meta.slug}` : '/collections'}
-        image={`${process.env.PUBLIC_URL}/og-image.png`}
+        title="Collections"
+        description="TEYA COLLECTIONS — Handcrafted premium kurtas, embroidered kurta sets, and breathable everyday cotton & linen silhouettes. Shop Indian ethnic wear online."
+        canonical="/collections"
+        image="/og-image.png"
         type="collection"
       />
 
@@ -71,17 +72,11 @@ export default function CollectionsPage() {
                 src={col.image_url}
                 alt={col.name}
                 className="col-editorial__image"
-                // Generate srcset for responsive/retina images
-                srcset={col.image_url
-                  ? [
-                      col.image_url.replace(/\.jpg$/, '') + '@480w 480w',
-                      col.image_url.replace(/\.jpg$/, '') + '@960w 960w',
-                      col.image_url.replace(/\.jpg$/, '') + '@1600w 1600w',
-                    ].join(', ')
-                  : ''
-                }
-                // Collection grid images are smaller
-                sizes="(max-width: 768px) 90vw, (max-width: 1024px) 70vw, 50vw"
+                srcSet={buildSrcSet(col.image_url)}
+                sizes={COLLECTION_SIZES}
+                onError={(e) => handleImageError(e, col.image_url)}
+                loading="lazy"
+                decoding="async"
               />
             </div>
             <div className="col-editorial__content">
@@ -105,7 +100,15 @@ export default function CollectionsPage() {
             {otherCollections.map((col) => (
               <Link key={col.id} to={`/collections/${col.slug}`} className="collection-card">
                 <div className="collection-card__image-wrap">
-                  <img src={col.image_url} alt={col.name} className="collection-card__image" />
+                  <img
+                    src={col.image_url}
+                    alt={col.name}
+                    className="collection-card__image"
+                    srcSet={buildSrcSet(col.image_url)}
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    onError={(e) => handleImageError(e, col.image_url)}
+                    loading="lazy"
+                  />
                 </div>
                 <div className="collection-card__info">
                   <h3 className="collection-card__name">{col.name}</h3>

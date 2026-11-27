@@ -7,6 +7,7 @@ import { supabase } from '../lib/supabase';
 import api from '../lib/axios';
 import SEO, { buildOrganizationSchema } from '../components/SEO';
 import { DEFAULT_PRODUCTS } from '../data/products';
+import { buildSrcSet, handleImageError, CATEGORY_TILE_SIZES } from '../utils/images';
 import './Home.css';
 
 // Active launch products
@@ -157,7 +158,15 @@ export default function HomePage() {
               >
                 <Link to={`/category/${cat.slug}`} className="biba-cat-card__link">
                   <div className="biba-cat-card__img-box">
-                    <img src={cat.image} alt={cat.name} loading="lazy" />
+                    <img
+                      src={cat.image}
+                      alt={cat.name}
+                      loading={i < 2 ? 'eager' : 'lazy'}
+                      decoding="async"
+                      srcSet={buildSrcSet(cat.image)}
+                      sizes={CATEGORY_TILE_SIZES}
+                      onError={(e) => handleImageError(e, cat.image)}
+                    />
                   </div>
                   <div className="biba-cat-card__meta">
                     <h3 className="biba-cat-card__name">{cat.name}</h3>
@@ -186,6 +195,10 @@ export default function HomePage() {
                     src="/products/scarlet-red-kashmiri-embroidered-kurta-set/front.jpg"
                     alt="The Celebratory Edit"
                     loading="lazy"
+                    decoding="async"
+                    srcSet={buildSrcSet('/products/scarlet-red-kashmiri-embroidered-kurta-set/front.jpg')}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    onError={(e) => handleImageError(e, '/products/scarlet-red-kashmiri-embroidered-kurta-set/front.jpg')}
                   />
                   <div className="biba-spotlight__overlay" />
                 </div>
@@ -213,6 +226,10 @@ export default function HomePage() {
                     src="/products/sage-olive-mirrorwork-kurta-set/front.jpg"
                     alt="Contemporary Silhouettes"
                     loading="lazy"
+                    decoding="async"
+                    srcSet={buildSrcSet('/products/sage-olive-mirrorwork-kurta-set/front.jpg')}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    onError={(e) => handleImageError(e, '/products/sage-olive-mirrorwork-kurta-set/front.jpg')}
                   />
                   <div className="biba-spotlight__overlay" />
                 </div>
@@ -242,8 +259,8 @@ export default function HomePage() {
           </div>
 
           <div className="products-grid">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {featuredProducts.map((product, i) => (
+              <ProductCard key={product.id} product={product} priority={i < 4} />
             ))}
           </div>
         </section>

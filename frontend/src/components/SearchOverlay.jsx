@@ -4,15 +4,30 @@ import { Search, X, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../lib/axios';
 import useUIStore from '../store/uiStore';
+import { DEFAULT_PRODUCTS } from '../data/products';
+import { buildSrcSet, handleImageError, CART_THUMB_SIZES } from '../utils/images';
 import './SearchOverlay.css';
 
 const TRENDING = [
-  'Chanderi Kurta Set',
-  'Banarasi Silk Saree',
-  'Hand-Embroidered Anarkali',
-  'Raw Silk Bandhgala',
-  'Kalamkari Dupatta',
+  'Kurta Set',
+  'Festive Wear',
+  'Embroidered',
+  'Cotton',
+  'Zari',
 ];
+
+function localSearch(query) {
+  const q = query.toLowerCase();
+  return DEFAULT_PRODUCTS.filter((p) => {
+    const hay = `${p.name} ${p.description || ''} ${p.categories?.name || ''}`.toLowerCase();
+    return hay.includes(q);
+  }).slice(0, 8).map((p) => {
+    const image = Array.isArray(p.images) && p.images.length
+      ? (typeof p.images[0] === 'string' ? p.images[0] : p.images[0]?.url)
+      : p.image_url;
+    return { id: p.id, slug: p.slug, name: p.name, price: p.price, image };
+  });
+}
 
 export default function SearchOverlay() {
   const { searchOpen, closeSearch } = useUIStore();
@@ -44,10 +59,10 @@ export default function SearchOverlay() {
       setLoading(true);
       try {
         const res = await api.get(`/products/suggestions?q=${encodeURIComponent(query)}`);
-        setResults(res.data?.data?.results || []);
+        const apiResults = res.data?.data?.results || res.data?.data || [];
+        setResults(Array.isArray(apiResults) && apiResults.length > 0 ? apiResults : localSearch(query));
       } catch {
-        // Local fallback
-        setResults([]);
+        setResults(localSearch(query));
       } finally {
         setLoading(false);
       }
@@ -142,7 +157,14 @@ export default function SearchOverlay() {
                         <li key={item.id}>
                           <button className="search-result-item" onClick={() => handleResultClick(item.slug)}>
                             {item.image && (
-                              <img src={item.image} alt={item.name} className="search-result-item__img" />
+                              <img
+                                src={item.image}
+                                alt={item.name}
+                                className="search-result-item__img"
+                                srcSet={buildSrcSet(item.image)}
+                                sizes={CART_THUMB_SIZES}
+                                onError={(e) => handleImageError(e, item.image)}
+                              />
                             )}
                             <div className="search-result-item__info">
                               <p className="search-result-item__name">{item.name}</p>
@@ -159,7 +181,7 @@ export default function SearchOverlay() {
                 {!loading && query.length >= 2 && results.length === 0 && (
                   <div className="search-empty">
                     <p>No pieces found for "<strong>{query}</strong>"</p>
-                    <p className="search-empty__hint">Try searching for Saree, Anarkali, Kurta, or Lehenga</p>
+                    <p className="search-empty__hint">Try searching for Kurta, Festive, Zari, or Cotton</p>
                   </div>
                 )}
               </div>
