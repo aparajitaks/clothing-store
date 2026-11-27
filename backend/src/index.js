@@ -23,6 +23,10 @@ const { errorHandler } = require('./middleware/errorHandler');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Behind a cloud proxy (Render/Vercel/etc.) trust the first proxy hop so
+// express-rate-limit reads the real client IP from X-Forwarded-For.
+app.set('trust proxy', 1);
+
 // ─── Security ────────────────────────────────────────────────
 app.use(helmet());
 
@@ -119,8 +123,8 @@ app.use(errorHandler);
 
 // ─── Start ───────────────────────────────────────────────────
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(PORT, () => {
-    console.log(`\n🛍️  TeyaCollections API running on http://localhost:${PORT}`);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`\n🛍️  TeyaCollections API running on port ${PORT}`);
     console.log(`📦  Environment: ${process.env.NODE_ENV}`);
   });
 }

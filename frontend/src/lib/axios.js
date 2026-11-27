@@ -2,7 +2,9 @@ import axios from 'axios';
 import { supabase } from './supabase';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',
+  // Same-origin '/api' by default so production works behind a proxy/rewrite
+  // (no CORS). Local dev/preview proxy `/api` → http://localhost:3001.
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   timeout: 15000,
 });
 
