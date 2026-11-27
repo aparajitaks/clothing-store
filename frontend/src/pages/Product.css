@@ -169,8 +169,8 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  /* Improve image quality and prevent blur */
-  image-rendering: -webkit-optimize-contrast;
+  /* Use default image rendering — crisp at native resolution */
+  image-rendering: auto;
   transition: transform 0.25s ease-out;
 }
 
@@ -178,7 +178,7 @@
 .pdp-main-image.zooming {
   object-fit: cover;
   will-change: transform;
-  image-rendering: -webkit-optimize-contrast;
+  image-rendering: auto;
   /* Smooth the zoom transform without blurring below native resolution */
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
