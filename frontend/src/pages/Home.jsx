@@ -183,7 +183,7 @@ export default function HomePage() {
               <Link to="/category/festive-kurtas" className="biba-spotlight__card">
                 <div className="biba-spotlight__img-box">
                   <img
-                    src="/products/scarlet-red-kashmiri-embroidered-kurta-set/front-2.jpg"
+                    src="/products/scarlet-red-kashmiri-embroidered-kurta-set/front.jpg"
                     alt="The Celebratory Edit"
                     loading="lazy"
                   />

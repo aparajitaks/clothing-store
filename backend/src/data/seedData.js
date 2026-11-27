@@ -194,7 +194,6 @@ const SEED_PRODUCTS = [
       { url: '/products/ivory-floral-embroidered-kurta-set/front.jpg', alt: 'Ivory Floral Embroidered Kurta Set — Front View', isPrimary: true, type: 'image' },
       { url: '/products/ivory-floral-embroidered-kurta-set/back.jpg', alt: 'Ivory Floral Embroidered Kurta Set — Back View', type: 'image' },
       { url: '/products/ivory-floral-embroidered-kurta-set/left.jpg', alt: 'Ivory Floral Embroidered Kurta Set — Left Side Profile', type: 'image' },
-      { url: '/products/ivory-floral-embroidered-kurta-set/right.jpg', alt: 'Ivory Floral Embroidered Kurta Set — Full Silhouette', type: 'image' },
       { url: '/products/ivory-floral-embroidered-kurta-set/detail.jpg', alt: 'Ivory Floral Embroidered Kurta Set — Front Detail', type: 'image' },
       { url: '/products/ivory-floral-embroidered-kurta-set/video.mp4', poster: '/products/ivory-floral-embroidered-kurta-set/video-poster.jpg', alt: 'Ivory Floral Embroidered Kurta Set — Video Shoot', type: 'video' },
     ],
@@ -482,7 +481,6 @@ const SEED_PRODUCTS = [
       { url: '/products/fuchsia-floral-block-print-kurta-set/right.jpg', alt: 'Fuchsia Floral Block Print Kurta Set — Right Side Profile', type: 'image' },
       { url: '/products/fuchsia-floral-block-print-kurta-set/front-2.jpg', alt: 'Fuchsia Floral Block Print Kurta Set — Front Pose', type: 'image' },
       { url: '/products/fuchsia-floral-block-print-kurta-set/back.jpg', alt: 'Fuchsia Floral Block Print Kurta Set — Back View', type: 'image' },
-      { url: '/products/fuchsia-floral-block-print-kurta-set/back-2.jpg', alt: 'Fuchsia Floral Block Print Kurta Set — Back Detail', type: 'image' },
       { url: '/products/fuchsia-floral-block-print-kurta-set/video.mp4', poster: '/products/fuchsia-floral-block-print-kurta-set/video-poster.jpg', alt: 'Fuchsia Floral Block Print Kurta Set — Model Video Shoot', type: 'video' },
     ],
     video: '/products/fuchsia-floral-block-print-kurta-set/video.mp4',
@@ -959,7 +957,6 @@ const SEED_PRODUCTS = [
     compare_price: 2999,
     discount_percent: 15,
     images: [
-      { url: '/products/scarlet-red-kashmiri-embroidered-kurta-set/front-2.jpg', alt: 'Scarlet Red Kashmiri Embroidered Silk Kurta Set — Front View', isPrimary: true, type: 'image' },
       { url: '/products/scarlet-red-kashmiri-embroidered-kurta-set/front.jpg', alt: 'Scarlet Red Kashmiri Embroidered Silk Kurta Set — Side Pose with Dupatta', type: 'image' },
       { url: '/products/scarlet-red-kashmiri-embroidered-kurta-set/back.jpg', alt: 'Scarlet Red Kashmiri Embroidered Silk Kurta Set — Back View', type: 'image' },
       { url: '/products/scarlet-red-kashmiri-embroidered-kurta-set/video.mp4', poster: '/products/scarlet-red-kashmiri-embroidered-kurta-set/video-poster.jpg', alt: 'Scarlet Red Kashmiri Embroidered Silk Kurta Set — Model Video Shoot', type: 'video' },
